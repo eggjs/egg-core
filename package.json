@@ -1,0 +1,42 @@
+{
+  "name": "egg-loader",
+  "version": "1.0.0",
+  "description": "egg loader",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint lib test *.js",
+    "test": "npm run lint && egg-bin test",
+    "cov": "egg-bin cov",
+    "ci": "npm run lint && npm run cov"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eggjs/egg-loader.git"
+  },
+  "keywords": [
+    "egg",
+    "loader"
+  ],
+  "author": "gxcsoccer <gxcsoccer@126.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eggjs/egg-loader/issues"
+  },
+  "homepage": "https://github.com/eggjs/egg-loader#readme",
+  "engines": {
+    "node": ">= 4.0.0"
+  },
+  "ci": {
+    "version": "4, 6"
+  },
+  "devDependencies": {
+    "egg-bin": "1",
+    "egg-ci": "1",
+    "eslint": "3",
+    "eslint-config-egg": "3",
+    "mm": "1",
+    "should": "9",
+    "supertest": "1"
+  },
+  "dependencies": {}
+}
