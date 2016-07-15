@@ -1,6 +1,6 @@
 {
   "name": "egg-loader",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "egg loader",
   "main": "index.js",
   "scripts": {
@@ -34,9 +34,18 @@
     "egg-ci": "1",
     "eslint": "3",
     "eslint-config-egg": "3",
+    "koa": "1",
+    "koa-router": "4",
     "mm": "1",
     "should": "9",
     "supertest": "1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "debug": "^2.2.0",
+    "depd": "^1.1.0",
+    "extend": "^3.0.0",
+    "interop-require": "^1.0.0",
+    "is-type-of": "^1.0.0",
+    "loading": "^1.12.0"
+  }
 }
