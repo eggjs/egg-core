@@ -33,7 +33,7 @@ describe('test/load_service.test.js', function() {
   it('should throw when dulplicate', function() {
     (function() {
       utils.createApp('service-override');
-    }).should.throw('can\'t overwrite property foo');
+    }).should.throw(/^can't overwrite property 'foo'/);
   });
 
   it('should check es6', function() {

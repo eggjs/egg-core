@@ -29,7 +29,7 @@ describe('test/load_proxy.test.js', function() {
   it('should throw when dulplicate', function() {
     (function() {
       utils.createApp('proxy-override');
-    }).should.throw('can\'t overwrite property queryProxy');
+    }).should.throw(/^can't overwrite property 'queryProxy'/);
   });
 
   describe('subdir', function() {
