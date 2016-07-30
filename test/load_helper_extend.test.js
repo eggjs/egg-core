@@ -10,7 +10,7 @@ describe('test/load_helper_extend.test.js', function() {
     app = utils.createApp('helper');
   });
 
-  it('应该加载 app 和 plugin 的 helper 文件', function(done) {
+  it('should load extend from chair, plugin and helper', function(done) {
     request(app.callback())
     .get('/')
     .expect(/app: true/)
@@ -19,14 +19,14 @@ describe('test/load_helper_extend.test.js', function() {
     .expect(200, done);
   });
 
-  it('app 的优先级高于 plugin', function(done) {
+  it('should override chair by application', function(done) {
     request(app.callback())
     .get('/')
     .expect(/override: app/)
     .expect(200, done);
   });
 
-  it('应该使用 helper 调用，无法直接调用', function(done) {
+  it('should not call directly', function(done) {
     request(app.callback())
     .get('/')
     .expect(/not exists on locals: false/)

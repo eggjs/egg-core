@@ -10,33 +10,33 @@ describe('test/egg_loader.test.js', function() {
 
   afterEach(mm.restore);
 
-  describe('getServerEnv', function() {
+  describe('.getServerEnv', function() {
 
-    it('应该来自于环境变量 EGG_SERVER_ENV', function() {
+    it('should get from env EGG_SERVER_ENV', function() {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       const app = utils.createApp('serverenv');
       app.loader.serverEnv.should.equal('prod');
     });
 
-    it('当 NODE_ENV = test，应该设置默认值 unittest', function() {
+    it('should use unittest when NODE_ENV = test', function() {
       mm(process.env, 'NODE_ENV', 'test');
       const app = utils.createApp('serverenv');
       app.loader.serverEnv.should.equal('unittest');
     });
 
-    it('当 NODE_ENV = production，应该设置默认值 default', function() {
+    it('should use default when NODE_ENV = production', function() {
       mm(process.env, 'NODE_ENV', 'production');
       const app = utils.createApp('serverenv');
       app.loader.serverEnv.should.equal('default');
     });
 
-    it('当 NODE_ENV 为其他值，应该设置默认值 local', function() {
+    it('should use local when NODE_ENV is other', function() {
       mm(process.env, 'NODE_ENV', 'development');
       const app = utils.createApp('serverenv');
       app.loader.serverEnv.should.equal('local');
     });
 
-    it('应该来自于环境变量 EGG_SERVER_ENV', function() {
+    it('should get from config/serverEnv', function() {
       mm(process.env, 'NODE_ENV', 'production');
       mm(process.env, 'EGG_SERVER_ENV', 'test');
       const app = utils.createApp('serverenv-file');
@@ -47,12 +47,12 @@ describe('test/egg_loader.test.js', function() {
 
   describe('eggPaths', function() {
 
-    it('应该通过 loader 的参数指定 eggPath', function() {
+    it('should get from paramter', function() {
       const app = utils.createApp('eggpath');
       app.loader.eggPath.should.equal(utils.getFilepath('egg'));
     });
 
-    it('应该解析 egg 和框架的路径', function() {
+    it('should get from framework', function() {
       const Application = require('./fixtures/framework');
       const app = new Application();
       app.coreLogger = console;
@@ -66,7 +66,7 @@ describe('test/egg_loader.test.js', function() {
       return app;
     });
 
-    it('应该解析 egg 和框架的路径，使用 Symbol.for', function() {
+    it('should get from framework using symbol', function() {
       const Application = require('./fixtures/framework-symbol');
       const app = new Application();
       app.coreLogger = console;
@@ -80,7 +80,7 @@ describe('test/egg_loader.test.js', function() {
       return app;
     });
 
-    it('frameworkPaths 不应该包括 eggPath', function() {
+    it('frameworkPaths should not container eggPath', function() {
       const eggPath = path.join(__dirname, 'fixtures/egg');
       const loader = new BaseLoader({
         baseDir: path.join(__dirname, 'fixtures/eggpath'),
@@ -94,13 +94,13 @@ describe('test/egg_loader.test.js', function() {
 
   describe('loadDirs', function() {
 
-    it('默认读取插件', function() {
+    it('should get plugin dir', function() {
       const app = utils.createApp('plugin');
       const dirs = app.loader.loadDirs();
       dirs.length.should.eql(10);
     });
 
-    it('应该不读取插件', function() {
+    it('should not get plugin dir', function() {
       const loader = new utils.Loader('plugin');
       const dirs = loader.loadDirs();
       dirs.length.should.eql(2);

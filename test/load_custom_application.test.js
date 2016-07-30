@@ -10,18 +10,18 @@ describe('test/load_custom_app.test.js', function() {
     app = utils.createApp('plugin');
   });
 
-  it('正确加载 app.js', function() {
+  it('should load app.js', function() {
     app.b.should.equal('plugin b');
     app.c.should.equal('plugin c');
     app.app.should.equal('app');
   });
 
-  it('插件 app 优先于应用 app 加载', function() {
+  it('should app.js of plugin before application\'s', function() {
     (app.dateB <= app.date).should.equal(true);
     (app.dateC <= app.date).should.equal(true);
   });
 
-  it('不加载未开启的插件', function() {
+  it('should not load plugin that is disabled', function() {
     should.not.exists(app.a);
   });
 });

@@ -8,7 +8,7 @@ const utils = require('./utils');
 describe('test/load_service.test.js', function() {
   afterEach(mm.restore);
 
-  it('应该加载应用和插件的 service', function(done) {
+  it('should load from application and plugin', function(done) {
     const app = utils.createApp('plugin');
     console.log(app.serviceClasses);
     should.exists(app.serviceClasses.foo);
@@ -30,19 +30,19 @@ describe('test/load_service.test.js', function() {
     .expect(200, done);
   });
 
-  it('当重复加载时报错', function() {
+  it('should throw when dulplicate', function() {
     (function() {
       utils.createApp('service-override');
     }).should.throw('can\'t overwrite property foo');
   });
 
-  it('service 的检查支持 es6', function() {
+  it('should check es6', function() {
     const app = utils.createApp('services_loader_verify');
     app.serviceClasses.should.have.property('foo');
     app.serviceClasses.foo.should.have.properties('bar', 'bar1', 'aa');
   });
 
-  it('支持继承 app.Service 类', function(done) {
+  it('should extend app.Service', function(done) {
     const app = utils.createApp('extends-app-service');
     request(app.callback())
     .get('/user')
@@ -52,9 +52,9 @@ describe('test/load_service.test.js', function() {
     .expect(200, done);
   });
 
-  describe('支持子目录', function() {
+  describe('subdir', function() {
 
-    it('支持一，二级目录，自动过滤超过二级的目录', function(done) {
+    it('should load 2 level dir', function(done) {
       mm(process.env, 'NO_DEPRECATION', '*');
       const app = utils.createApp('subdir-services');
       request(app.callback())

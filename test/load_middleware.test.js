@@ -11,7 +11,7 @@ describe('test/load_middleware.test.js', function() {
     app = utils.createApp('middleware-override');
   });
 
-  it('应该加载应用，插件和默认中间件', function() {
+  it('should load application, plugin, and default middlewares', function() {
     app.middlewares.should.have.property('static');
     app.middlewares.should.have.property('status');
     app.middlewares.should.have.property('custom');
@@ -19,34 +19,34 @@ describe('test/load_middleware.test.js', function() {
     app.middlewares.should.not.have.property('a');
   });
 
-  it('插件中间件会覆盖 egg 的中间件', function(done) {
+  it('should override middlewares of egg by plugin', function(done) {
     request(app.callback())
     .get('/status')
     .expect('status')
     .end(done);
   });
 
-  it('应用中间件会覆盖插件中间件', function(done) {
+  it('should override middlewares of plugin by application', function(done) {
     request(app.callback())
     .get('/custom')
     .expect('app custom')
     .end(done);
   });
 
-  it('应用中间件会覆盖 egg 的中间件', function(done) {
+  it('should override middlewares of egg by application', function(done) {
     request(app.callback())
     .get('/static')
     .expect('static')
     .end(done);
   });
 
-  it('如果中间件返回的非 generator 会报错', function() {
+  it('should throw when middleware return no-generator', function() {
     (function() {
       utils.createApp('custom_session_invaild');
     }).should.throw('Middleware session must be a generator function, but actual is {}');
   });
 
-  it('未找到配置的中间件', function() {
+  it('should throw when not load that is not configured', function() {
     (function() {
       utils.createApp('no-middleware');
     }).should.throw('Middleware a not found');

@@ -45,7 +45,7 @@ describe('test/load_plugin.test.js', function() {
     loader.orderPlugins.should.be.an.Array;
   });
 
-  it('同名插件优先级，应用依赖库 > chair 依赖库 > chair 默认', function() {
+  it('should follow the search order，node_modules of application > node_modules of framework', function() {
     const baseDir = utils.getFilepath('plugin');
     const loader = new Loader('plugin');
     loader.loadConfig();
@@ -60,7 +60,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('应用插件配置支持别名', function() {
+  it('should support alias', function() {
     const baseDir = utils.getFilepath('plugin');
     const loader = new Loader('plugin');
     loader.loadConfig();
@@ -76,7 +76,7 @@ describe('test/load_plugin.test.js', function() {
     should.not.exists(loader.plugins.d);
   });
 
-  it('支持插件 package.json 配置', function() {
+  it('should support config in package.json', function() {
     const baseDir = utils.getFilepath('plugin');
     const loader = new Loader('plugin');
     loader.loadConfig();
@@ -91,7 +91,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('如果插件名不一致提示警告', function() {
+  it('should warn when the name of plugin is not same', function() {
     let message;
     mm(console, 'warn', function(m) {
       if (!m.startsWith('[egg:loader] eggPlugin is missing') && !message) {
@@ -161,21 +161,21 @@ describe('test/load_plugin.test.js', function() {
     should.not.exists(loader.allPlugins.h);
   });
 
-  it('加载不存在的插件，抛异常', function() {
+  it('should throw when plugin not exist', function() {
     (function() {
       const loader = new Loader('plugin-noexist');
       loader.loadConfig();
     }).should.throw(/Can not find plugin noexist in /);
   });
 
-  it('当插件依赖的未开启的插件不存在，抛异常', function() {
+  it('should throw when the dependent plugin is disabled', function() {
     (function() {
       const loader = new Loader('no-dep-plugin');
       loader.loadConfig();
     }).should.throw(/Can not find plugin @ali\/b in /);
   });
 
-  it('插件加载保持依赖顺序', function() {
+  it('should make order', function() {
     mm(process.env, 'NODE_ENV', 'development');
     const loader = new Loader('plugin-dep');
     loader.loadConfig();
@@ -206,21 +206,21 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
-  it('插件循环依赖应该报错', function() {
+  it('should throw when plugin is recursive', function() {
     (function() {
       const loader = new Loader('plugin-dep-recursive');
       loader.loadConfig();
     }).should.throw('sequencify plugins has problem, missing: [], recursive: [a,b,c,a]');
   });
 
-  it('依赖不存在的 key 应该报错', function() {
+  it('should throw when the dependent plugin not exist', function() {
     (function() {
       const loader = new Loader('plugin-dep-missing');
       loader.loadConfig();
     }).should.throw('sequencify plugins has problem, missing: [a1], recursive: []\n\t>> Plugin [a1] is disabled or missed, but is required by [c]');
   });
 
-  it('依赖未开启的插件应该隐式开启，并且给出提示', done => {
+  it('should log when enable plugin implicitly', done => {
     const logger = {
       info: msg => {
         if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
@@ -243,14 +243,14 @@ describe('test/load_plugin.test.js', function() {
     }
   });
 
-  it('app 的 plugin.js 不允许隐式覆盖', () => {
+  it('should not override the plugin.js of app implicitly', () => {
     (function() {
       const loader = new Loader('plugin-dep-disable');
       loader.loadConfig();
     }).should.throw(`sequencify plugins has problem, missing: [b,c], recursive: []\n\t>> Plugin [b] is disabled or missed, but is required by [a,d]\n\t>> Plugin [c] is disabled or missed, but is required by [a]`);
   });
 
-  it('不开启环境条件不符合的插件', function() {
+  it('should enable when not match env', function() {
     const loader = new Loader('dont-load-plugin');
     loader.loadConfig();
     should.not.exist(loader.plugins.testMe);
@@ -259,7 +259,7 @@ describe('test/load_plugin.test.js', function() {
     }).should.not.containEql('testMe');
   });
 
-  it('只开启 type: alipay 的插件', function() {
+  it('should enable that match type', function() {
     // mock local
     mm(process.env, 'NODE_ENV', 'development');
     const loader = new Loader('dont-load-plugin');
@@ -270,7 +270,7 @@ describe('test/load_plugin.test.js', function() {
     names.should.containEql('testMe');
   });
 
-  it('只开启 type: ali 的插件', function() {
+  it('should enable that match one type', function() {
     const loader = new Loader('ali-plugin');
     loader.loadConfig();
     const names = loader.orderPlugins.map(function(plugin) {
@@ -279,7 +279,7 @@ describe('test/load_plugin.test.js', function() {
     names.should.containEql('foo');
   });
 
-  it('可以通过插件内的配置文件补全本插件配置信息', function() {
+  it('should complement infomation by config/plugin.js from plugin', function() {
     const baseDir = utils.getFilepath('plugin');
 
     mm(process.env, 'NODE_ENV', 'test');
@@ -309,7 +309,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('支持 customEgg 加载多个 egg 内核', function() {
+  it('should load multi framework', function() {
     const customEgg = utils.getFilepath('custom-framework');
     const loader = new Loader('custom-app', {
       customEgg,
@@ -328,13 +328,13 @@ describe('test/load_plugin.test.js', function() {
     should.not.exists(loader.plugins.depd);
   });
 
-  it('插件均未开启', function() {
+  it('should load when all plugins are disabled', function() {
     const loader = new Loader('noplugin');
     loader.loadConfig();
     loader.orderPlugins.length.should.eql(0);
   });
 
-  it('依赖的插件被 env 关闭，应该关闭', function() {
+  it('should throw when the dependent plugin is disabled', function() {
     (function() {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       const loader = new Loader('env-disable');
@@ -342,7 +342,7 @@ describe('test/load_plugin.test.js', function() {
     }).should.throw('sequencify plugins has problem, missing: [b], recursive: []\n\t>> Plugin [b] is disabled or missed, but is required by [a]');
   });
 
-  it('插件覆盖时应该只取 path 或 package', function() {
+  it('should pick path or package when override config', function() {
     const loader = new Loader('plugin-path-package');
     loader.loadConfig();
     should.not.exists(loader.plugins.session.package);

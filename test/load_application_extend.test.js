@@ -10,23 +10,21 @@ describe('test/load_application_extend.test.js', function() {
     app = utils.createApp('application');
   });
 
-  it('应该加载 chair, plugin 和 app 的扩展', function() {
+  it('should load extend from chair, plugin and application', function() {
     should.exist(app.poweredBy);
-    // should.exist(app.utils);
-    // should.exist(app.inspect);
     should.exist(app.a);
     should.exist(app.b);
     should.exist(app.foo);
     should.exist(app.bar);
   });
 
-  it('plugin 可以覆盖 chair', function() {
+  it('should override chair by plugin', function() {
     app.a.should.equal('plugin a');
     app.b.should.equal('plugin b');
     app.poweredBy.should.equal('plugin a');
   });
 
-  it('app 可以覆盖 plugin', function() {
+  it('should override plugin by app', function() {
     app.foo.should.equal('app bar');
     app.bar.should.equal('foo');
   });

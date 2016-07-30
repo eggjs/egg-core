@@ -1,7 +1,6 @@
 'use strict';
 
 require('should');
-const join = require('path').join;
 const request = require('supertest');
 const koa = require('koa');
 const utils = require('./utils');
@@ -14,7 +13,7 @@ describe('test/load_extend.test.js', function() {
     app = utils.createApp('extend');
   });
 
-  it('应该加载 app.context app.request app.response', function(done) {
+  it('should load app.context app.request app.response', function(done) {
     app.context.should.have.property('appContext');
     app.context.should.have.property('pluginbContext');
     app.context.should.not.have.property('pluginaContext');
@@ -43,7 +42,7 @@ describe('test/load_extend.test.js', function() {
     .expect(200, done);
   });
 
-  it('app 覆盖 chair 的', function(done) {
+  it('should load application overriding framework', function(done) {
     request(app.callback())
     .get('/merge/app_override_chair')
     .expect({
@@ -52,7 +51,7 @@ describe('test/load_extend.test.js', function() {
     .expect(200, done);
   });
 
-  it('plugin 覆盖 chair 的', function(done) {
+  it('should load plugin overriding framework', function(done) {
     request(app.callback())
     .get('/merge/plugin_override_chair')
     .expect({
@@ -61,7 +60,7 @@ describe('test/load_extend.test.js', function() {
     .expect(200, done);
   });
 
-  it('app 覆盖 plugin 的', function(done) {
+  it('should load application overriding plugin', function(done) {
     request(app.callback())
     .get('/merge/app_override_plugin')
     .expect({
@@ -70,7 +69,7 @@ describe('test/load_extend.test.js', function() {
     .expect(200, done);
   });
 
-  it('当无法找到依赖时应该抛错', function() {
+  it('should throw when no deps', function() {
     (function() {
       const app = koa();
       app.coreLogger = console;
@@ -82,7 +81,7 @@ describe('test/load_extend.test.js', function() {
     }).should.throw(/Cannot find module 'this is a pen'/);
   });
 
-  it('当文件语法异常时该抛错并给出错误文件地址', function() {
+  it('should throw when syntax error', function() {
     (function() {
       const app = koa();
       app.coreLogger = console;
@@ -94,20 +93,7 @@ describe('test/load_extend.test.js', function() {
     }).should.throw(/load_context_syntax_error\/app\/extend\/context\.js error: Unexpected token \)/);
   });
 
-  it.skip('插件之间不允许覆盖，若有则报错', function() {
-    const baseDir = utils.getFilepath('plugin_conflict_error');
-    (function() {
-      const app = koa();
-      app.coreLogger = console;
-      const loader = new Loader('plugin_conflict_error', {
-        app,
-      });
-      loader.loadConfig();
-      loader.load();
-    }).should.throw(`Property: "app.context.foo" conflicted, it is defined in [ "${join(baseDir, 'node_modules/a/app/context')}", "${join(baseDir, 'node_modules/b/app/context')}" ]`);
-  });
-
-  it('应该合并 symbol', function() {
+  it('should extend symbol', function() {
     const app = koa();
     app.coreLogger = console;
     const loader = new Loader('extend-symbol', {

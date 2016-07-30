@@ -5,7 +5,7 @@ const Loader = require('./utils').Loader;
 
 describe('test/load_config.test.js', function() {
 
-  it('加载应用配置，覆盖 egg 默认配置', function() {
+  it('should load application config overriding default of egg', function() {
     const loader = new Loader('config');
     loader.loadConfig();
     loader.config.name.should.eql('config-test');
@@ -20,13 +20,13 @@ describe('test/load_config.test.js', function() {
     });
   });
 
-  it('加载插件配置，覆盖 egg 默认配置', function() {
+  it('should load plugin config overriding default of egg', function() {
     const loader = new Loader('plugin');
     loader.loadConfig();
     loader.config.name.should.eql('override default');
   });
 
-  it('加载插件配置，被 app 覆盖', function() {
+  it('should load application config overriding plugin', function() {
     const loader = new Loader('plugin');
     loader.loadConfig();
     loader.config.plugin.should.eql('override plugin');
@@ -36,19 +36,19 @@ describe('test/load_config.test.js', function() {
   //   framework config.default
   //     egg config.local
   //       framework config.local
-  it('应该根据环境加载配置', function() {
+  it('should load config by env', function() {
     const loader = new Loader('config-env');
     loader.loadConfig();
     loader.config.egg.should.eql('egg-unittest');
   });
 
-  it('不会加载未开启插件的配置', function() {
+  it('should not load config of plugin that is disabled', function() {
     const loader = new Loader('plugin');
     loader.loadConfig();
     should.not.exists(loader.config.pluginA);
   });
 
-  it('需要剔除 middleware 和 proxy', function() {
+  it('should delete config.middleware and config.proxy', function() {
     const loader = new Loader('plugin');
     loader.loadConfig();
     should.not.exists(loader.config.proxy);
@@ -56,7 +56,7 @@ describe('test/load_config.test.js', function() {
     loader.config.appMiddleware.should.not.containEql('d');
   });
 
-  it('config 函数可以读取应用配置', function() {
+  it('should read appinfo from the function of config', function() {
     const loader = new Loader('preload-app-config');
     loader.loadConfig();
     loader.config.plugin.val.should.eql(2);
