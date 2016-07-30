@@ -1,5 +1,4 @@
 /node_modules
 coverage
 .logs
-test
 npm-debug.log

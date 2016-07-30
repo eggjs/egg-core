@@ -1,0 +1,6 @@
+{
+  "name": "dont-load-plugin",
+  "egg": {
+    "type": "alipay"
+  }
+}
