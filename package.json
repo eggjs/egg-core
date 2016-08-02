@@ -37,6 +37,7 @@
     "koa": "1",
     "koa-router": "4",
     "mm": "1",
+    "pedding": "^1.0.0",
     "should": "9",
     "supertest": "1"
   },
