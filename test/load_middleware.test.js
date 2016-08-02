@@ -19,10 +19,10 @@ describe('test/load_middleware.test.js', function() {
     app.middlewares.should.not.have.property('a');
   });
 
-  it('should override middlewares of egg by plugin', function(done) {
+  it('should override middlewares of plugin by framework', function(done) {
     request(app.callback())
     .get('/status')
-    .expect('status')
+    .expect('egg status')
     .end(done);
   });
 

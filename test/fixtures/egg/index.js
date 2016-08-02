@@ -1,11 +1,12 @@
 'use strict';
 
+const path = require('path');
 const KoaApplication = require('koa');
 
-class Application extends KoaApplication {
+class EggApplication extends KoaApplication {
   get [Symbol.for('egg#eggPath')]() {
     return __dirname;
   }
 }
 
-module.exports = Application;
+module.exports = EggApplication;

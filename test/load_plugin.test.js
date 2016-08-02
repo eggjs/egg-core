@@ -310,19 +310,18 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should load multi framework', function() {
-    const customEgg = utils.getFilepath('custom-framework');
+    const Application = require(utils.getFilepath('custom-framework'));
     const loader = new Loader('custom-app', {
-      customEgg,
+      app: new Application(),
     });
     loader.loadConfig();
 
-    console.log(loader.plugins);
     loader.plugins.foo.should.eql({
       name: 'foo',
       enable: true,
       dep: [],
       env: [],
-      path: path.join(customEgg, 'lib/plugins/foo'),
+      path: utils.getFilepath('custom-framework/lib/plugins/foo'),
     });
 
     should.not.exists(loader.plugins.depd);

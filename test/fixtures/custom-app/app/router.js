@@ -6,7 +6,7 @@ module.exports = function(app) {
       customFoo: app.customFoo,
       env: app.config.env,
       eggPaths: app.loader.eggPaths,
-      frameworkPaths: app.loader.frameworkPaths,
+      eggPaths: app.loader.eggPaths,
       eggPath: app.loader.eggPath,
     };
   });
