@@ -24,12 +24,4 @@ describe('test/egg_loader.test.js', function() {
     });
   });
 
-
-  describe('loadFile', function() {
-    it('should throw with filepath when file syntax error', function() {
-      (function() {
-        utils.createApp('syntaxerror');
-      }).should.throw(/test\/fixtures\/syntaxerror\/app\.js error:/);
-    });
-  });
 });
