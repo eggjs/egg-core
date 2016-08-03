@@ -19,13 +19,12 @@ describe('test/get_appname.test.js', function() {
   });
 
   it('should throw when appname is not found', function() {
-    const loader = new Loader({
-      baseDir: utils.getFilepath('app-noname'),
-      app: new EggApplication(),
-    });
     const pkg = utils.getFilepath('app-noname/package.json');
     (function() {
-      loader.getAppname();
+      new Loader({
+        baseDir: utils.getFilepath('app-noname'),
+        app: new EggApplication(),
+      });
     }).should.throw(`name is required from ${pkg}`);
   });
 });
