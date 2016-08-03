@@ -28,11 +28,11 @@ class TestLoader extends BaseLoader {
   }
 
   load() {
-    this.loadApplication();
-    this.loadRequest();
-    this.loadResponse();
-    this.loadContext();
-    this.loadHelper();
+    this.loadApplicationExtend();
+    this.loadRequestExtend();
+    this.loadResponseExtend();
+    this.loadContextExtend();
+    this.loadHelperExtend();
 
     this.loadCustomApp();
     this.loadProxy();
@@ -79,7 +79,7 @@ module.exports = {
     agent.loader.loadConfig();
     agent.config = agent.loader.config;
     agent.antx = agent.loader.antx;
-    agent.loader.loadAgent();
+    agent.loader.loadAgentExtend();
     agent.loader.loadCustomAgent();
     return agent;
   },
