@@ -19,7 +19,7 @@ describe('test/get_load_units.test.js', function() {
     const units = loader.getLoadUnits();
     units.length.should.eql(10);
     units[8].type.should.eql('framework');
-    units[8].path.should.eql(utils.getFilepath('egg/lib/core'));
+    units[8].path.should.eql(utils.getFilepath('egg'));
     units[9].type.should.eql('app');
     units[9].path.should.eql(utils.getFilepath('plugin'));
   });

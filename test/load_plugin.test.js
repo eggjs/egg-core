@@ -35,13 +35,6 @@ describe('test/load_plugin.test.js', function() {
       env: [],
       path: path.join(baseDir, 'plugins/e'),
     });
-    // loader.plugins.onerror.should.eql({
-    //   enable: true,
-    //   name: 'onerror',
-    //   dep: [],
-    //   env: [],
-    //   path: path.join(utils.eggPath, 'lib/plugins/onerror'),
-    // });
     loader.orderPlugins.should.be.an.Array;
   });
 
@@ -307,24 +300,6 @@ describe('test/load_plugin.test.js', function() {
       env: [ 'local', 'prod' ],
       path: path.join(baseDir, 'node_modules/a1'),
     });
-  });
-
-  it('should load multi framework', function() {
-    const Application = require(utils.getFilepath('custom-framework'));
-    const loader = new Loader('custom-app', {
-      app: new Application(),
-    });
-    loader.loadConfig();
-
-    loader.plugins.foo.should.eql({
-      name: 'foo',
-      enable: true,
-      dep: [],
-      env: [],
-      path: utils.getFilepath('custom-framework/lib/plugins/foo'),
-    });
-
-    should.not.exists(loader.plugins.depd);
   });
 
   it('should load when all plugins are disabled', function() {
