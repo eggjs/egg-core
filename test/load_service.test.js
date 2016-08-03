@@ -10,7 +10,6 @@ describe('test/load_service.test.js', function() {
 
   it('should load from application and plugin', function(done) {
     const app = utils.createApp('plugin');
-    console.log(app.serviceClasses);
     should.exists(app.serviceClasses.foo);
     should.exists(app.serviceClasses.foo2);
     should.not.exists(app.serviceClasses.bar1);
@@ -79,7 +78,9 @@ describe('test/load_service.test.js', function() {
           name: 'bar3name',
           bar: 'bar3',
         },
-        subdir11bar: false,
+        subdir11bar: {
+          bar: 'bar111',
+        },
         ok: {
           ok: true,
         },
