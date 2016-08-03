@@ -1,3 +1,3 @@
 'use strict';
 
-module.exports = require('./lib/base_loader');
+module.exports = require('./lib/egg_loader');
