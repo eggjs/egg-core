@@ -90,7 +90,7 @@ describe('test/load_extend.test.js', function() {
       });
       loader.loadConfig();
       loader.load();
-    }).should.throw(/load_context_syntax_error\/app\/extend\/context\.js error: Unexpected token \)/);
+    }).should.throw(/ error: Unexpected token/);
   });
 
   it('should extend symbol', function() {
