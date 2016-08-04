@@ -20,53 +20,208 @@
 [download-image]: https://img.shields.io/npm/dm/egg-loader.svg?style=flat-square
 [download-url]: https://npmjs.org/package/egg-loader
 
-egg 文件加载器
+A core Plugable framework based on koa
 
-## 使用说明
+**Don't use it directly, see [egg]**
 
-```js
-const app = koa();
-const Loader = require('egg-loader');
-const loader = new Loader({
-  baseDir: '/path/to/app',
-  eggPath: '/path/to/framework',
-  app: app,
-});
-loader.loadPlugin();
-loader.loadConfig();
+## Usage
+
+Directory structure
+
+```
+├── package.json
+├── app.js (optional)
+├── agent.js (optional)
+├── app
+|   ├── router.js
+│   ├── controller
+│   │   └── home.js
+|   ├── extend (optional)
+│   |   ├── helper.js (optional)
+│   |   ├── filter.js (optional)
+│   |   ├── request.js (optional)
+│   |   ├── response.js (optional)
+│   |   ├── context.js (optional)
+│   |   ├── application.js (optional)
+│   |   └── agent.js (optional)
+│   ├── service (optional)
+│   ├── middleware (optional)
+│   │   └── response_time.js
+│   └── view (optional)
+|       ├── layout.html
+│       └── home.html
+├── config
+|   ├── config.default.js
+│   ├── config.prod.js
+|   ├── config.test.js (optional)
+|   ├── config.local.js (optional)
+|   ├── config.unittest.js (optional)
+│   └── plugin.js
 ```
 
-## API
+Than you can start with code below
 
-### options
+```js
+const Application = require('egg-core').Application;
+const app = new Application({
+  baseDir: '/path/to/app'
+});
+app.ready(() => {
+  app.listen(3000);
+});
+```
 
-- baseDir: 应用根目录
-- eggPath: egg 本身的路径
-- plugins: 自定义插件配置
-- app: 任何基于 koa 实例化
+## EggLoader
 
-### methods
+EggLoader will load file or directory easily, you can also custom your loader with low level API.
 
-基础方式
+### constructor
 
-- loadFile: 加载单文件，
-- loadDirs: 获取需要加载的所有目录，按照 egg > 插件 > 框架 > 应用的顺序加载。
+- {String} baseDir - current directory of application
+- {Object} app - instance of egg application
+- {Object} plugins - merge plugins for test
+- {Logger} logger - logger instance，default is console
 
-业务方法
+### High Level API
 
-- getAppname: 获取应用名
-- loadServerEnv: 加载环境变量
-- loadConfig: 加载: config
-- loadPlugin: 加载插件
-- loadApplication: 加载 extend/application.js 到 app
-- loadRequest: 加载 extend/request.js 到 app.request
-- loadResponse: 加载 extend/response.js 到 app.response
-- loadContext: 加载 extend/context.js 到 app.context
-- loadHelper: 加载 extend/helper.js，到 app.Helper.prototype，需要定义 app.Helper 才会加载
-- loadService: 加载 app/service 到 app.service
-- loadProxy: 加载 app/proxy 到 app.proxy
-- loadMiddleware: 加载中间件
-- loadController: 加载 app/controller 到 app.controller
-- loadAgent: 加载 agent.js 进行自定义
-- loadApp: 加载 app.js 进行自定义
+#### loadPlugin
 
+Load config/plugin.js
+
+#### loadConfig
+
+Load config/config.js and config/{serverEnv}.js
+
+#### loadController
+
+Load app/controller
+
+#### loadMiddleware
+
+Load app/middleware
+
+#### loadApplicationExtend
+
+Load app/extend/application.js
+
+#### loadContextExtend
+
+Load app/extend/context.js
+
+#### loadRequestExtend
+
+Load app/extend/request.js
+
+#### loadResponseExtend
+
+Load app/extend/response.js
+
+#### loadHelperExtend
+
+Load app/extend/helper.js
+
+#### loadCustomApp
+
+Load app.js
+
+#### loadCustomAgent
+
+Load agent.js
+
+#### loadService
+
+Load app/service
+
+### Low Level API
+
+#### getServerEnv()
+
+Get serverEnv for application, available serverEnv
+
+serverEnv | description
+---       | ---
+default   | default environment
+test      | system integration testing environment
+prod      | production environment
+local     | local environment on your own computer
+unittest  | unit test environment
+
+You can use this.serverEnv directly after instantiation.
+
+#### getEggPaths()
+
+Get the directory of the frameworks, a new framework born by extending egg, then you can use this function to get all frameworks.
+
+#### getLoadUnits()
+
+A loadUnit is a directory that can be loaded by EggLoader, it has the same structure.
+
+This function will get add loadUnits follow the order:
+
+1. plugin
+2. framework
+3. app
+
+loadUnit has a path and a type(app, framework, plugin).
+
+```js
+{
+  path: 'path/to/application',
+  type: 'app',
+}
+```
+
+#### getAppname()
+
+Get appname from package.json
+
+#### loadFile(filepath)
+
+Load single file, will invork when export is function.
+
+#### loadToApp(directory, property, LoaderOptions)
+
+Load the files in directory to app.
+
+Invoke `this.loadToApp('$baseDir/app/controller', 'controller')`, then you can use it by `app.controller`.
+
+#### loadToContext(directory, property, LoaderOptions)
+
+Load the files in directory to context, it will bind the context.
+
+```
+// define service in app/service/query.js
+module.exports = class Query {
+  constructor(ctx) {
+    // get the ctx
+  }
+
+  get() {}
+};
+
+// use the service in app/controller/home.js
+module.exports = function*() {
+  this.body = this.service.query.get();
+};
+```
+
+#### loadExtend(name, target)
+
+Loader app/extend/xx.js to target, example
+
+```js
+this.loadExtend('application', app);
+```
+
+### LoaderOptions
+
+- {String|Array} directory - directories to load
+- {Object} target: attach object from loaded files,
+- {String} ignore - ignore the files when load
+- {Function} initializer - custom file exports
+- {Boolean} lowercaseFirst - determine whether the fist letter is lowercase
+- {Boolean} override: determine whether override the property when get the same name
+- {Boolean} call - determine whether invoke when exports is function
+- {Object} inject - an object that be the argument when invoke the function
+
+[egg]: https://github.com/eggjs/egg
