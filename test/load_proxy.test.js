@@ -58,7 +58,7 @@ describe('test/load_proxy.test.js', function() {
           name: 'bar3name',
           bar: 'bar3',
         },
-        subdir11bar: false,
+        subdir11bar: true,
         ok: {
           ok: true,
         },

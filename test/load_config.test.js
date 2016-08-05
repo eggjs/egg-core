@@ -1,6 +1,7 @@
 'use strict';
 
 const should = require('should');
+const utils = require('./utils');
 const Loader = require('./utils').Loader;
 
 describe('test/load_config.test.js', function() {
@@ -48,12 +49,39 @@ describe('test/load_config.test.js', function() {
     should.not.exists(loader.config.pluginA);
   });
 
-  it('should delete config.middleware and config.proxy', function() {
-    const loader = new Loader('plugin');
-    loader.loadConfig();
-    should.not.exists(loader.config.proxy);
-    loader.config.coreMiddleware.should.not.containEql('d');
-    loader.config.appMiddleware.should.not.containEql('d');
+  it('should throw when plugin define middleware', function() {
+    const loader = new Loader('plugin', {
+      plugins: {
+        middleware: {
+          enable: true,
+          path: utils.getFilepath('plugin/plugin-middleware'),
+        },
+      },
+    });
+    (function() {
+      loader.loadConfig();
+    }).should.throw('Can not define middleware in framework or plugin');
+  });
+
+  it('should throw when plugin define proxy', function() {
+    const loader = new Loader('plugin', {
+      plugins: {
+        proxy: {
+          enable: true,
+          path: utils.getFilepath('plugin/plugin-proxy'),
+        },
+      },
+    });
+    (function() {
+      loader.loadConfig();
+    }).should.throw('Can not define proxy in framework or plugin');
+  });
+
+  it('should throw when app define coreMiddleware', function() {
+    const loader = new Loader('app-core-middleware');
+    (function() {
+      loader.loadConfig();
+    }).should.throw('Can not define coreMiddleware in app or plugin');
   });
 
   it('should read appinfo from the function of config', function() {

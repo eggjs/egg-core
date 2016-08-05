@@ -1,16 +1,24 @@
 'use strict';
 
 const path = require('path');
-const koa = require('koa');
+const KoaApplication = require('koa');
 const Router = require('koa-router');
 const BaseLoader = require('..');
+
+class EggApplication extends KoaApplication {
+  get [Symbol.for('egg#eggPath')]() {
+    return path.join(__dirname, 'fixtures/egg');
+  }
+}
 
 class TestLoader extends BaseLoader {
 
   constructor(name, options) {
     options = options || {};
+    if (!options.app) {
+      options.app = new EggApplication();
+    }
     options.baseDir = path.join(__dirname, 'fixtures', name);
-    options.eggPath = path.join(__dirname, 'fixtures/egg');
     super(options);
   }
 
@@ -20,11 +28,11 @@ class TestLoader extends BaseLoader {
   }
 
   load() {
-    this.loadApplication();
-    this.loadRequest();
-    this.loadResponse();
-    this.loadContext();
-    this.loadHelper();
+    this.loadApplicationExtend();
+    this.loadRequestExtend();
+    this.loadResponseExtend();
+    this.loadContextExtend();
+    this.loadHelperExtend();
 
     this.loadCustomApp();
     this.loadProxy();
@@ -51,7 +59,7 @@ module.exports = {
 
   createApp(name, options) {
     options = options || {};
-    const app = koa();
+    const app = new EggApplication();
     options.app = app;
     app.coreLogger = console;
     app.loader = new this.Loader(name, options);
@@ -64,14 +72,14 @@ module.exports = {
 
   createAgent(name, options) {
     options = options || {};
-    const agent = {};
+    const agent = new EggApplication();
     options.app = agent;
     agent.coreLogger = console;
     agent.loader = new this.Loader(name, options);
     agent.loader.loadConfig();
     agent.config = agent.loader.config;
     agent.antx = agent.loader.antx;
-    agent.loader.loadAgent();
+    agent.loader.loadAgentExtend();
     agent.loader.loadCustomAgent();
     return agent;
   },
