@@ -3,7 +3,7 @@
 const should = require('should');
 const path = require('path');
 const mm = require('mm');
-const utils = require('./utils');
+const utils = require('../utils');
 const Loader = utils.Loader;
 
 describe('test/load_plugin.test.js', function() {

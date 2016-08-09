@@ -2,9 +2,9 @@
 
 require('should');
 const mm = require('mm');
-const utils = require('./utils');
-const Loader = require('../lib/loader/egg_loader');
-const EggApplication = require('./fixtures/egg');
+const utils = require('../utils');
+const Loader = require('../../lib/loader/egg_loader');
+const EggApplication = require('../fixtures/egg');
 
 describe('test/load_file.test.js', function() {
 
@@ -14,6 +14,7 @@ describe('test/load_file.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('load_file'),
       app: new EggApplication(),
+      logger: console,
     });
     loader.loadFile(utils.getFilepath('load_file/obj.js')).should.eql({ a: 1 });
   });
@@ -22,6 +23,7 @@ describe('test/load_file.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('load_file'),
       app: new EggApplication(),
+      logger: console,
     });
     loader.loadFile(utils.getFilepath('load_file/function.js'), 1, 2).should.eql([ 1, 2 ]);
   });

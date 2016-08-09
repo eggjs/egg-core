@@ -2,7 +2,7 @@
 
 require('should');
 const mm = require('mm');
-const utils = require('./utils');
+const utils = require('../utils');
 
 describe('test/get_server_env.test.js', function() {
 
