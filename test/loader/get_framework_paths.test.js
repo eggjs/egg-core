@@ -2,9 +2,9 @@
 
 require('should');
 const mm = require('mm');
-const utils = require('./utils');
-const Loader = require('../lib/loader/egg_loader');
-const EggApplication = require('./fixtures/egg');
+const utils = require('../utils');
+const Loader = require('../../lib/loader/egg_loader');
+const EggApplication = require('../fixtures/egg');
 const KoaApplication = require('koa');
 
 describe('test/get_framework_paths.test.js', function() {
@@ -15,15 +15,17 @@ describe('test/get_framework_paths.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('eggpath'),
       app: new EggApplication(),
+      logger: console,
     });
     loader.eggPaths.should.eql([ utils.getFilepath('egg') ]);
   });
 
   it('should get from framework using symbol', function() {
-    const Application = require('./fixtures/framework-symbol');
+    const Application = require('../fixtures/framework-symbol');
     const loader = new Loader({
       baseDir: utils.getFilepath('eggpath'),
       app: new Application(),
+      logger: console,
     });
     loader.eggPaths.should.eql([
       utils.getFilepath('framework-symbol/node_modules/framework2'),
@@ -41,6 +43,7 @@ describe('test/get_framework_paths.test.js', function() {
       new Loader({
         baseDir: utils.getFilepath('eggpath'),
         app: new Application(),
+        logger: console,
       });
     }).should.throw('Symbol.for(\'egg#eggPath\') is required on Application');
   });
@@ -56,6 +59,7 @@ describe('test/get_framework_paths.test.js', function() {
       new Loader({
         baseDir: utils.getFilepath('eggpath'),
         app: new Application2(),
+        logger: console,
       });
     }).should.throw('Symbol.for(\'egg#eggPath\') is required on Application');
   });

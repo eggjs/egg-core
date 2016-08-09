@@ -1,7 +1,7 @@
 'use strict';
 
 const should = require('should');
-const utils = require('./utils');
+const utils = require('../utils');
 
 describe('test/load_application_extend.test.js', function() {
 

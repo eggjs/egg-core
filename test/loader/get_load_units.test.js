@@ -2,9 +2,9 @@
 
 require('should');
 const mm = require('mm');
-const utils = require('./utils');
-const Loader = require('../lib/loader/egg_loader');
-const EggApplication = require('./fixtures/egg');
+const utils = require('../utils');
+const Loader = require('../../lib/loader/egg_loader');
+const EggApplication = require('../fixtures/egg');
 
 describe('test/get_load_units.test.js', function() {
 
@@ -14,6 +14,7 @@ describe('test/get_load_units.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('plugin'),
       app: new EggApplication(),
+      logger: console,
     });
     loader.loadPlugin();
     const units = loader.getLoadUnits();
@@ -28,6 +29,7 @@ describe('test/get_load_units.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('plugin'),
       app: new EggApplication(),
+      logger: console,
     });
     const units = loader.getLoadUnits();
     units.length.should.eql(2);

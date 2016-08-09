@@ -7,8 +7,8 @@
 const should = require('should');
 const pedding = require('pedding');
 const path = require('path');
-const Loader = require('../lib/loader/file_loader');
-const dirBase = path.join(__dirname, 'fixtures/load_dirs');
+const Loader = require('../../lib/loader/file_loader');
+const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
 describe('test/loader.test.js', () => {
 
@@ -68,6 +68,7 @@ describe('test/loader.test.js', () => {
           path.join(dirBase, 'overwrite_services'),
         ],
         target: app.services,
+        logger: console,
       }).load();
     }).should.throw(/^can't overwrite property 'foo'/);
   });

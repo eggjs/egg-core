@@ -1,8 +1,8 @@
 'use strict';
 
 const should = require('should');
-const utils = require('./utils');
-const Loader = require('./utils').Loader;
+const utils = require('../utils');
+const Loader = require('../utils').Loader;
 
 describe('test/load_config.test.js', function() {
 

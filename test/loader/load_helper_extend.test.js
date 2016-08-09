@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('supertest');
-const utils = require('./utils');
+const utils = require('../utils');
 
 describe('test/load_helper_extend.test.js', function() {
 

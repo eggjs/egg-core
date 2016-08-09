@@ -3,7 +3,7 @@
 require('should');
 const request = require('supertest');
 const koa = require('koa');
-const utils = require('./utils');
+const utils = require('../utils');
 const Loader = utils.Loader;
 
 describe('test/load_extend.test.js', function() {

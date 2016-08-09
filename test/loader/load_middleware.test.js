@@ -2,7 +2,7 @@
 
 require('should');
 const request = require('supertest');
-const utils = require('./utils');
+const utils = require('../utils');
 
 describe('test/load_middleware.test.js', function() {
 

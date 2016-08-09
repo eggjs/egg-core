@@ -3,7 +3,7 @@
 const path = require('path');
 const KoaApplication = require('koa');
 const Router = require('koa-router');
-const BaseLoader = require('..');
+const EggLoader = require('..').EggLoader;
 
 class EggApplication extends KoaApplication {
   get [Symbol.for('egg#eggPath')]() {
@@ -11,13 +11,14 @@ class EggApplication extends KoaApplication {
   }
 }
 
-class TestLoader extends BaseLoader {
+class TestLoader extends EggLoader {
 
   constructor(name, options) {
     options = options || {};
     if (!options.app) {
       options.app = new EggApplication();
     }
+    options.logger = options.logger || console;
     options.baseDir = path.join(__dirname, 'fixtures', name);
     super(options);
   }

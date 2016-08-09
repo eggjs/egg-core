@@ -3,7 +3,7 @@
 const should = require('should');
 const request = require('supertest');
 const mm = require('mm');
-const utils = require('./utils');
+const utils = require('../utils');
 
 describe('test/load_proxy.test.js', function() {
 

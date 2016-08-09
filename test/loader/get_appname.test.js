@@ -2,9 +2,9 @@
 
 require('should');
 const mm = require('mm');
-const utils = require('./utils');
-const Loader = require('../lib/loader/egg_loader');
-const EggApplication = require('./fixtures/egg');
+const utils = require('../utils');
+const Loader = require('../../lib/loader/egg_loader');
+const EggApplication = require('../fixtures/egg');
 
 describe('test/get_appname.test.js', function() {
 
@@ -14,6 +14,7 @@ describe('test/get_appname.test.js', function() {
     const loader = new Loader({
       baseDir: utils.getFilepath('appname'),
       app: new EggApplication(),
+      logger: console,
     });
     loader.getAppname().should.eql('appname');
   });
@@ -24,6 +25,7 @@ describe('test/get_appname.test.js', function() {
       new Loader({
         baseDir: utils.getFilepath('app-noname'),
         app: new EggApplication(),
+        logger: console,
       });
     }).should.throw(`name is required from ${pkg}`);
   });
