@@ -3,13 +3,18 @@
 const should = require('should');
 const request = require('supertest');
 const mm = require('mm');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_service.test.js', function() {
+describe('test/loader/mixin/load_service.test.js', function() {
   afterEach(mm.restore);
 
   it('should load from application and plugin', function(done) {
     const app = utils.createApp('plugin');
+    app.loader.loadPlugin();
+    app.loader.loadApplicationExtend();
+    app.loader.loadService();
+    app.loader.loadController();
+    app.loader.loadRouter();
     should.exists(app.serviceClasses.foo);
     should.exists(app.serviceClasses.foo2);
     should.not.exists(app.serviceClasses.bar1);
@@ -31,18 +36,29 @@ describe('test/load_service.test.js', function() {
 
   it('should throw when dulplicate', function() {
     (function() {
-      utils.createApp('service-override');
+      const app = utils.createApp('service-override');
+      app.loader.loadPlugin();
+      app.loader.loadService();
     }).should.throw(/^can't overwrite property 'foo'/);
   });
 
   it('should check es6', function() {
     const app = utils.createApp('services_loader_verify');
+    app.loader.loadPlugin();
+    app.loader.loadApplicationExtend();
+    app.loader.loadService();
     app.serviceClasses.should.have.property('foo');
     app.serviceClasses.foo.should.have.properties('bar', 'bar1', 'aa');
   });
 
   it('should extend app.Service', function(done) {
     const app = utils.createApp('extends-app-service');
+    app.loader.loadPlugin();
+    app.loader.loadApplicationExtend();
+    app.loader.loadService();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
     request(app.callback())
     .get('/user')
     .expect(function(res) {
@@ -56,6 +72,11 @@ describe('test/load_service.test.js', function() {
     it('should load 2 level dir', function(done) {
       mm(process.env, 'NO_DEPRECATION', '*');
       const app = utils.createApp('subdir-services');
+      app.loader.loadPlugin();
+      app.loader.loadApplicationExtend();
+      app.loader.loadService();
+      app.loader.loadController();
+      app.loader.loadRouter();
       request(app.callback())
       .get('/')
       .expect({

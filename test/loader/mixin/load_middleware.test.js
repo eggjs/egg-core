@@ -2,13 +2,18 @@
 
 require('should');
 const request = require('supertest');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_middleware.test.js', function() {
+describe('test/loader/mixin/load_middleware.test.js', function() {
 
   let app;
   before(function() {
     app = utils.createApp('middleware-override');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
   });
 
   it('should load application, plugin, and default middlewares', function() {
@@ -41,14 +46,20 @@ describe('test/load_middleware.test.js', function() {
   });
 
   it('should throw when middleware return no-generator', function() {
+    const app = utils.createApp('custom_session_invaild');
     (function() {
-      utils.createApp('custom_session_invaild');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadMiddleware();
     }).should.throw('Middleware session must be a generator function, but actual is {}');
   });
 
   it('should throw when not load that is not configured', function() {
+    const app = utils.createApp('no-middleware');
     (function() {
-      utils.createApp('no-middleware');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadMiddleware();
     }).should.throw('Middleware a not found');
   });
 });

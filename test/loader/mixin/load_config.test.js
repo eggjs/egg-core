@@ -1,13 +1,14 @@
 'use strict';
 
 const should = require('should');
-const utils = require('../utils');
-const Loader = require('../utils').Loader;
+const utils = require('../../utils');
 
-describe('test/load_config.test.js', function() {
+describe('test/loader/mixin/load_config.test.js', function() {
 
   it('should load application config overriding default of egg', function() {
-    const loader = new Loader('config');
+    const app = utils.createApp('config');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.config.name.should.eql('config-test');
     loader.config.test.should.eql(1);
@@ -22,13 +23,17 @@ describe('test/load_config.test.js', function() {
   });
 
   it('should load plugin config overriding default of egg', function() {
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.config.name.should.eql('override default');
   });
 
   it('should load application config overriding plugin', function() {
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.config.plugin.should.eql('override plugin');
   });
@@ -38,19 +43,23 @@ describe('test/load_config.test.js', function() {
   //     egg config.local
   //       framework config.local
   it('should load config by env', function() {
-    const loader = new Loader('config-env');
+    const app = utils.createApp('config-env');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.config.egg.should.eql('egg-unittest');
   });
 
   it('should not load config of plugin that is disabled', function() {
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     should.not.exists(loader.config.pluginA);
   });
 
   it('should throw when plugin define middleware', function() {
-    const loader = new Loader('plugin', {
+    const app = utils.createApp('plugin', {
       plugins: {
         middleware: {
           enable: true,
@@ -58,13 +67,15 @@ describe('test/load_config.test.js', function() {
         },
       },
     });
+    const loader = app.loader;
     (function() {
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw('Can not define middleware in framework or plugin');
   });
 
   it('should throw when plugin define proxy', function() {
-    const loader = new Loader('plugin', {
+    const app = utils.createApp('plugin', {
       plugins: {
         proxy: {
           enable: true,
@@ -72,20 +83,25 @@ describe('test/load_config.test.js', function() {
         },
       },
     });
+    const loader = app.loader;
     (function() {
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw('Can not define proxy in framework or plugin');
   });
 
   it('should throw when app define coreMiddleware', function() {
-    const loader = new Loader('app-core-middleware');
+    const app = utils.createApp('app-core-middleware');
     (function() {
-      loader.loadConfig();
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
     }).should.throw('Can not define coreMiddleware in app or plugin');
   });
 
   it('should read appinfo from the function of config', function() {
-    const loader = new Loader('preload-app-config');
+    const app = utils.createApp('preload-app-config');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.config.plugin.val.should.eql(2);
     loader.config.plugin.val.should.eql(2);

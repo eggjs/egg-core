@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = function*() {
-  console.log(111);
   this.body = {
     returnAppContext: this.appContext,
     returnPluginbContext: this.pluginbContext,

@@ -1,13 +1,16 @@
 'use strict';
 
 const should = require('should');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_application_extend.test.js', function() {
+describe('test/loader/mixin/load_application_extend.test.js', function() {
 
   let app;
   before(function() {
     app = utils.createApp('application');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadApplicationExtend();
   });
 
   it('should load extend from chair, plugin and application', function() {
