@@ -1,13 +1,20 @@
 'use strict';
 
 const request = require('supertest');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_helper_extend.test.js', function() {
+describe('test/loader/mixin/load_helper_extend.test.js', function() {
 
   let app;
   before(function() {
     app = utils.createApp('helper');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadApplicationExtend();
+    app.loader.loadContextExtend();
+    app.loader.loadHelperExtend();
+    app.loader.loadController();
+    app.loader.loadRouter();
   });
 
   it('should load extend from chair, plugin and helper', function(done) {

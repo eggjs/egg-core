@@ -7,14 +7,14 @@
 const should = require('should');
 const pedding = require('pedding');
 const path = require('path');
-const Loader = require('../../lib/loader/file_loader');
+const FileLoader = require('../../lib/loader/file_loader');
 const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
-describe('test/loader.test.js', () => {
+describe('test/file_loader.test.js', () => {
 
   it('should load files', done => {
     const services = {};
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'services'),
       target: services,
     }).load();
@@ -52,7 +52,7 @@ describe('test/loader.test.js', () => {
       },
     };
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'services'),
         target: app.services,
       }).load();
@@ -62,7 +62,7 @@ describe('test/loader.test.js', () => {
   it('should not overwrite property from loading', () => {
     const app = { services: {} };
     (function() {
-      new Loader({
+      new FileLoader({
         directory: [
           path.join(dirBase, 'services'),
           path.join(dirBase, 'overwrite_services'),
@@ -75,7 +75,7 @@ describe('test/loader.test.js', () => {
 
   it('should overwrite property from loading', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: [
         path.join(dirBase, 'services'),
         path.join(dirBase, 'overwrite_services'),
@@ -87,7 +87,7 @@ describe('test/loader.test.js', () => {
 
   it('should loading without call function', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'services'),
       target: app.services,
       call: false,
@@ -97,7 +97,7 @@ describe('test/loader.test.js', () => {
 
   it('should loading without call es6 class', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'class'),
       target: app.services,
     }).load();
@@ -110,7 +110,7 @@ describe('test/loader.test.js', () => {
 
   it('should loading without call babel class', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'babel'),
       target: app.services,
     }).load();
@@ -120,7 +120,7 @@ describe('test/loader.test.js', () => {
 
   it.skip('should only load property match the filers', () => {
     const app = { middlewares: {} };
-    new Loader({
+    new FileLoader({
       directory: [
         path.join(dirBase, 'middlewares/default'),
         path.join(dirBase, 'middlewares/app'),
@@ -134,7 +134,7 @@ describe('test/loader.test.js', () => {
 
   it('should support ignore', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'ignore'),
       target: app.services,
       ignore: 'util/**',
@@ -144,7 +144,7 @@ describe('test/loader.test.js', () => {
 
   it('should support lowercase first letter', () => {
     const app = { services: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'lowercase'),
       target: app.services,
       lowercaseFirst: true,
@@ -155,7 +155,7 @@ describe('test/loader.test.js', () => {
 
   it('should support options.initializer with es6 class ', () => {
     const app = { dao: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'dao'),
       target: app.dao,
       ignore: 'util/**',
@@ -171,7 +171,7 @@ describe('test/loader.test.js', () => {
 
   it('should pass es6 module', () => {
     const app = { model: {} };
-    new Loader({
+    new FileLoader({
       directory: path.join(dirBase, 'es6_module'),
       target: app.model,
     }).load();
@@ -181,7 +181,7 @@ describe('test/loader.test.js', () => {
   it('should contain syntax error filepath', () => {
     const app = { model: {} };
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
@@ -191,7 +191,7 @@ describe('test/loader.test.js', () => {
   it('should throw when directory contains dot', () => {
     const mod = {};
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'error/dotdir'),
         target: mod,
       }).load();
@@ -201,13 +201,13 @@ describe('test/loader.test.js', () => {
   it('should throw when directory contains dot', () => {
     const mod = {};
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'error/underscore-dir'),
         target: mod,
       }).load();
     }).should.throw('_underscore is not match \'a-z0-9_-\' in _underscore/a.js');
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'error/underscore-file-in-dir'),
         target: mod,
       }).load();
@@ -217,7 +217,7 @@ describe('test/loader.test.js', () => {
   it('should throw when file starts with underscore', () => {
     const mod = {};
     (function() {
-      new Loader({
+      new FileLoader({
         directory: path.join(dirBase, 'error/underscore-file'),
         target: mod,
       }).load();

@@ -3,8 +3,7 @@
 const should = require('should');
 const path = require('path');
 const mm = require('mm');
-const utils = require('../utils');
-const Loader = utils.Loader;
+const utils = require('../../utils');
 
 describe('test/load_plugin.test.js', function() {
 
@@ -12,7 +11,9 @@ describe('test/load_plugin.test.js', function() {
 
   it('should loadConfig all plugins', function() {
     const baseDir = utils.getFilepath('plugin');
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.plugins.b.should.eql({
       enable: true,
@@ -40,7 +41,9 @@ describe('test/load_plugin.test.js', function() {
 
   it('should follow the search order，node_modules of application > node_modules of framework', function() {
     const baseDir = utils.getFilepath('plugin');
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     loader.plugins.rds.should.eql({
@@ -55,7 +58,9 @@ describe('test/load_plugin.test.js', function() {
 
   it('should support alias', function() {
     const baseDir = utils.getFilepath('plugin');
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     loader.plugins.d1.should.eql({
@@ -71,7 +76,9 @@ describe('test/load_plugin.test.js', function() {
 
   it('should support config in package.json', function() {
     const baseDir = utils.getFilepath('plugin');
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     loader.plugins.g.should.eql({
@@ -86,12 +93,14 @@ describe('test/load_plugin.test.js', function() {
 
   it('should warn when the name of plugin is not same', function() {
     let message;
-    mm(console, 'warn', function(m) {
+    const app = utils.createApp('plugin');
+    mm(app.console, 'warn', function(m) {
       if (!m.startsWith('[egg:loader] eggPlugin is missing') && !message) {
         message = m;
       }
     });
-    const loader = new Loader('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     message.should.eql('[egg:loader] pluginName(e) is different from pluginConfigName(wrong-name)');
@@ -108,7 +117,9 @@ describe('test/load_plugin.test.js', function() {
         env: [ 'unittest' ],
       },
     };
-    const loader = new Loader('plugin', { plugins });
+    const app = utils.createApp('plugin', { plugins });
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     loader.plugins.d1.should.eql({
@@ -139,7 +150,9 @@ describe('test/load_plugin.test.js', function() {
       },
     };
     mm(process.env, 'EGG_PLUGINS', `${JSON.stringify(plugins)}`);
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
 
     loader.allPlugins.b.enable.should.be.false();
@@ -149,28 +162,36 @@ describe('test/load_plugin.test.js', function() {
 
   it('should ignore when EGG_PLUGINS parse error', function() {
     mm(process.env, 'EGG_PLUGINS', '{h:1}');
-    const loader = new Loader('plugin');
+    const app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     should.not.exists(loader.allPlugins.h);
   });
 
   it('should throw when plugin not exist', function() {
     (function() {
-      const loader = new Loader('plugin-noexist');
+      const app = utils.createApp('plugin-noexist');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw(/Can not find plugin noexist in /);
   });
 
   it('should throw when the dependent plugin is disabled', function() {
     (function() {
-      const loader = new Loader('no-dep-plugin');
+      const app = utils.createApp('no-dep-plugin');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw(/Can not find plugin @ali\/b in /);
   });
 
   it('should make order', function() {
     mm(process.env, 'NODE_ENV', 'development');
-    const loader = new Loader('plugin-dep');
+    const app = utils.createApp('plugin-dep');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.orderPlugins.map(function(plugin) {
       return plugin.name;
@@ -201,34 +222,37 @@ describe('test/load_plugin.test.js', function() {
 
   it('should throw when plugin is recursive', function() {
     (function() {
-      const loader = new Loader('plugin-dep-recursive');
+      const app = utils.createApp('plugin-dep-recursive');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw('sequencify plugins has problem, missing: [], recursive: [a,b,c,a]');
   });
 
   it('should throw when the dependent plugin not exist', function() {
     (function() {
-      const loader = new Loader('plugin-dep-missing');
+      const app = utils.createApp('plugin-dep-missing');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw('sequencify plugins has problem, missing: [a1], recursive: []\n\t>> Plugin [a1] is disabled or missed, but is required by [c]');
   });
 
   it('should log when enable plugin implicitly', done => {
-    const logger = {
-      info: msg => {
-        if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
-          return;
-        }
-        // Following plugins will be enabled implicitly.
-        //   - eagleeye required by [hsfclient]
-        //   - configclient required by [hsfclient]
-        //   - diamond required by [hsfclient]
-        msg.should.equal(`Following plugins will be enabled implicitly.\n  - eagleeye required by [hsfclient]\n  - configclient required by [hsfclient]\n  - diamond required by [hsfclient]`);
-        done();
-      },
-    };
-
-    const loader = new Loader('plugin-framework', { logger });
+    const app = utils.createApp('plugin-framework');
+    mm(app.console, 'info', msg => {
+      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
+        return;
+      }
+      // Following plugins will be enabled implicitly.
+      //   - eagleeye required by [hsfclient]
+      //   - configclient required by [hsfclient]
+      //   - diamond required by [hsfclient]
+      msg.should.equal(`Following plugins will be enabled implicitly.\n  - eagleeye required by [hsfclient]\n  - configclient required by [hsfclient]\n  - diamond required by [hsfclient]`);
+      done();
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     // loader.plugins 应该是都被开启的插件
     for (const name in loader.plugins) {
@@ -238,13 +262,17 @@ describe('test/load_plugin.test.js', function() {
 
   it('should not override the plugin.js of app implicitly', () => {
     (function() {
-      const loader = new Loader('plugin-dep-disable');
+      const app = utils.createApp('plugin-dep-disable');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw(`sequencify plugins has problem, missing: [b,c], recursive: []\n\t>> Plugin [b] is disabled or missed, but is required by [a,d]\n\t>> Plugin [c] is disabled or missed, but is required by [a]`);
   });
 
   it('should enable when not match env', function() {
-    const loader = new Loader('dont-load-plugin');
+    const app = utils.createApp('dont-load-plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     should.not.exist(loader.plugins.testMe);
     loader.orderPlugins.map(function(plugin) {
@@ -255,7 +283,9 @@ describe('test/load_plugin.test.js', function() {
   it('should enable that match type', function() {
     // mock local
     mm(process.env, 'NODE_ENV', 'development');
-    const loader = new Loader('dont-load-plugin');
+    const app = utils.createApp('dont-load-plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     const names = loader.orderPlugins.map(function(plugin) {
       return plugin.name;
@@ -264,7 +294,9 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should enable that match one type', function() {
-    const loader = new Loader('ali-plugin');
+    const app = utils.createApp('ali-plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     const names = loader.orderPlugins.map(function(plugin) {
       return plugin.name;
@@ -276,7 +308,9 @@ describe('test/load_plugin.test.js', function() {
     const baseDir = utils.getFilepath('plugin');
 
     mm(process.env, 'NODE_ENV', 'test');
-    const loader1 = new Loader('plugin');
+    const app1 = utils.createApp('plugin');
+    const loader1 = app1.loader;
+    loader1.loadPlugin();
     loader1.loadConfig();
 
     // unittest 环境不开启
@@ -287,7 +321,9 @@ describe('test/load_plugin.test.js', function() {
     should.not.exist(loader1.plugins.a1);
 
     mm(process.env, 'NODE_ENV', 'development');
-    const loader2 = new Loader('plugin');
+    const app2 = utils.createApp('plugin');
+    const loader2 = app2.loader;
+    loader2.loadPlugin();
     loader2.loadConfig();
     const keys2 = loader2.orderPlugins.map(function(plugin) {
       return plugin.name;
@@ -303,7 +339,9 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should load when all plugins are disabled', function() {
-    const loader = new Loader('noplugin');
+    const app = utils.createApp('noplugin');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     loader.orderPlugins.length.should.eql(0);
   });
@@ -311,13 +349,17 @@ describe('test/load_plugin.test.js', function() {
   it('should throw when the dependent plugin is disabled', function() {
     (function() {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
-      const loader = new Loader('env-disable');
+      const app = utils.createApp('env-disable');
+      const loader = app.loader;
+      loader.loadPlugin();
       loader.loadConfig();
     }).should.throw('sequencify plugins has problem, missing: [b], recursive: []\n\t>> Plugin [b] is disabled or missed, but is required by [a]');
   });
 
   it('should pick path or package when override config', function() {
-    const loader = new Loader('plugin-path-package');
+    const app = utils.createApp('plugin-path-package');
+    const loader = app.loader;
+    loader.loadPlugin();
     loader.loadConfig();
     should.not.exists(loader.plugins.session.package);
     loader.plugins.session.path

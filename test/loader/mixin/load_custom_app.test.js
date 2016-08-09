@@ -1,13 +1,16 @@
 'use strict';
 
 const should = require('should');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_custom_app.test.js', function() {
+describe('test/loader/mixin/load_custom_app.test.js', function() {
 
   let app;
   before(function() {
     app = utils.createApp('plugin');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadCustomApp();
   });
 
   it('should load app.js', function() {

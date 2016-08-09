@@ -2,15 +2,21 @@
 
 require('should');
 const request = require('supertest');
-const koa = require('koa');
-const utils = require('../utils');
-const Loader = utils.Loader;
+const utils = require('../../utils');
 
-describe('test/load_extend.test.js', function() {
+describe('test/loader/mixin/load_extend.test.js', function() {
 
   let app;
   before(function() {
     app = utils.createApp('extend');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadRequestExtend();
+    app.loader.loadResponseExtend();
+    app.loader.loadApplicationExtend();
+    app.loader.loadContextExtend();
+    app.loader.loadController();
+    app.loader.loadRouter();
   });
 
   it('should load app.context app.request app.response', function(done) {
@@ -71,36 +77,21 @@ describe('test/load_extend.test.js', function() {
 
   it('should throw when no deps', function() {
     (function() {
-      const app = koa();
-      app.coreLogger = console;
-      const loader = new Loader('load_context_error', {
-        app,
-      });
-      loader.loadConfig();
-      loader.load();
+      const app = utils.createApp('load_context_error');
+      app.loader.loadContextExtend();
     }).should.throw(/Cannot find module 'this is a pen'/);
   });
 
   it('should throw when syntax error', function() {
     (function() {
-      const app = koa();
-      app.coreLogger = console;
-      const loader = new Loader('load_context_syntax_error', {
-        app,
-      });
-      loader.loadConfig();
-      loader.load();
+      const app = utils.createApp('load_context_syntax_error');
+      app.loader.loadContextExtend();
     }).should.throw(/ error: Unexpected token/);
   });
 
   it('should extend symbol', function() {
-    const app = koa();
-    app.coreLogger = console;
-    const loader = new Loader('extend-symbol', {
-      app,
-    });
-    loader.loadConfig();
-    loader.load();
+    const app = utils.createApp('extend-symbol');
+    app.loader.loadApplicationExtend();
     app[utils.symbol.view].should.equal('view');
   });
 });

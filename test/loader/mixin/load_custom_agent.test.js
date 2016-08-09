@@ -1,13 +1,16 @@
 'use strict';
 
 const should = require('should');
-const utils = require('../utils');
+const utils = require('../../utils');
 
-describe('test/load_custom_agent.test.js', function() {
+describe('test/loader/mixin/load_custom_agent.test.js', function() {
 
   let agent;
   before(function() {
-    agent = utils.createAgent('plugin');
+    agent = utils.createApp('plugin');
+    agent.loader.loadPlugin();
+    agent.loader.loadConfig();
+    agent.loader.loadCustomAgent();
   });
 
   it('should load agent.js', function() {

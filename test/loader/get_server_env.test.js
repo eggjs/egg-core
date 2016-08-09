@@ -4,7 +4,7 @@ require('should');
 const mm = require('mm');
 const utils = require('../utils');
 
-describe('test/get_server_env.test.js', function() {
+describe('test/loader/get_server_env.test.js', function() {
 
   afterEach(mm.restore);
 
