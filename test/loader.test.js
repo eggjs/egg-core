@@ -7,7 +7,7 @@
 const should = require('should');
 const pedding = require('pedding');
 const path = require('path');
-const Loader = require('../lib/loader');
+const Loader = require('../lib/loader/file_loader');
 const dirBase = path.join(__dirname, 'fixtures/load_dirs');
 
 describe('test/loader.test.js', () => {

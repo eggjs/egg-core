@@ -3,7 +3,7 @@
 require('should');
 const mm = require('mm');
 const utils = require('./utils');
-const Loader = require('../lib/egg_loader');
+const Loader = require('../lib/loader/egg_loader');
 const EggApplication = require('./fixtures/egg');
 
 describe('test/load_file.test.js', function() {
