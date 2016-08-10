@@ -20,7 +20,7 @@
 [download-image]: https://img.shields.io/npm/dm/egg-loader.svg?style=flat-square
 [download-url]: https://npmjs.org/package/egg-loader
 
-A core Plugable framework based on koa
+A core Plugable framework based on [koa](https://github.com/koajs/koa)
 
 **Don't use it directly, see [egg]**
 
@@ -59,21 +59,19 @@ Directory structure
 │   └── plugin.js
 ```
 
-Than you can start with code below
+Then you can start with code below
 
 ```js
 const Application = require('egg-core').Application;
 const app = new Application({
   baseDir: '/path/to/app'
 });
-app.ready(() => {
-  app.listen(3000);
-});
+app.ready(() => app.listen(3000));
 ```
 
 ## EggLoader
 
-EggLoader will load file or directory easily, you can also custom your loader with low level API.
+EggLoader can easily load files or directories in your [egg]** project. In addition, you can customize the loader with low level APIs.
 
 ### constructor
 
@@ -82,7 +80,7 @@ EggLoader will load file or directory easily, you can also custom your loader wi
 - {Object} plugins - merge plugins for test
 - {Logger} logger - logger instance，default is console
 
-### High Level API
+### High Level APIs
 
 #### loadPlugin
 
@@ -132,11 +130,11 @@ Load agent.js
 
 Load app/service
 
-### Low Level API
+### Low Level APIs
 
 #### getServerEnv()
 
-Get serverEnv for application, available serverEnv
+Retrieve application environment variable values via `serverEnv`. You can access directly by calling `this.serverEnv` after instantiation.
 
 serverEnv | description
 ---       | ---
@@ -146,15 +144,13 @@ prod      | production environment
 local     | local environment on your own computer
 unittest  | unit test environment
 
-You can use this.serverEnv directly after instantiation.
-
 #### getEggPaths()
 
-Get the directory of the frameworks, a new framework born by extending egg, then you can use this function to get all frameworks.
+To get directories of the frameworks. A new framework is created by extending egg, then you can use this function to get all frameworks.
 
 #### getLoadUnits()
 
-A loadUnit is a directory that can be loaded by EggLoader, it has the same structure.
+A loadUnit is a directory that can be loaded by EggLoader, cause it has the same structure.
 
 This function will get add loadUnits follow the order:
 
@@ -162,34 +158,34 @@ This function will get add loadUnits follow the order:
 2. framework
 3. app
 
-loadUnit has a path and a type(app, framework, plugin).
+loadUnit has a path and a type. Type must be one of those values: *app*, *framework*, *plugin*.
 
 ```js
 {
   path: 'path/to/application',
-  type: 'app',
+  type: 'app'
 }
 ```
 
 #### getAppname()
 
-Get appname from package.json
+To get application name from *package.json*
 
 #### loadFile(filepath)
 
-Load single file, will invork when export is function.
+To load a single file. **Note:** The file must export as a function.
 
 #### loadToApp(directory, property, LoaderOptions)
 
-Load the files in directory to app.
+To load files from directory in the application.
 
 Invoke `this.loadToApp('$baseDir/app/controller', 'controller')`, then you can use it by `app.controller`.
 
 #### loadToContext(directory, property, LoaderOptions)
 
-Load the files in directory to context, it will bind the context.
+To load files from directory, and it will be bound the context.
 
-```
+```js
 // define service in app/service/query.js
 module.exports = class Query {
   constructor(ctx) {
@@ -207,7 +203,7 @@ module.exports = function*() {
 
 #### loadExtend(name, target)
 
-Loader app/extend/xx.js to target, example
+Loader app/extend/xx.js to target, For example,
 
 ```js
 this.loadExtend('application', app);
