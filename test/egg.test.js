@@ -147,15 +147,6 @@ describe('test/egg.test.js', () => {
     let app;
     afterEach(() => app.close());
 
-    it('should close all listeners', () => {
-      app = utils.createApp('close');
-      process.listeners('unhandledRejection')
-        .indexOf(app._unhandledRejectionHandler).should.not.equal(-1);
-      app.close();
-      process.listeners('unhandledRejection')
-        .indexOf(app._unhandledRejectionHandler).should.equal(-1);
-    });
-
     it('should emit close event before exit', () => {
       app = utils.createApp('close');
       let called = false;
