@@ -16,6 +16,7 @@ describe('test/loader/mixin/load_helper_extend.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
   });
+  after(() => app.close());
 
   it('should load extend from chair, plugin and helper', function(done) {
     request(app.callback())

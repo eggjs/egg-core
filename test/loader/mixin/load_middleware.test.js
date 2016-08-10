@@ -15,6 +15,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
   });
+  after(() => app.close());
 
   it('should load application, plugin, and default middlewares', function() {
     app.middlewares.should.have.property('static');

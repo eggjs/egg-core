@@ -7,11 +7,13 @@ const utils = require('../../utils');
 
 describe('test/load_plugin.test.js', function() {
 
+  let app;
   afterEach(mm.restore);
+  afterEach(() => app.close());
 
   it('should loadConfig all plugins', function() {
     const baseDir = utils.getFilepath('plugin');
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -41,7 +43,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should follow the search order，node_modules of application > node_modules of framework', function() {
     const baseDir = utils.getFilepath('plugin');
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -58,7 +60,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should support alias', function() {
     const baseDir = utils.getFilepath('plugin');
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -76,7 +78,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should support config in package.json', function() {
     const baseDir = utils.getFilepath('plugin');
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -93,7 +95,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should warn when the name of plugin is not same', function() {
     let message;
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     mm(app.console, 'warn', function(m) {
       if (!m.startsWith('[egg:loader] eggPlugin is missing') && !message) {
         message = m;
@@ -117,7 +119,7 @@ describe('test/load_plugin.test.js', function() {
         env: [ 'unittest' ],
       },
     };
-    const app = utils.createApp('plugin', { plugins });
+    app = utils.createApp('plugin', { plugins });
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -150,7 +152,7 @@ describe('test/load_plugin.test.js', function() {
       },
     };
     mm(process.env, 'EGG_PLUGINS', `${JSON.stringify(plugins)}`);
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -162,7 +164,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should ignore when EGG_PLUGINS parse error', function() {
     mm(process.env, 'EGG_PLUGINS', '{h:1}');
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -171,7 +173,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should throw when plugin not exist', function() {
     (function() {
-      const app = utils.createApp('plugin-noexist');
+      app = utils.createApp('plugin-noexist');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -180,7 +182,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should throw when the dependent plugin is disabled', function() {
     (function() {
-      const app = utils.createApp('no-dep-plugin');
+      app = utils.createApp('no-dep-plugin');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -189,7 +191,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should make order', function() {
     mm(process.env, 'NODE_ENV', 'development');
-    const app = utils.createApp('plugin-dep');
+    app = utils.createApp('plugin-dep');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -222,7 +224,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should throw when plugin is recursive', function() {
     (function() {
-      const app = utils.createApp('plugin-dep-recursive');
+      app = utils.createApp('plugin-dep-recursive');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -231,7 +233,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should throw when the dependent plugin not exist', function() {
     (function() {
-      const app = utils.createApp('plugin-dep-missing');
+      app = utils.createApp('plugin-dep-missing');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -239,7 +241,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should log when enable plugin implicitly', done => {
-    const app = utils.createApp('plugin-framework');
+    app = utils.createApp('plugin-framework');
     mm(app.console, 'info', msg => {
       if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
         return;
@@ -262,7 +264,7 @@ describe('test/load_plugin.test.js', function() {
 
   it('should not override the plugin.js of app implicitly', () => {
     (function() {
-      const app = utils.createApp('plugin-dep-disable');
+      app = utils.createApp('plugin-dep-disable');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -270,7 +272,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should enable when not match env', function() {
-    const app = utils.createApp('dont-load-plugin');
+    app = utils.createApp('dont-load-plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -283,7 +285,7 @@ describe('test/load_plugin.test.js', function() {
   it('should enable that match type', function() {
     // mock local
     mm(process.env, 'NODE_ENV', 'development');
-    const app = utils.createApp('dont-load-plugin');
+    app = utils.createApp('dont-load-plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -294,7 +296,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should enable that match one type', function() {
-    const app = utils.createApp('ali-plugin');
+    app = utils.createApp('ali-plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -339,7 +341,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should load when all plugins are disabled', function() {
-    const app = utils.createApp('noplugin');
+    app = utils.createApp('noplugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -349,7 +351,7 @@ describe('test/load_plugin.test.js', function() {
   it('should throw when the dependent plugin is disabled', function() {
     (function() {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
-      const app = utils.createApp('env-disable');
+      app = utils.createApp('env-disable');
       const loader = app.loader;
       loader.loadPlugin();
       loader.loadConfig();
@@ -357,7 +359,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should pick path or package when override config', function() {
-    const app = utils.createApp('plugin-path-package');
+    app = utils.createApp('plugin-path-package');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();

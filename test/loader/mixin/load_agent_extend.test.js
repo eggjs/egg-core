@@ -12,6 +12,7 @@ describe('test/loader/mixin/load_agent_extend.test.js', function() {
     agent.loader.loadConfig();
     agent.loader.loadAgentExtend();
   });
+  after(() => agent.close());
 
   it('should load extend from chair, plugin and agent', function() {
     should.exist(agent.poweredBy);
