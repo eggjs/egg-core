@@ -111,7 +111,24 @@ describe('test/utils/router.test.js', () => {
           .expect(404);
       });
     });
+
+    describe('no name', function() {
+      it('should GET /comments', () => {
+        return request(app.callback())
+          .get('/comments')
+          .expect('index')
+          .expect(200);
+      });
+
+      it('should POST /comments', () => {
+        return request(app.callback())
+          .post('/comments')
+          .expect('new')
+          .expect(200);
+      });
+    });
   });
+
 
   describe('router.url', () => {
     it('should work', () => {
@@ -122,6 +139,10 @@ describe('test/utils/router.test.js', () => {
       app.router.url('new_post').should.equal('/posts/new');
       app.router.url('new_member').should.equal('/members/new');
       app.router.url('edit_post', { id: 1 }).should.equal('/posts/1/edit');
+      // no match params
+      app.router.url('edit_post', {}).should.equal('/posts/:id/edit');
+      app.router.url('noname').should.equal('');
+      app.router.url('comment_index', { id: 1, a: 1 }).should.equal('/comments/1?filter=&a=1');
     });
 
     it('should work with unknow params', () => {
