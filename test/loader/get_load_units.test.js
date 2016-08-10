@@ -6,10 +6,12 @@ const utils = require('../utils');
 
 describe('test/get_load_units.test.js', function() {
 
+  let app;
   afterEach(mm.restore);
+  afterEach(() => app.close());
 
   it('should get plugin dir', function() {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     app.loader.loadPlugin();
     // delete cache
     delete app.loader.dirs;
@@ -22,7 +24,7 @@ describe('test/get_load_units.test.js', function() {
   });
 
   it('should not get plugin dir', function() {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const units = app.loader.getLoadUnits();
     units.length.should.eql(2);
   });

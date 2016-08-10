@@ -12,6 +12,7 @@ describe('test/loader/mixin/load_application_extend.test.js', function() {
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
   });
+  after(() => app.close());
 
   it('should load extend from chair, plugin and application', function() {
     should.exist(app.poweredBy);

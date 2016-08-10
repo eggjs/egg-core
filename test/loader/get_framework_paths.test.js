@@ -6,15 +6,17 @@ const utils = require('../utils');
 
 describe('test/loader/get_framework_paths.test.js', function() {
 
+  let app;
   afterEach(mm.restore);
+  afterEach(() => app && app.close());
 
   it('should get from paramter', function() {
-    const app = utils.createApp('eggpath');
+    app = utils.createApp('eggpath');
     app.loader.eggPaths.should.eql([ utils.getFilepath('egg') ]);
   });
 
   it('should get from framework using symbol', function() {
-    const app = utils.createApp('eggpath', {
+    app = utils.createApp('eggpath', {
       Application: require(utils.getFilepath('framework-symbol')),
     });
     app.loader.eggPaths.should.eql([

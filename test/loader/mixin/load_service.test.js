@@ -6,10 +6,12 @@ const mm = require('mm');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_service.test.js', function() {
+  let app;
   afterEach(mm.restore);
+  afterEach(() => app.close());
 
   it('should load from application and plugin', function(done) {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
@@ -36,14 +38,14 @@ describe('test/loader/mixin/load_service.test.js', function() {
 
   it('should throw when dulplicate', function() {
     (function() {
-      const app = utils.createApp('service-override');
+      app = utils.createApp('service-override');
       app.loader.loadPlugin();
       app.loader.loadService();
     }).should.throw(/^can't overwrite property 'foo'/);
   });
 
   it('should check es6', function() {
-    const app = utils.createApp('services_loader_verify');
+    app = utils.createApp('services_loader_verify');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
@@ -52,7 +54,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   });
 
   it('should extend app.Service', function(done) {
-    const app = utils.createApp('extends-app-service');
+    app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
@@ -71,7 +73,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
 
     it('should load 2 level dir', function(done) {
       mm(process.env, 'NO_DEPRECATION', '*');
-      const app = utils.createApp('subdir-services');
+      app = utils.createApp('subdir-services');
       app.loader.loadPlugin();
       app.loader.loadApplicationExtend();
       app.loader.loadService();

@@ -12,6 +12,7 @@ describe('test/loader/mixin/load_custom_agent.test.js', function() {
     agent.loader.loadConfig();
     agent.loader.loadCustomAgent();
   });
+  after(() => agent.close());
 
   it('should load agent.js', function() {
     agent.b.should.equal('plugin b');

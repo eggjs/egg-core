@@ -12,6 +12,7 @@ describe('test/loader/mixin/load_custom_app.test.js', function() {
     app.loader.loadConfig();
     app.loader.loadCustomApp();
   });
+  after(() => app.close());
 
   it('should load app.js', function() {
     app.b.should.equal('plugin b');

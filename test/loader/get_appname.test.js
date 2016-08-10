@@ -6,10 +6,12 @@ const utils = require('../utils');
 
 describe('test/loader/get_appname.test.js', function() {
 
+  let app;
   afterEach(mm.restore);
+  afterEach(() => app && app.close());
 
   it('should get appname', function() {
-    const app = utils.createApp('appname');
+    app = utils.createApp('appname');
     app.loader.getAppname().should.eql('appname');
   });
 

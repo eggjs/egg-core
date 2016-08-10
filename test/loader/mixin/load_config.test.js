@@ -5,8 +5,11 @@ const utils = require('../../utils');
 
 describe('test/loader/mixin/load_config.test.js', function() {
 
+  let app;
+  afterEach(() => app.close());
+
   it('should load application config overriding default of egg', function() {
-    const app = utils.createApp('config');
+    app = utils.createApp('config');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -23,7 +26,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should load plugin config overriding default of egg', function() {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -31,7 +34,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should load application config overriding plugin', function() {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -43,7 +46,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   //     egg config.local
   //       framework config.local
   it('should load config by env', function() {
-    const app = utils.createApp('config-env');
+    app = utils.createApp('config-env');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -51,7 +54,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should not load config of plugin that is disabled', function() {
-    const app = utils.createApp('plugin');
+    app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
@@ -59,7 +62,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should throw when plugin define middleware', function() {
-    const app = utils.createApp('plugin', {
+    app = utils.createApp('plugin', {
       plugins: {
         middleware: {
           enable: true,
@@ -75,7 +78,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should throw when plugin define proxy', function() {
-    const app = utils.createApp('plugin', {
+    app = utils.createApp('plugin', {
       plugins: {
         proxy: {
           enable: true,
@@ -91,7 +94,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should throw when app define coreMiddleware', function() {
-    const app = utils.createApp('app-core-middleware');
+    app = utils.createApp('app-core-middleware');
     (function() {
       app.loader.loadPlugin();
       app.loader.loadConfig();
@@ -99,7 +102,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should read appinfo from the function of config', function() {
-    const app = utils.createApp('preload-app-config');
+    app = utils.createApp('preload-app-config');
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();

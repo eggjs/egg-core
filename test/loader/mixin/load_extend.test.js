@@ -18,6 +18,7 @@ describe('test/loader/mixin/load_extend.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
   });
+  after(() => app.close());
 
   it('should load app.context app.request app.response', function(done) {
     app.context.should.have.property('appContext');
