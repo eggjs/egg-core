@@ -1,9 +1,5 @@
 'use strict';
 
-/**
- * Module dependencies.
- */
-
 const should = require('should');
 const pedding = require('pedding');
 const path = require('path');
