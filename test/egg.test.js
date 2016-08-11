@@ -26,12 +26,12 @@ describe('test/egg.test.js', () => {
 
     it('should use cwd when no options', () => {
       app = new Application();
-      app._options.baseDir.should.eql(process.cwd());
+      app._options.baseDir.should.equal(process.cwd());
     });
 
     it('should set default application when no type', () => {
       app = new Application();
-      app.type.should.eql('application');
+      app.type.should.equal('application');
     });
 
     it('should not set value expect for application and agent', () => {
@@ -73,19 +73,20 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('app-getter');
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      return app.ready();
     });
     after(() => app.close());
 
     it('should has get type', () => {
-      app.type.should.eql('application');
+      app.type.should.equal('application');
     });
 
     it('should has baseDir', () => {
-      app.baseDir.should.eql(utils.getFilepath('app-getter'));
+      app.baseDir.should.equal(utils.getFilepath('app-getter'));
     });
 
     it('should has name', () => {
-      app.name.should.eql('app-getter');
+      app.name.should.equal('app-getter');
     });
 
     it('should has plugins', () => {
@@ -119,8 +120,8 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('notready');
       app.loader.loadAll();
       mm(app.console, 'warn', (message, a) => {
-        message.should.eql('[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
-        a.should.eql('a');
+        message.should.equal('[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
+        a.should.equal('a');
         done();
       });
       app.ready(() => {

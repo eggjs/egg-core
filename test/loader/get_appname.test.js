@@ -12,7 +12,7 @@ describe('test/loader/get_appname.test.js', function() {
 
   it('should get appname', function() {
     app = utils.createApp('appname');
-    app.loader.getAppname().should.eql('appname');
+    app.loader.getAppname().should.equal('appname');
   });
 
   it('should throw when appname is not found', function() {
