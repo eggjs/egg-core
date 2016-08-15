@@ -1,4 +1,4 @@
-# egg-loader
+# egg-core
 
 [![NPM version][npm-image]][npm-url]
 [![build status][travis-image]][travis-url]
@@ -7,18 +7,18 @@
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/egg-loader.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-loader
-[travis-image]: https://img.shields.io/travis/eggjs/egg-loader.svg?style=flat-square
-[travis-url]: https://travis-ci.org/eggjs/egg-loader
-[codecov-image]: https://codecov.io/github/eggjs/egg-loader/coverage.svg?branch=master
-[codecov-url]: https://codecov.io/github/eggjs/egg-loader?branch=master
-[david-image]: https://img.shields.io/david/eggjs/egg-loader.svg?style=flat-square
-[david-url]: https://david-dm.org/eggjs/egg-loader
-[snyk-image]: https://snyk.io/test/npm/egg-loader/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-loader
-[download-image]: https://img.shields.io/npm/dm/egg-loader.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-loader
+[npm-image]: https://img.shields.io/npm/v/egg-core.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/egg-core
+[travis-image]: https://img.shields.io/travis/eggjs/egg-core.svg?style=flat-square
+[travis-url]: https://travis-ci.org/eggjs/egg-core
+[codecov-image]: https://codecov.io/github/eggjs/egg-core/coverage.svg?branch=master
+[codecov-url]: https://codecov.io/github/eggjs/egg-core?branch=master
+[david-image]: https://img.shields.io/david/eggjs/egg-core.svg?style=flat-square
+[david-url]: https://david-dm.org/eggjs/egg-core
+[snyk-image]: https://snyk.io/test/npm/egg-core/badge.svg?style=flat-square
+[snyk-url]: https://snyk.io/test/npm/egg-core
+[download-image]: https://img.shields.io/npm/dm/egg-core.svg?style=flat-square
+[download-url]: https://npmjs.org/package/egg-core
 
 A core Plugable framework based on [koa](https://github.com/koajs/koa)
 
