@@ -1,3 +1,4 @@
 'use strict';
 
-module.exports = require('./lib/egg_loader');
+module.exports.EggCore = require('./lib/egg');
+module.exports.EggLoader = require('./lib/loader/egg_loader');

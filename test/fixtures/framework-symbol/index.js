@@ -11,6 +11,7 @@ class Framework extends Application {
   get [Symbol.for('egg#eggPath')]() {
     return __dirname;
   }
+
 }
 
 module.exports = Framework;
