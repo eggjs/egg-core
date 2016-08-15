@@ -1,7 +1,7 @@
 {
-  "name": "egg-loader",
-  "version": "0.0.3",
-  "description": "egg loader",
+  "name": "egg-core",
+  "version": "0.1.0",
+  "description": "A core Plugable framework based on koa",
   "main": "index.js",
   "scripts": {
     "lint": "eslint lib test *.js",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eggjs/egg-loader.git"
+    "url": "git+https://github.com/eggjs/egg-core.git"
   },
   "keywords": [
     "egg",
@@ -20,9 +20,9 @@
   "author": "gxcsoccer <gxcsoccer@126.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/eggjs/egg-loader/issues"
+    "url": "https://github.com/eggjs/egg-core/issues"
   },
-  "homepage": "https://github.com/eggjs/egg-loader#readme",
+  "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
     "node": ">= 4.0.0"
   },

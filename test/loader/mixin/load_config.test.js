@@ -1,6 +1,7 @@
 'use strict';
 
 const should = require('should');
+const path = require('path');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_config.test.js', function() {
@@ -62,11 +63,12 @@ describe('test/loader/mixin/load_config.test.js', function() {
   });
 
   it('should throw when plugin define middleware', function() {
+    const pluginDir = utils.getFilepath('plugin/plugin-middleware');
     app = utils.createApp('plugin', {
       plugins: {
         middleware: {
           enable: true,
-          path: utils.getFilepath('plugin/plugin-middleware'),
+          path: pluginDir,
         },
       },
     });
@@ -74,15 +76,16 @@ describe('test/loader/mixin/load_config.test.js', function() {
     (function() {
       loader.loadPlugin();
       loader.loadConfig();
-    }).should.throw('Can not define middleware in framework or plugin');
+    }).should.throw(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`);
   });
 
   it('should throw when plugin define proxy', function() {
+    const pluginDir = utils.getFilepath('plugin/plugin-proxy');
     app = utils.createApp('plugin', {
       plugins: {
         proxy: {
           enable: true,
-          path: utils.getFilepath('plugin/plugin-proxy'),
+          path: pluginDir,
         },
       },
     });
@@ -90,7 +93,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     (function() {
       loader.loadPlugin();
       loader.loadConfig();
-    }).should.throw('Can not define proxy in framework or plugin');
+    }).should.throw(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`);
   });
 
   it('should throw when app define coreMiddleware', function() {
