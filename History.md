@@ -1,4 +1,13 @@
 
+0.1.0 / 2016-08-16
+==================
+
+  * feat: rename egg-loader to egg-core (#8)
+  * refactor: rename to egg-core (#6)
+  * doc: proofread readme documentation and correct english terms (#7)
+  * refactor API (#5)
+  * refactor: implement Loader instead of loading (#4)
+
 0.0.3 / 2016-07-30
 ==================
 
