@@ -214,7 +214,8 @@ this.loadExtend('application', app);
 - {String|Array} directory - directories to load
 - {Object} target: attach object from loaded files,
 - {String} ignore - ignore the files when load
-- {Function} initializer - custom file exports
+- {Function} initializer - custom file exports, receive two parameters, the first one is the inject object,
+  second one is the path of the loaded file.
 - {Boolean} lowercaseFirst - determine whether the fist letter is lowercase
 - {Boolean} override: determine whether override the property when get the same name
 - {Boolean} call - determine whether invoke when exports is function
