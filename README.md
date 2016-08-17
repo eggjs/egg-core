@@ -211,13 +211,23 @@ this.loadExtend('application', app);
 
 ### LoaderOptions
 
-- {String|Array} directory - directories to load
-- {Object} target: attach object from loaded files,
-- {String} ignore - ignore the files when load
-- {Function} initializer - custom file exports
-- {Boolean} lowercaseFirst - determine whether the fist letter is lowercase
-- {Boolean} override: determine whether override the property when get the same name
-- {Boolean} call - determine whether invoke when exports is function
-- {Object} inject - an object that be the argument when invoke the function
+Param          | Type           | Description
+-------------- | -------------- | ------------------------
+directory      | `String/Array` | directories to load
+target         | `Object`       | attach object from loaded files
+ignore         | `String`       | ignore the files when load
+initializer    | `Function`     | custom file exports, receive two parameters, first is the inject object, second is an `options` object that contain `path`
+lowercaseFirst | `Boolean`      | determine whether the fist letter is lowercase
+override       | `Boolean`      | determine whether override the property when get the same name
+call           | `Boolean`      | determine whether invoke when exports is function
+inject         | `Object`       | an object that be the argument when invoke the function
+
+## Questions & Suggestions
+
+Please open an issue [here](https://github.com/eggjs/egg/issues).
+
+## License
+
+[MIT](LICENSE)
 
 [egg]: https://github.com/eggjs/egg

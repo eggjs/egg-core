@@ -4,6 +4,7 @@
   "description": "A core Plugable framework based on koa",
   "main": "index.js",
   "scripts": {
+    "autod": "autod",
     "lint": "eslint lib test *.js",
     "test": "npm run lint && egg-bin test",
     "cov": "egg-bin cov",
@@ -30,27 +31,28 @@
     "version": "4, 6"
   },
   "devDependencies": {
+    "autod": "^2.7.0",
     "egg-bin": "1",
     "egg-ci": "1",
     "eslint": "~3.1.0",
     "eslint-config-egg": "3",
     "koa": "1",
     "koa-router": "4",
-    "mm": "1",
+    "mm": "^2.0.0",
     "pedding": "^1.0.0",
-    "should": "9",
-    "supertest": "1"
+    "should": "^11.1.0",
+    "supertest": "^2.0.0"
   },
   "dependencies": {
     "debug": "^2.2.0",
     "depd": "^1.1.0",
-    "egg-logger": "^1.1.0",
+    "egg-logger": "^1.2.0",
     "extend": "^3.0.0",
     "globby": "^6.0.0",
     "inflection": "^1.10.0",
     "interop-require": "^1.0.0",
     "is-type-of": "^1.0.0",
-    "koa": "^1.2.0",
+    "koa": "^1.2.1",
     "koa-router": "^5.4.0",
     "ready-callback": "^1.0.0",
     "utility": "^1.8.0"

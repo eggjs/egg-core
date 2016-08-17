@@ -155,12 +155,14 @@ describe('test/file_loader.test.js', () => {
       directory: path.join(dirBase, 'dao'),
       target: app.dao,
       ignore: 'util/**',
-      initializer(exports) {
-        return new exports(app);
+      initializer(exports, opt) {
+        return new exports(app, opt.path);
       },
     }).load();
     app.dao.should.have.property('TestClass');
     app.dao.TestClass.user.should.eql({ name: 'kai.fangk' });
+    app.dao.TestClass.app.should.equal(app);
+    app.dao.TestClass.path.should.equal(path.join(dirBase, 'dao/TestClass.js'));
     app.dao.should.have.property('testFunction', { user: { name: 'kai.fangk' } });
     app.dao.should.have.property('testReturnFunction', { user: { name: 'kai.fangk' } });
   });
