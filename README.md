@@ -88,6 +88,7 @@ Load config/plugin.js
 
 #### loadConfig
 
+// config.default.js
 Load config/config.js and config/{serverEnv}.js
 
 #### loadController
