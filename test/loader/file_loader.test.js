@@ -155,8 +155,8 @@ describe('test/file_loader.test.js', () => {
       directory: path.join(dirBase, 'dao'),
       target: app.dao,
       ignore: 'util/**',
-      initializer(exports, fullpath) {
-        return new exports(app, fullpath);
+      initializer(exports, opt) {
+        return new exports(app, opt.path);
       },
     }).load();
     app.dao.should.have.property('TestClass');
