@@ -112,5 +112,6 @@ describe('test/loader/mixin/load_config.test.js', function() {
     loader.config.plugin.val.should.eql(2);
     loader.config.plugin.val.should.eql(2);
     loader.config.plugin.sub.should.not.equal(loader.config.app.sub);
+    loader.config.appInApp.should.false();
   });
 });
