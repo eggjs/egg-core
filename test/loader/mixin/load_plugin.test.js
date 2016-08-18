@@ -6,6 +6,8 @@ const fs = require('fs');
 const mm = require('mm');
 const rimraf = require('rimraf');
 const utils = require('../../utils');
+const EggCore = require('../../..').EggCore;
+const EggLoader = require('../../..').EggLoader;
 
 describe('test/load_plugin.test.js', function() {
 
@@ -25,6 +27,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [],
       env: [],
       path: path.join(baseDir, 'node_modules/b'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
     loader.plugins.c.should.eql({
       enable: true,
@@ -32,6 +35,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [],
       env: [],
       path: path.join(baseDir, 'node_modules/c'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
     loader.plugins.e.should.eql({
       enable: true,
@@ -39,6 +43,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [ 'f' ],
       env: [],
       path: path.join(baseDir, 'plugins/e'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
     loader.orderPlugins.should.be.an.Array;
   });
@@ -57,6 +62,7 @@ describe('test/load_plugin.test.js', function() {
       env: [],
       package: 'rds',
       path: path.join(baseDir, 'node_modules/rds'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
   });
 
@@ -74,6 +80,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [],
       env: [],
       path: path.join(baseDir, 'node_modules/d'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
     should.not.exists(loader.plugins.d);
   });
@@ -92,6 +99,7 @@ describe('test/load_plugin.test.js', function() {
       env: [],
       path: path.join(baseDir, 'plugins/g'),
       version: '1.0.0',
+      from: path.join(baseDir, 'config/plugin.js'),
     });
   });
 
@@ -133,6 +141,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [],
       env: [ 'unittest' ],
       path: path.join(baseDir, 'node_modules/d'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
     loader.plugins.foo.should.eql({
       enable: true,
@@ -339,6 +348,7 @@ describe('test/load_plugin.test.js', function() {
       dep: [ 'd1' ],
       env: [ 'local', 'prod' ],
       path: path.join(baseDir, 'node_modules/a1'),
+      from: path.join(baseDir, 'config/plugin.js'),
     });
   });
 
@@ -382,5 +392,22 @@ describe('test/load_plugin.test.js', function() {
     const plugin = loader.plugins.a;
     plugin.name.should.equal('a');
     plugin.path.should.equal(utils.getFilepath('realpath/a'));
+  });
+
+  it('should get the defining plugin path in every plugin', () => {
+    app = utils.createApp('plugin-from', {
+      Application: class Application extends EggCore {
+        get [Symbol.for('egg#loader')]() {
+          return EggLoader;
+        }
+        get [Symbol.for('egg#eggPath')]() {
+          return utils.getFilepath('plugin-from/framework');
+        }
+      },
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.plugins.a.from.should.equal(utils.getFilepath('plugin-from/config/plugin.js'));
+    loader.plugins.b.from.should.equal(utils.getFilepath('plugin-from/framework/config/plugin.js'));
   });
 });
