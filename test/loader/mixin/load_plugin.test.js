@@ -2,7 +2,9 @@
 
 const should = require('should');
 const path = require('path');
+const fs = require('fs');
 const mm = require('mm');
+const rimraf = require('rimraf');
 const utils = require('../../utils');
 
 describe('test/load_plugin.test.js', function() {
@@ -369,5 +371,16 @@ describe('test/load_plugin.test.js', function() {
     should.exists(loader.plugins.hsfclient.package);
     loader.plugins.hsfclient.path
       .should.equal(utils.getFilepath('plugin-path-package/node_modules/hsfclient'));
+  });
+
+  it('should resolve the realpath of plugin path', () => {
+    rimraf.sync(utils.getFilepath('realpath/node_modules/a'));
+    fs.symlinkSync('../a', utils.getFilepath('realpath/node_modules/a'), 'dir');
+    app = utils.createApp('realpath');
+    const loader = app.loader;
+    loader.loadPlugin();
+    const plugin = loader.plugins.a;
+    plugin.name.should.equal('a');
+    plugin.path.should.equal(utils.getFilepath('realpath/a'));
   });
 });
