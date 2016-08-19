@@ -293,30 +293,6 @@ describe('test/load_plugin.test.js', function() {
     }).should.not.containEql('testMe');
   });
 
-  it('should enable that match type', function() {
-    // mock local
-    mm(process.env, 'NODE_ENV', 'development');
-    app = utils.createApp('dont-load-plugin');
-    const loader = app.loader;
-    loader.loadPlugin();
-    loader.loadConfig();
-    const names = loader.orderPlugins.map(function(plugin) {
-      return plugin.name;
-    });
-    names.should.containEql('testMe');
-  });
-
-  it('should enable that match one type', function() {
-    app = utils.createApp('ali-plugin');
-    const loader = app.loader;
-    loader.loadPlugin();
-    loader.loadConfig();
-    const names = loader.orderPlugins.map(function(plugin) {
-      return plugin.name;
-    });
-    names.should.containEql('foo');
-  });
-
   it('should complement infomation by config/plugin.js from plugin', function() {
     const baseDir = utils.getFilepath('plugin');
 
