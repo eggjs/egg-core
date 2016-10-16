@@ -2,6 +2,7 @@
 
 require('should');
 const request = require('supertest');
+const mm = require('mm');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_extend.test.js', function() {
@@ -95,4 +96,17 @@ describe('test/loader/mixin/load_extend.test.js', function() {
     app.loader.loadApplicationExtend();
     app[utils.symbol.view].should.equal('view');
   });
+
+  it('should load application by custom env', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'custom');
+    const app = utils.createApp('extend-env');
+    app.loader.loadPlugin();
+    app.loader.loadApplicationExtend();
+    app.custom.should.be.true();
+    // application.custom.js override application.js
+    app.a.should.eql('a1');
+    // application.custom.js in plugin also can override application.js in app
+    app.b.should.eql('b1');
+  });
+
 });
