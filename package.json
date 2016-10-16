@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "autod": "^2.7.0",
+    "co": "^4.6.0",
     "egg-bin": "1",
     "egg-ci": "1",
     "eslint": "~3.1.0",
