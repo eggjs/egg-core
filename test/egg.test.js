@@ -146,7 +146,6 @@ describe('test/egg.test.js', () => {
 
   describe('app.close()', () => {
     let app;
-    afterEach(() => app.close());
 
     it('should emit close event before exit', () => {
       app = utils.createApp('close');
@@ -157,5 +156,24 @@ describe('test/egg.test.js', () => {
       app.close();
       called.should.equal(true);
     });
+
+    it('should return a promise', done => {
+      app = utils.createApp('close');
+      const promise = app.close();
+      promise.should.instanceof(Promise);
+      promise.then(done);
+    });
+
+    it('should throw when close error', done => {
+      app = utils.createApp('close');
+      mm(app, 'removeAllListeners', () => {
+        throw new Error('removeAllListeners error');
+      });
+      app.close().catch(err => {
+        err.message.should.eql('removeAllListeners error');
+        done();
+      });
+    });
   });
+
 });
