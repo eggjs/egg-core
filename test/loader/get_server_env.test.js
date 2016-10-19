@@ -22,10 +22,10 @@ describe('test/loader/get_server_env.test.js', function() {
     app.loader.serverEnv.should.equal('unittest');
   });
 
-  it('should use default when NODE_ENV = production', function() {
+  it('should use prod when NODE_ENV = production', function() {
     mm(process.env, 'NODE_ENV', 'production');
     app = utils.createApp('serverenv');
-    app.loader.serverEnv.should.equal('default');
+    app.loader.serverEnv.should.equal('prod');
   });
 
   it('should use local when NODE_ENV is other', function() {
