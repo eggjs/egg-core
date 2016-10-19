@@ -386,4 +386,23 @@ describe('test/load_plugin.test.js', function() {
     loader.plugins.a.from.should.equal(utils.getFilepath('plugin-from/config/plugin.js'));
     loader.plugins.b.from.should.equal(utils.getFilepath('plugin-from/framework/config/plugin.js'));
   });
+
+  it('should load plugin.unittest.js override default', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'unittest');
+    app = utils.createApp('load-plugin-by-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.allPlugins.a.enable.should.be.false();
+    loader.allPlugins.b.enable.should.be.true();
+  });
+
+  it('should load plugin.custom.js when env is custom', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'custom');
+    app = utils.createApp('load-plugin-by-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.allPlugins.a.enable.should.be.true();
+    should.not.exists(loader.allPlugins.b);
+    loader.allPlugins.c.enable.should.be.true();
+  });
 });
