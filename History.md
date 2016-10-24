@@ -1,4 +1,10 @@
 
+0.5.0 / 2016-10-24
+==================
+
+  * feat: app.js/agent.js support async function (#18)
+  * feat: add EGG_HOME to getHomedir for test (#25)
+
 0.4.0 / 2016-10-24
 ==================
 
