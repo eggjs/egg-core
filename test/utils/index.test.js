@@ -24,5 +24,10 @@ describe('test/utils/index.test.js', () => {
       mm(os, 'homedir', null);
       utils.getHomedir().should.equal('/home/admin');
     });
+
+    it('should return when EGG_HOME exists', () => {
+      mm(process.env, 'EGG_HOME', '/path/to/home');
+      utils.getHomedir().should.equal('/path/to/home');
+    });
   });
 });
