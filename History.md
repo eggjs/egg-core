@@ -1,4 +1,14 @@
 
+0.4.0 / 2016-10-24
+==================
+
+  * feat: support plugin.{env}.js (#20)
+  * feat: support {env}.js when load extend (#21)
+  * feat: app.close return a promise (#19)
+  * feat: [BREAKING_CHANGE] env as prod when EGG_SERVER_ENV undefined & NODE_ENV prod (#24)
+  * feat: warning when missing EGG_SERVER_ENV at production (#23)
+  * test: fix homedir testcase on Windows (#22)
+
 0.3.0 / 2016-10-13
 ==================
 
