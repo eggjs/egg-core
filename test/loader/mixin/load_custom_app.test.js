@@ -47,6 +47,22 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     });
   });
 
+  describe('app.js as function return generator function', () => {
+    let app;
+    before(done => {
+      app = utils.createApp('custom-app-generator');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadCustomApp();
+      app.ready(done);
+    });
+    after(() => app.close());
+
+    it('should load app.js success', () => {
+      app.app.should.be.true();
+    });
+  });
+
   describe('app.js as async function', () => {
     let app;
     before(done => {
