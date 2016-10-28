@@ -32,7 +32,6 @@
   },
   "devDependencies": {
     "autod": "^2.7.0",
-    "co": "^4.6.0",
     "egg-bin": "1",
     "egg-ci": "1",
     "eslint": "~3.1.0",
@@ -46,6 +45,7 @@
     "supertest": "^2.0.0"
   },
   "dependencies": {
+    "co": "^4.6.0",
     "debug": "^2.2.0",
     "depd": "^1.1.0",
     "egg-logger": "^1.2.0",
