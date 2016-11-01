@@ -63,4 +63,12 @@ describe('test/loader/get_framework_paths.test.js', function() {
     });
     app.loader.eggPaths.should.eql([ utils.getFilepath('egg') ]);
   });
+
+  it('should assert eggPath type', () => {
+    (function() {
+      utils.createApp('eggpath', {
+        Application: require(utils.getFilepath('framework-wrong-eggpath')),
+      });
+    }).should.throw('Symbol.for(\'egg#eggPath\') should be string');
+  });
 });
