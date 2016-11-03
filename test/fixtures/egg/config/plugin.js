@@ -27,4 +27,10 @@ module.exports = {
     enable: false,
     path: path.join(__dirname, '../plugins/diamond'),
   },
+
+  zzz: {
+    enable: true,
+    path: path.join(__dirname, '../plugins/zzz'),
+  },
+
 };

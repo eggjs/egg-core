@@ -210,6 +210,7 @@ describe('test/load_plugin.test.js', function() {
       return plugin.name;
     }).should.eql([
       'session',
+      'zzz',
       // 'depd',
       // 'onerror',
       // 'userservice',
@@ -404,5 +405,25 @@ describe('test/load_plugin.test.js', function() {
     loader.allPlugins.a.enable.should.be.true();
     should.not.exists(loader.allPlugins.b);
     loader.allPlugins.c.enable.should.be.true();
+  });
+
+  it('should warn when redefine plugin', () => {
+    app = utils.createApp('load-plugin-config-override');
+    mm(app.console, 'warn', function(msg, name, targetPlugin, from) {
+      msg.should.eql('plugin %s has been defined that is %j, but you define again in %s');
+      name.should.eql('zzz');
+      targetPlugin.should.eql({
+        enable: true,
+        path: utils.getFilepath('egg/plugins/zzz'),
+        name: 'zzz',
+        dep: [],
+        env: [],
+        from: utils.getFilepath('egg/config/plugin.js'),
+      });
+      from.should.eql(utils.getFilepath('load-plugin-config-override/config/plugin.js'));
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.allPlugins.zzz.path.should.eql(utils.getFilepath('load-plugin-config-override/plugins/zzz'));
   });
 });

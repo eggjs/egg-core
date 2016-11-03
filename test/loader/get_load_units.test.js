@@ -16,11 +16,11 @@ describe('test/get_load_units.test.js', function() {
     // delete cache
     delete app.loader.dirs;
     const units = app.loader.getLoadUnits();
-    units.length.should.eql(10);
-    units[8].type.should.eql('framework');
-    units[8].path.should.eql(utils.getFilepath('egg'));
-    units[9].type.should.eql('app');
-    units[9].path.should.eql(utils.getFilepath('plugin'));
+    units.length.should.eql(11);
+    units[9].type.should.eql('framework');
+    units[9].path.should.eql(utils.getFilepath('egg'));
+    units[10].type.should.eql('app');
+    units[10].path.should.eql(utils.getFilepath('plugin'));
   });
 
   it('should not get plugin dir', function() {
