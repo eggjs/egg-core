@@ -1,4 +1,10 @@
 
+1.0.0 / 2016-11-04
+==================
+
+  * feat: warn when redefine plugin (#28)
+  * refactor: assert eggPath should be string
+
 0.6.0 / 2016-10-28
 ==================
 
