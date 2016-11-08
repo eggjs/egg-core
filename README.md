@@ -171,6 +171,17 @@ loadUnit has a path and a type. Type must be one of those values: *app*, *framew
 
 To get application name from *package.json*
 
+#### appInfo
+
+Get the infomation of the application
+
+- pkg: `package.json`
+- name: the application name from `package.json`
+- baseDir: current directory of application
+- env: equals to serverEnv
+- HOME: home directory of the OS
+- root: baseDir when local and unittest, HOME when other environment
+
 #### loadFile(filepath)
 
 To load a single file. **Note:** The file must export as a function.
