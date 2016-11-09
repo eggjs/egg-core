@@ -1,4 +1,9 @@
 
+1.1.0 / 2016-11-09
+==================
+
+  * refactor: extract getAppInfo that can be extend (#30)
+
 1.0.1 / 2016-11-07
 ==================
 
