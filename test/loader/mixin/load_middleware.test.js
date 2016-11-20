@@ -63,4 +63,77 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       app.loader.loadMiddleware();
     }).should.throw('Middleware a not found');
   });
+
+  it('should throw when middleware name redefined', function() {
+    const app = utils.createApp('middleware-redefined');
+    (function() {
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadMiddleware();
+    }).should.throw('Middleware status redefined');
+  });
+
+  it('should core middleware support options.enable', function* () {
+    const app = utils.createApp('middleware-disable');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+    .get('/status')
+    .expect(404);
+    app.close();
+  });
+
+  it('should core middleware support options.match', function* () {
+    const app = utils.createApp('middleware-match');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+    .get('/status')
+    .expect('egg status');
+
+    yield request(app.callback())
+    .post('/status')
+    .expect(404);
+    app.close();
+  });
+
+  it('should core middleware support options.ignore', function* () {
+    const app = utils.createApp('middleware-ignore');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+    .post('/status')
+    .expect('egg status');
+
+    yield request(app.callback())
+    .get('/status')
+    .expect(404);
+    app.close();
+  });
+
+  it('should app middleware do not support options.enable', function* () {
+    const app = utils.createApp('middleware-app-disable');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+    .get('/static')
+    .expect(200);
+    app.close();
+  });
 });
