@@ -1,4 +1,10 @@
 
+1.2.0 / 2016-11-21
+==================
+
+  * refactor: don't use core middleware when enable = false (#32)
+  * feat: core middlewares support enable/match/ignore options (#31)
+
 1.1.0 / 2016-11-09
 ==================
 
