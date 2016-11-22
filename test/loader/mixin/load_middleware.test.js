@@ -123,7 +123,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.close();
   });
 
-  it('should app middleware do not support options.enable', function* () {
+  it('should app middleware support options.enable', function* () {
     const app = utils.createApp('middleware-app-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -133,7 +133,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
 
     yield request(app.callback())
     .get('/static')
-    .expect(200);
+    .expect(404);
     app.close();
   });
 });
