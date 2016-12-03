@@ -139,6 +139,7 @@ describe('test/utils/router.test.js', () => {
       app.router.url('new_post').should.equal('/posts/new');
       app.router.url('new_member').should.equal('/members/new');
       app.router.url('edit_post', { id: 1 }).should.equal('/posts/1/edit');
+      app.router.url('params', { a: 1, b: 2 }).should.eql('/params/1/2');
       // no match params
       app.router.url('edit_post', {}).should.equal('/posts/:id/edit');
       app.router.url('noname').should.equal('');
