@@ -20,4 +20,11 @@ module.exports = app => {
       number: this.type.number,
     };
   });
+
+  app.get('/service', function* () {
+    this.body = {
+      service1: this.service1.user.userInfo,
+      service2: this.service2.user.userInfo,
+    };
+  });
 };

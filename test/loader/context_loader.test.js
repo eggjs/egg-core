@@ -43,4 +43,18 @@ describe('test/loader/context_loader.test.js', () => {
     .expect(200, done);
   });
 
+  it('should use different cache key', done => {
+    const service1Dir = path.join(__dirname, '../fixtures/context-loader/app/service1');
+    app.loader.loadToContext(service1Dir, 'service1');
+    const service2Dir = path.join(__dirname, '../fixtures/context-loader/app/service2');
+    app.loader.loadToContext(service2Dir, 'service2');
+
+    request(app.callback())
+    .get('/service')
+    .expect({
+      service1: 'service1',
+      service2: 'service2',
+    })
+    .expect(200, done);
+  });
 });
