@@ -21,11 +21,10 @@ describe('test/load_file.test.js', function() {
   });
 
   it('should throw with filepath when file syntax error', function() {
-    const filepath = utils.getFilepath('syntaxerror/app.js');
     (function() {
       app = utils.createApp('syntaxerror');
       app.loader.loadCustomApp();
-    }).should.throw(`load file: ${filepath}, error: Unexpected token )`);
+    }).should.throw(/Parse Error: Unexpected token/);
   });
 
 });

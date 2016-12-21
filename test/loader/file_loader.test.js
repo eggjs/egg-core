@@ -183,7 +183,7 @@ describe('test/file_loader.test.js', () => {
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
-    }).should.throw(/ error: Unexpected identifier/);
+    }).should.throw(/Parse Error: Unexpected token/);
   });
 
   it('should throw when directory contains dot', () => {
