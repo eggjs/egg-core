@@ -88,7 +88,7 @@ describe('test/loader/mixin/load_extend.test.js', function() {
     (function() {
       const app = utils.createApp('load_context_syntax_error');
       app.loader.loadContextExtend();
-    }).should.throw(/ error: Unexpected token/);
+    }).should.throw(/Parse Error: Unexpected token/);
   });
 
   it('should extend symbol', function() {
