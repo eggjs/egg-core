@@ -1,7 +1,7 @@
 'use strict';
 
-require('should');
 const mm = require('mm');
+const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/get_load_units.test.js', function() {
@@ -16,17 +16,17 @@ describe('test/get_load_units.test.js', function() {
     // delete cache
     delete app.loader.dirs;
     const units = app.loader.getLoadUnits();
-    units.length.should.eql(11);
-    units[9].type.should.eql('framework');
-    units[9].path.should.eql(utils.getFilepath('egg'));
-    units[10].type.should.eql('app');
-    units[10].path.should.eql(utils.getFilepath('plugin'));
+    assert(units.length === 11);
+    assert(units[9].type === 'framework');
+    assert(units[9].path === utils.getFilepath('egg'));
+    assert(units[10].type === 'app');
+    assert(units[10].path === utils.getFilepath('plugin'));
   });
 
   it('should not get plugin dir', function() {
     app = utils.createApp('plugin');
     const units = app.loader.getLoadUnits();
-    units.length.should.eql(2);
+    assert(units.length === 2);
   });
 
 });

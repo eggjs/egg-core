@@ -1,8 +1,8 @@
 'use strict';
 
-const should = require('should');
 const request = require('supertest');
 const mm = require('mm');
+const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_service.test.js', function() {
@@ -17,11 +17,11 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
-    should.exists(app.serviceClasses.foo);
-    should.exists(app.serviceClasses.foo2);
-    should.not.exists(app.serviceClasses.bar1);
-    should.exists(app.serviceClasses.bar2);
-    should.exists(app.serviceClasses.foo4);
+    assert(app.serviceClasses.foo);
+    assert(app.serviceClasses.foo2);
+    assert(!app.serviceClasses.bar1);
+    assert(app.serviceClasses.bar2);
+    assert(app.serviceClasses.foo4);
 
     request(app.callback())
     .get('/')
@@ -37,11 +37,11 @@ describe('test/loader/mixin/load_service.test.js', function() {
   });
 
   it('should throw when dulplicate', function() {
-    (function() {
+    assert.throws(() => {
       app = utils.createApp('service-override');
       app.loader.loadPlugin();
       app.loader.loadService();
-    }).should.throw(/^can't overwrite property 'foo'/);
+    }, /can't overwrite property 'foo'/);
   });
 
   it('should check es6', function() {
@@ -49,8 +49,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
-    app.serviceClasses.should.have.property('foo');
-    app.serviceClasses.foo.should.have.properties('bar', 'bar1', 'aa');
+    assert('foo' in app.serviceClasses);
+    assert('bar' in app.serviceClasses.foo);
+    assert('bar1' in app.serviceClasses.foo);
+    assert('aa' in app.serviceClasses.foo);
   });
 
   it('should extend app.Service', function(done) {
@@ -64,7 +66,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     request(app.callback())
     .get('/user')
     .expect(function(res) {
-      res.body.user.should.eql('123mock');
+      assert(res.body.user === '123mock');
     })
     .expect(200, done);
   });

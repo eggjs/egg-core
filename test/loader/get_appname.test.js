@@ -1,7 +1,7 @@
 'use strict';
 
-require('should');
 const mm = require('mm');
+const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/loader/get_appname.test.js', function() {
@@ -12,13 +12,13 @@ describe('test/loader/get_appname.test.js', function() {
 
   it('should get appname', function() {
     app = utils.createApp('appname');
-    app.loader.getAppname().should.equal('appname');
+    assert(app.loader.getAppname() === 'appname');
   });
 
   it('should throw when appname is not found', function() {
     const pkg = utils.getFilepath('app-noname/package.json');
-    (function() {
+    assert.throws(() => {
       utils.createApp('app-noname');
-    }).should.throw(`name is required from ${pkg}`);
+    }, new RegExp(`name is required from ${pkg}`));
   });
 });

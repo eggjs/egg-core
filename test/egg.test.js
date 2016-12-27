@@ -1,8 +1,8 @@
 'use strict';
 
-const should = require('should');
 const mm = require('mm');
 const util = require('util');
+const assert = require('assert');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const EggLoader = require('..').EggLoader;
@@ -26,44 +26,44 @@ describe('test/egg.test.js', () => {
 
     it('should use cwd when no options', () => {
       app = new Application();
-      app._options.baseDir.should.equal(process.cwd());
+      assert(app._options.baseDir === process.cwd());
     });
 
     it('should set default application when no type', () => {
       app = new Application();
-      app.type.should.equal('application');
+      assert(app.type === 'application');
     });
 
     it('should not set value expect for application and agent', () => {
-      (function() {
+      assert.throws(() => {
         new Application({
           type: 'nothing',
         });
-      }).should.throw('options.type should be application or agent');
+      }, /options.type should be application or agent/);
     });
 
     it('should throw options.baseDir required', () => {
-      (function() {
+      assert.throws(() => {
         new Application({
           baseDir: 1,
         });
-      }).should.throw('options.baseDir required, and must be a string');
+      }, /options.baseDir required, and must be a string/);
     });
 
     it('should throw options.baseDir not exist', () => {
-      (function() {
+      assert.throws(() => {
         new Application({
           baseDir: 'not-exist',
         });
-      }).should.throw('Directory not-exist not exists');
+      }, /Directory not-exist not exists/);
     });
 
     it('should throw options.baseDir is not a directory', () => {
-      (function() {
+      assert.throws(() => {
         new Application({
           baseDir: __filename,
         });
-      }).should.throw(`Directory ${__filename} is not a directory`);
+      }, new RegExp(`Directory ${__filename} is not a directory`));
     });
   });
 
@@ -78,25 +78,25 @@ describe('test/egg.test.js', () => {
     after(() => app.close());
 
     it('should has get type', () => {
-      app.type.should.equal('application');
+      assert(app.type === 'application');
     });
 
     it('should has baseDir', () => {
-      app.baseDir.should.equal(utils.getFilepath('app-getter'));
+      assert(app.baseDir === utils.getFilepath('app-getter'));
     });
 
     it('should has name', () => {
-      app.name.should.equal('app-getter');
+      assert(app.name === 'app-getter');
     });
 
     it('should has plugins', () => {
-      should.exists(app.plugins);
-      app.plugins.should.equal(app.loader.plugins);
+      assert(app.plugins);
+      assert(app.plugins === app.loader.plugins);
     });
 
     it('should has config', () => {
-      should.exists(app.config);
-      app.config.should.equal(app.loader.config);
+      assert(app.config);
+      assert(app.config === app.loader.config);
     });
   });
 
@@ -107,8 +107,8 @@ describe('test/egg.test.js', () => {
     it('should deprecate with namespace egg', () => {
       app = utils.createApp('plugin');
       const deprecate = app.deprecate;
-      deprecate._namespace.should.equal('egg');
-      deprecate.should.equal(app.deprecate);
+      assert(deprecate._namespace === 'egg');
+      assert(deprecate === app.deprecate);
     });
   });
 
@@ -120,8 +120,8 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('notready');
       app.loader.loadAll();
       mm(app.console, 'warn', (message, a) => {
-        message.should.equal('[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
-        a.should.equal('a');
+        assert(message === '[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
+        assert(a === 'a');
         done();
       });
       app.ready(() => {
@@ -137,8 +137,8 @@ describe('test/egg.test.js', () => {
         message += util.format.apply(null, [ a, b, c ]);
       });
       app.ready(() => {
-        message.should.containEql('[egg:core:ready_stat] end ready task a, remain ["b"]');
-        message.should.containEql('[egg:core:ready_stat] end ready task b, remain []');
+        assert(/\[egg:core:ready_stat] end ready task a, remain \["b"]/.test(message));
+        assert(/\[egg:core:ready_stat] end ready task b, remain \[]/.test(message));
         done();
       });
     });
@@ -154,13 +154,13 @@ describe('test/egg.test.js', () => {
         called = true;
       });
       app.close();
-      called.should.equal(true);
+      assert(called === true);
     });
 
     it('should return a promise', done => {
       app = utils.createApp('close');
       const promise = app.close();
-      promise.should.instanceof(Promise);
+      assert(promise instanceof Promise);
       promise.then(done);
     });
 
@@ -170,7 +170,7 @@ describe('test/egg.test.js', () => {
         throw new Error('removeAllListeners error');
       });
       app.close().catch(err => {
-        err.message.should.eql('removeAllListeners error');
+        assert(err.message === 'removeAllListeners error');
         done();
       });
     });
