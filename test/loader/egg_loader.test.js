@@ -1,6 +1,6 @@
 'use strict';
 
-const should = require('should');
+const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/loader/egg_loader.test.js', () => {
@@ -11,8 +11,8 @@ describe('test/loader/egg_loader.test.js', () => {
   });
 
   it('should container FileLoader and ContextLoader', () => {
-    should.exists(app.loader.FileLoader);
-    should.exists(app.loader.ContextLoader);
+    assert(app.loader.FileLoader);
+    assert(app.loader.ContextLoader);
   });
 
 });

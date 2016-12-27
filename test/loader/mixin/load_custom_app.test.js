@@ -1,6 +1,6 @@
 'use strict';
 
-const should = require('should');
+const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_custom_app.test.js', () => {
@@ -16,18 +16,18 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     after(() => app.close());
 
     it('should load app.js', () => {
-      app.b.should.equal('plugin b');
-      app.c.should.equal('plugin c');
-      app.app.should.equal('app');
+      assert(app.b === 'plugin b');
+      assert(app.c === 'plugin c');
+      assert(app.app === 'app');
     });
 
     it('should app.js of plugin before application\'s', () => {
-      (app.dateB <= app.date).should.equal(true);
-      (app.dateC <= app.date).should.equal(true);
+      assert(app.dateB <= app.date);
+      assert(app.dateC <= app.date);
     });
 
     it('should not load plugin that is disabled', () => {
-      should.not.exists(app.a);
+      assert(!app.a);
     });
   });
 
@@ -43,7 +43,7 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     after(() => app.close());
 
     it('should load app.js success', () => {
-      app.app.should.be.true();
+      assert(app.app === true);
     });
   });
 
@@ -59,7 +59,7 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     after(() => app.close());
 
     it('should load app.js success', () => {
-      app.app.should.be.true();
+      assert(app.app === true);
     });
   });
 
@@ -75,7 +75,7 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     after(() => app.close());
 
     it('should load app.js success', () => {
-      app.app.should.be.true();
+      assert(app.app === true);
     });
   });
 
@@ -87,7 +87,7 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
     it('should load app.js success', done => {
       app = utils.createApp('custom-app-error');
       app.on('error', err => {
-        err.message.should.eql('load async error');
+        assert(err.message === 'load async error');
         done();
       });
       app.loader.loadPlugin();

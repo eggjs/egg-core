@@ -1,8 +1,8 @@
 'use strict';
 
-require('should');
 const request = require('supertest');
 const mm = require('mm');
+const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_extend.test.js', function() {
@@ -22,18 +22,18 @@ describe('test/loader/mixin/load_extend.test.js', function() {
   after(() => app.close());
 
   it('should load app.context app.request app.response', function(done) {
-    app.context.should.have.property('appContext');
-    app.context.should.have.property('pluginbContext');
-    app.context.should.not.have.property('pluginaContext');
-    app.request.should.have.property('appRequest');
-    app.request.should.have.property('pluginbRequest');
-    app.request.should.not.have.property('pluginaRequest');
-    app.response.should.have.property('appResponse');
-    app.response.should.have.property('pluginbResponse');
-    app.response.should.not.have.property('pluginaResponse');
-    app.should.have.property('appApplication');
-    app.should.have.property('pluginbApplication');
-    app.should.not.have.property('pluginaApplication');
+    assert(app.context.appContext);
+    assert(app.context.pluginbContext);
+    assert(!app.context.pluginaContext);
+    assert(app.request.appRequest);
+    assert(app.request.pluginbRequest);
+    assert(!app.request.pluginaRequest);
+    assert(app.response.appResponse);
+    assert(app.response.pluginbResponse);
+    assert(!app.response.pluginaResponse);
+    assert(app.appApplication);
+    assert(app.pluginbApplication);
+    assert(!app.pluginaApplication);
 
     request(app.callback())
     .get('/')
@@ -78,23 +78,23 @@ describe('test/loader/mixin/load_extend.test.js', function() {
   });
 
   it('should throw when no deps', function() {
-    (function() {
+    assert.throws(() => {
       const app = utils.createApp('load_context_error');
       app.loader.loadContextExtend();
-    }).should.throw(/Cannot find module 'this is a pen'/);
+    }, /Cannot find module 'this is a pen'/);
   });
 
   it('should throw when syntax error', function() {
-    (function() {
+    assert.throws(() => {
       const app = utils.createApp('load_context_syntax_error');
       app.loader.loadContextExtend();
-    }).should.throw(/Parse Error: Unexpected token/);
+    }, /Parse Error: Unexpected token/);
   });
 
   it('should extend symbol', function() {
     const app = utils.createApp('extend-symbol');
     app.loader.loadApplicationExtend();
-    app[utils.symbol.view].should.equal('view');
+    assert.equal(app[utils.symbol.view], 'view');
   });
 
   it('should load application by custom env', function() {
@@ -102,11 +102,11 @@ describe('test/loader/mixin/load_extend.test.js', function() {
     const app = utils.createApp('extend-env');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
-    app.custom.should.be.true();
+    assert(app.custom === true);
     // application.custom.js override application.js
-    app.a.should.eql('a1');
+    assert(app.a === 'a1');
     // application.custom.js in plugin also can override application.js in app
-    app.b.should.eql('b1');
+    assert(app.b === 'b1');
   });
 
 });

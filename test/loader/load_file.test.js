@@ -1,7 +1,7 @@
 'use strict';
 
-require('should');
 const mm = require('mm');
+const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/load_file.test.js', function() {
@@ -12,19 +12,21 @@ describe('test/load_file.test.js', function() {
 
   it('should load file', function() {
     app = utils.createApp('load_file');
-    app.loader.loadFile(utils.getFilepath('load_file/obj.js')).should.eql({ a: 1 });
+    const exports = app.loader.loadFile(utils.getFilepath('load_file/obj.js'));
+    assert.deepEqual(exports, { a: 1 });
   });
 
   it('should load file when exports is function', function() {
     app = utils.createApp('load_file');
-    app.loader.loadFile(utils.getFilepath('load_file/function.js'), 1, 2).should.eql([ 1, 2 ]);
+    const exports = app.loader.loadFile(utils.getFilepath('load_file/function.js'), 1, 2);
+    assert.deepEqual(exports, [ 1, 2 ]);
   });
 
   it('should throw with filepath when file syntax error', function() {
-    (function() {
+    assert.throws(() => {
       app = utils.createApp('syntaxerror');
       app.loader.loadCustomApp();
-    }).should.throw(/Parse Error: Unexpected token/);
+    }, /Parse Error: Unexpected token/);
   });
 
 });

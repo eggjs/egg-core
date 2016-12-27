@@ -1,7 +1,7 @@
 'use strict';
 
-const should = require('should');
 const path = require('path');
+const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_config.test.js', function() {
@@ -14,10 +14,10 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    loader.config.name.should.eql('config-test');
-    loader.config.test.should.eql(1);
+    assert(loader.config.name === 'config-test');
+    assert(loader.config.test === 1);
     // 支持嵌套覆盖
-    loader.config.urllib.should.eql({
+    assert.deepEqual(loader.config.urllib, {
       keepAlive: false,
       keepAliveTimeout: 30000,
       timeout: 30000,
@@ -31,7 +31,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    loader.config.name.should.eql('override default');
+    assert(loader.config.name === 'override default');
   });
 
   it('should load application config overriding plugin', function() {
@@ -39,7 +39,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    loader.config.plugin.should.eql('override plugin');
+    assert(loader.config.plugin === 'override plugin');
   });
 
   // egg config.default
@@ -51,7 +51,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    loader.config.egg.should.eql('egg-unittest');
+    assert(loader.config.egg === 'egg-unittest');
   });
 
   it('should not load config of plugin that is disabled', function() {
@@ -59,7 +59,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    should.not.exists(loader.config.pluginA);
+    assert(!loader.config.pluginA);
   });
 
   it('should throw when plugin define middleware', function() {
@@ -73,10 +73,10 @@ describe('test/loader/mixin/load_config.test.js', function() {
       },
     });
     const loader = app.loader;
-    (function() {
+    assert.throws(() => {
       loader.loadPlugin();
       loader.loadConfig();
-    }).should.throw(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`);
+    }, new RegExp(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`));
   });
 
   it('should throw when plugin define proxy', function() {
@@ -90,18 +90,18 @@ describe('test/loader/mixin/load_config.test.js', function() {
       },
     });
     const loader = app.loader;
-    (function() {
+    assert.throws(() => {
       loader.loadPlugin();
       loader.loadConfig();
-    }).should.throw(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`);
+    }, new RegExp(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`));
   });
 
   it('should throw when app define coreMiddleware', function() {
     app = utils.createApp('app-core-middleware');
-    (function() {
+    assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
-    }).should.throw('Can not define coreMiddleware in app or plugin');
+    }, new RegExp('Can not define coreMiddleware in app or plugin'));
   });
 
   it('should read appinfo from the function of config', function() {
@@ -109,9 +109,9 @@ describe('test/loader/mixin/load_config.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    loader.config.plugin.val.should.eql(2);
-    loader.config.plugin.val.should.eql(2);
-    loader.config.plugin.sub.should.not.equal(loader.config.app.sub);
-    loader.config.appInApp.should.false();
+    assert(loader.config.plugin.val === 2);
+    assert(loader.config.plugin.val === 2);
+    assert(loader.config.plugin.sub !== loader.config.app.sub);
+    assert(loader.config.appInApp === false);
   });
 });

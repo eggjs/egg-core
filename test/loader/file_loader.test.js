@@ -1,6 +1,6 @@
 'use strict';
 
-const should = require('should');
+const assert = require('assert');
 const pedding = require('pedding');
 const path = require('path');
 const FileLoader = require('../../lib/loader/file_loader');
@@ -15,30 +15,30 @@ describe('test/file_loader.test.js', () => {
       target: services,
     }).load();
 
-    services.should.have.keys('dir', 'foo', 'fooBarHello', 'fooService', 'hyphenDir', 'underscoreDir', 'userProfile');
-    should.exists(services.dir.abc);
-    should.exists(services.dir.service);
-    should.exists(services.foo);
-    should.exists(services.fooBarHello);
-    should.exists(services.fooService);
-    should.exists(services.hyphenDir.a);
-    should.exists(services.underscoreDir.a);
-    should.exists(services.userProfile);
+    assert(services.dir.abc);
+    assert(services.dir.service);
+    assert(services.foo);
+    assert(services.fooBarHello);
+    assert(services.fooService);
+    assert(services.hyphenDir.a);
+    assert(services.underscoreDir.a);
+    assert(services.userProfile);
 
     done = pedding(2, done);
     services.foo.get((err, v) => {
-      should.not.exist(err);
-      v.should.equal('bar');
+      assert.ifError(err);
+      assert(v === 'bar');
       done();
     });
     services.userProfile.getByName('mk2', (err, user) => {
-      should.not.exist(err);
-      user.should.eql({ name: 'mk2' });
+      assert.ifError(err);
+      assert.deepEqual(user, { name: 'mk2' });
       done();
     });
 
-    services.dir.service.should.have.keys('load', 'app');
-    services.dir.service.load.should.equal(true);
+    assert('load' in services.dir.service);
+    assert('app' in services.dir.service);
+    assert(services.dir.service.load === true);
   });
 
   it('should not overwrite property', () => {
@@ -47,17 +47,20 @@ describe('test/file_loader.test.js', () => {
         foo: {},
       },
     };
-    (function() {
-      new FileLoader({
-        directory: path.join(dirBase, 'services'),
-        target: app.services,
-      }).load();
-    }).should.throw(/^can't overwrite property 'foo'/);
+    assert.throws(
+      () => {
+        new FileLoader({
+          directory: path.join(dirBase, 'services'),
+          target: app.services,
+        }).load();
+      },
+      /can't overwrite property 'foo'/
+    );
   });
 
   it('should not overwrite property from loading', () => {
     const app = { services: {} };
-    (function() {
+    assert.throws(() => {
       new FileLoader({
         directory: [
           path.join(dirBase, 'services'),
@@ -66,7 +69,7 @@ describe('test/file_loader.test.js', () => {
         target: app.services,
         logger: console,
       }).load();
-    }).should.throw(/^can't overwrite property 'foo'/);
+    }, /can't overwrite property 'foo'/);
   });
 
   it('should overwrite property from loading', () => {
@@ -88,7 +91,7 @@ describe('test/file_loader.test.js', () => {
       target: app.services,
       call: false,
     }).load();
-    app.services.fooService().should.eql({ a: 1 });
+    assert.deepEqual(app.services.fooService(), { a: 1 });
   });
 
   it('should loading without call es6 class', () => {
@@ -97,11 +100,11 @@ describe('test/file_loader.test.js', () => {
       directory: path.join(dirBase, 'class'),
       target: app.services,
     }).load();
-    (function() {
+    assert.throws(() => {
       app.services.UserProxy();
-    }).should.throw(/cannot be invoked without 'new'/);
+    }, /cannot be invoked without 'new'/);
     const instance = new app.services.UserProxy();
-    instance.getUser().should.eql({ name: 'xiaochen.gaoxc' });
+    assert.deepEqual(instance.getUser(), { name: 'xiaochen.gaoxc' });
   });
 
   it('should loading without call babel class', () => {
@@ -111,7 +114,7 @@ describe('test/file_loader.test.js', () => {
       target: app.services,
     }).load();
     const instance = new app.services.UserProxy();
-    instance.getUser().should.eql({ name: 'xiaochen.gaoxc' });
+    assert.deepEqual(instance.getUser(), { name: 'xiaochen.gaoxc' });
   });
 
   it.skip('should only load property match the filers', () => {
@@ -125,7 +128,10 @@ describe('test/file_loader.test.js', () => {
       call: false,
       filters: [ 'm1', 'm2', 'dm1', 'dm2' ],
     }).load();
-    app.middlewares.should.have.keys('m1', 'm2', 'dm1', 'dm2');
+    assert(app.middlewares.m1);
+    assert(app.middlewares.m2);
+    assert(app.middlewares.dm1);
+    assert(app.middlewares.dm2);
   });
 
   it('should support ignore', () => {
@@ -135,7 +141,7 @@ describe('test/file_loader.test.js', () => {
       target: app.services,
       ignore: 'util/**',
     }).load();
-    app.services.should.have.property('a', { a: 1 });
+    assert.deepEqual(app.services.a, { a: 1 });
   });
 
   it('should support lowercase first letter', () => {
@@ -145,8 +151,9 @@ describe('test/file_loader.test.js', () => {
       target: app.services,
       lowercaseFirst: true,
     }).load();
-    app.services.should.have.properties('someClass', 'someDir');
-    app.services.someDir.should.have.property('someSubClass');
+    assert(app.services.someClass);
+    assert(app.services.someDir);
+    assert(app.services.someDir.someSubClass);
   });
 
   it('should support options.initializer with es6 class ', () => {
@@ -159,12 +166,12 @@ describe('test/file_loader.test.js', () => {
         return new exports(app, opt.path);
       },
     }).load();
-    app.dao.should.have.property('TestClass');
-    app.dao.TestClass.user.should.eql({ name: 'kai.fangk' });
-    app.dao.TestClass.app.should.equal(app);
-    app.dao.TestClass.path.should.equal(path.join(dirBase, 'dao/TestClass.js'));
-    app.dao.should.have.property('testFunction', { user: { name: 'kai.fangk' } });
-    app.dao.should.have.property('testReturnFunction', { user: { name: 'kai.fangk' } });
+    assert(app.dao.TestClass);
+    assert.deepEqual(app.dao.TestClass.user, { name: 'kai.fangk' });
+    assert(app.dao.TestClass.app === app);
+    assert(app.dao.TestClass.path === path.join(dirBase, 'dao/TestClass.js'));
+    assert.deepEqual(app.dao.testFunction, { user: { name: 'kai.fangk' } });
+    assert.deepEqual(app.dao.testReturnFunction, { user: { name: 'kai.fangk' } });
   });
 
   it('should pass es6 module', () => {
@@ -173,52 +180,52 @@ describe('test/file_loader.test.js', () => {
       directory: path.join(dirBase, 'es6_module'),
       target: app.model,
     }).load();
-    app.model.mod.should.eql({ a: 1 });
+    assert.deepEqual(app.model.mod, { a: 1 });
   });
 
   it('should contain syntax error filepath', () => {
     const app = { model: {} };
-    (function() {
+    assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
-    }).should.throw(/Parse Error: Unexpected token/);
+    }, /Parse Error: Unexpected token/);
   });
 
   it('should throw when directory contains dot', () => {
     const mod = {};
-    (function() {
+    assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'error/dotdir'),
         target: mod,
       }).load();
-    }).should.throw('dot.dir is not match \'a-z0-9_-\' in dot.dir/a.js');
+    }, /dot.dir is not match 'a-z0-9_-' in dot.dir\/a.js/);
   });
 
-  it('should throw when directory contains dot', () => {
+  it('should throw when directory contains underscore', () => {
     const mod = {};
-    (function() {
+    assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'error/underscore-dir'),
         target: mod,
       }).load();
-    }).should.throw('_underscore is not match \'a-z0-9_-\' in _underscore/a.js');
-    (function() {
+    }, /_underscore is not match 'a-z0-9_-' in _underscore\/a.js/);
+    assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'error/underscore-file-in-dir'),
         target: mod,
       }).load();
-    }).should.throw('_a is not match \'a-z0-9_-\' in dir/_a.js');
+    }, /_a is not match 'a-z0-9_-' in dir\/_a.js/);
   });
 
   it('should throw when file starts with underscore', () => {
     const mod = {};
-    (function() {
+    assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'error/underscore-file'),
         target: mod,
       }).load();
-    }).should.throw('_private is not match \'a-z0-9_-\' in _private.js');
+    }, /_private is not match 'a-z0-9_-' in _private.js/);
   });
 });

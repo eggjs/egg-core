@@ -1,6 +1,6 @@
 'use strict';
 
-require('should');
+const assert = require('assert');
 const request = require('supertest');
 const utils = require('../../utils');
 
@@ -18,11 +18,11 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
   after(() => app.close());
 
   it('should load application, plugin, and default middlewares', function() {
-    app.middlewares.should.have.property('static');
-    app.middlewares.should.have.property('status');
-    app.middlewares.should.have.property('custom');
-    app.middlewares.should.have.property('b');
-    app.middlewares.should.not.have.property('a');
+    assert('static' in app.middlewares);
+    assert('status' in app.middlewares);
+    assert('custom' in app.middlewares);
+    assert('b' in app.middlewares);
+    assert(!('a' in app.middlewares));
   });
 
   it('should override middlewares of plugin by framework', function(done) {
@@ -48,29 +48,29 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
 
   it('should throw when middleware return no-generator', function() {
     const app = utils.createApp('custom_session_invaild');
-    (function() {
+    assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadMiddleware();
-    }).should.throw('Middleware session must be a generator function, but actual is {}');
+    }, /Middleware session must be a generator function, but actual is {}/);
   });
 
   it('should throw when not load that is not configured', function() {
     const app = utils.createApp('no-middleware');
-    (function() {
+    assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadMiddleware();
-    }).should.throw('Middleware a not found');
+    }, /Middleware a not found/);
   });
 
   it('should throw when middleware name redefined', function() {
     const app = utils.createApp('middleware-redefined');
-    (function() {
+    assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadMiddleware();
-    }).should.throw('Middleware status redefined');
+    }, /Middleware status redefined/);
   });
 
   it('should core middleware support options.enable', function* () {

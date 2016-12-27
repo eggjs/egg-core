@@ -1,6 +1,6 @@
 'use strict';
 
-const should = require('should');
+const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_custom_agent.test.js', function() {
@@ -15,17 +15,17 @@ describe('test/loader/mixin/load_custom_agent.test.js', function() {
   after(() => agent.close());
 
   it('should load agent.js', function() {
-    agent.b.should.equal('plugin b');
-    agent.c.should.equal('plugin c');
-    agent.agent.should.equal('agent');
+    assert(agent.b === 'plugin b');
+    assert(agent.c === 'plugin c');
+    assert(agent.agent === 'agent');
   });
 
   it('should agent.js of plugin before application\'s', function() {
-    (agent.dateB <= agent.date).should.equal(true);
-    (agent.dateC <= agent.date).should.equal(true);
+    assert(agent.dateB <= agent.date);
+    assert(agent.dateC <= agent.date);
   });
 
   it('should not load plugin that is disabled', function() {
-    should.not.exists(agent.a);
+    assert(!agent.a);
   });
 });

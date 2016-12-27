@@ -2,6 +2,7 @@
 
 const mm = require('mm');
 const os = require('os');
+const assert = require('assert');
 const utils = require('../../lib/utils');
 
 describe('test/utils/index.test.js', () => {
@@ -15,19 +16,19 @@ describe('test/utils/index.test.js', () => {
         delete userInfo.homedir;
         mm(os, 'userInfo', () => userInfo);
       }
-      utils.getHomedir().should.equal(process.env.HOME);
+      assert(utils.getHomedir() === process.env.HOME);
     });
 
     it('should return /home/admin when process.env.HOME is not exist', () => {
       mm(process.env, 'HOME', '');
       mm(os, 'userInfo', null);
       mm(os, 'homedir', null);
-      utils.getHomedir().should.equal('/home/admin');
+      assert(utils.getHomedir() === '/home/admin');
     });
 
     it('should return when EGG_HOME exists', () => {
       mm(process.env, 'EGG_HOME', '/path/to/home');
-      utils.getHomedir().should.equal('/path/to/home');
+      assert(utils.getHomedir() === '/path/to/home');
     });
   });
 });

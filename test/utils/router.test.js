@@ -1,5 +1,6 @@
 'use strict';
 
+const assert = require('assert');
 const request = require('supertest');
 const utils = require('../utils');
 
@@ -132,44 +133,44 @@ describe('test/utils/router.test.js', () => {
 
   describe('router.url', () => {
     it('should work', () => {
-      app.router.url('posts').should.equal('/posts');
-      app.router.url('members').should.equal('/members');
-      app.router.url('post', { id: 1 }).should.equal('/posts/1');
-      app.router.url('member', { id: 1 }).should.equal('/members/1');
-      app.router.url('new_post').should.equal('/posts/new');
-      app.router.url('new_member').should.equal('/members/new');
-      app.router.url('edit_post', { id: 1 }).should.equal('/posts/1/edit');
-      app.router.url('params', { a: 1, b: 2 }).should.eql('/params/1/2');
+      assert(app.router.url('posts') === '/posts');
+      assert(app.router.url('members') === '/members');
+      assert(app.router.url('post', { id: 1 }) === '/posts/1');
+      assert(app.router.url('member', { id: 1 }) === '/members/1');
+      assert(app.router.url('new_post') === '/posts/new');
+      assert(app.router.url('new_member') === '/members/new');
+      assert(app.router.url('edit_post', { id: 1 }) === '/posts/1/edit');
+      assert(app.router.url('params', { a: 1, b: 2 }) === '/params/1/2');
       // no match params
-      app.router.url('edit_post', {}).should.equal('/posts/:id/edit');
-      app.router.url('noname').should.equal('');
-      app.router.url('comment_index', { id: 1, a: 1 }).should.equal('/comments/1?filter=&a=1');
+      assert(app.router.url('edit_post', {}) === '/posts/:id/edit');
+      assert(app.router.url('noname') === '');
+      assert(app.router.url('comment_index', { id: 1, a: 1 }) === '/comments/1?filter=&a=1');
     });
 
     it('should work with unknow params', () => {
-      app.router.url('posts', { name: 'foo', page: 2 }).should.equal('/posts?name=foo&page=2');
-      app.router.url('posts', { name: 'foo&?', page: 2 }).should.equal('/posts?name=foo%26%3F&page=2');
-      app.router.url('edit_post', { id: 10, page: 2 }).should.equal('/posts/10/edit?page=2');
-      app.router.url('edit_post', { i: 2, id: 10 }).should.equal('/posts/10/edit?i=2');
-      app.router.url('edit_post', { id: 10, page: 2, tags: [ 'chair', 'develop' ] })
-        .should.equal('/posts/10/edit?page=2&tags=chair&tags=develop');
-      app.router.url('edit_post', { id: [ 10 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
-        .should.equal('/posts/10/edit?page=2&tags=chair&tags=develop');
-      app.router.url('edit_post', { id: [ 10, 11 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
-        .should.equal('/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('posts', { name: 'foo', page: 2 }) === '/posts?name=foo&page=2');
+      assert(app.router.url('posts', { name: 'foo&?', page: 2 }) === '/posts?name=foo%26%3F&page=2');
+      assert(app.router.url('edit_post', { id: 10, page: 2 }) === '/posts/10/edit?page=2');
+      assert(app.router.url('edit_post', { i: 2, id: 10 }) === '/posts/10/edit?i=2');
+      assert(app.router.url('edit_post', { id: 10, page: 2, tags: [ 'chair', 'develop' ] })
+         === '/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('edit_post', { id: [ 10 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
+         === '/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('edit_post', { id: [ 10, 11 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
+         === '/posts/10/edit?page=2&tags=chair&tags=develop');
     });
 
   });
 
   describe('router.pathFor', () => {
     it('should work', () => {
-      app.router.pathFor('posts').should.equal('/posts');
+      assert(app.router.pathFor('posts') === '/posts');
     });
   });
 
   describe('router.method', () => {
     it('router method include HEAD', () => {
-      app.router.methods.should.containEql('HEAD');
+      assert(app.router.methods.indexOf('HEAD') > -1);
     });
   });
 });
