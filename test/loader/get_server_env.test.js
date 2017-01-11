@@ -34,7 +34,7 @@ describe('test/loader/get_server_env.test.js', function() {
     assert(app.loader.serverEnv === 'local');
   });
 
-  it('should get from config/serverEnv', function() {
+  it('should get from config/env', function() {
     mm(process.env, 'NODE_ENV', 'production');
     mm(process.env, 'EGG_SERVER_ENV', 'test');
     app = utils.createApp('serverenv-file');
