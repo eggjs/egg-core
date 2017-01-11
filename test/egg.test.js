@@ -144,6 +144,46 @@ describe('test/egg.test.js', () => {
     });
   });
 
+  describe('app.beforeStart()', () => {
+    let app;
+    afterEach(() => app.close());
+
+    it('should beforeStart param error', done => {
+      try {
+        app = utils.createApp('beforestart-params-error');
+        app.loader.loadAll();
+      } catch (err) {
+        assert(err.message === 'beforeStart only support generator function');
+        done();
+      }
+    });
+
+
+    it('should beforeStart excute success', () => {
+      app = utils.createApp('beforestart');
+      app.loader.loadAll();
+      return app.ready();
+    });
+
+    it('should beforeStart excute failed', done => {
+      app = utils.createApp('beforestart-error');
+      app.loader.loadAll();
+      app.once('error', err => {
+        assert(err.message === 'not ready');
+        done();
+      });
+    });
+
+    it('should beforeStart excute timeout', done => {
+      app = utils.createApp('beforestart-timeout');
+      app.loader.loadAll();
+      app.once('ready_timeout', id => {
+        assert(id.match(/test\/fixtures\/beforestart-timeout\/app\.js/));
+        done();
+      });
+    });
+  });
+
   describe('app.close()', () => {
     let app;
 
