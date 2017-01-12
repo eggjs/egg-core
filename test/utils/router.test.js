@@ -66,6 +66,16 @@ describe('test/utils/router.test.js', () => {
     });
 
     describe('controller url', () => {
+      describe('controller not exists error', () => {
+        it('should throw when controller not exists', done => {
+          try {
+            app.get('/hello', 'not.exist.controller');
+          } catch (err) {
+            assert(err.message === 'controller \'not.exist.controller\' not exists');
+            done();
+          }
+        });
+      });
       it('should GET /members', () => {
         return request(app.callback())
           .get('/members')
