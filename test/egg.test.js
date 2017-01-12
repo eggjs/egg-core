@@ -2,6 +2,7 @@
 
 const mm = require('mm');
 const util = require('util');
+const path = require('path');
 const assert = require('assert');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
@@ -58,12 +59,15 @@ describe('test/egg.test.js', () => {
       }, /Directory not-exist not exists/);
     });
 
-    it('should throw options.baseDir is not a directory', () => {
-      assert.throws(() => {
+    it('should throw options.baseDir is not a directory', done => {
+      try {
         new Application({
           baseDir: __filename,
         });
-      }, new RegExp(`Directory ${__filename} is not a directory`));
+      } catch (err) {
+        assert(err.message.indexOf(`Directory ${__filename} is not a directory`) >= 0);
+        done();
+      }
     });
   });
 
@@ -139,6 +143,47 @@ describe('test/egg.test.js', () => {
       app.ready(() => {
         assert(/\[egg:core:ready_stat] end ready task a, remain \["b"]/.test(message));
         assert(/\[egg:core:ready_stat] end ready task b, remain \[]/.test(message));
+        done();
+      });
+    });
+  });
+
+  describe('app.beforeStart()', () => {
+    let app;
+    afterEach(() => app.close());
+
+    it('should beforeStart param error', done => {
+      try {
+        app = utils.createApp('beforestart-params-error');
+        app.loader.loadAll();
+      } catch (err) {
+        assert(err.message === 'beforeStart only support generator function');
+        done();
+      }
+    });
+
+
+    it('should beforeStart excute success', () => {
+      app = utils.createApp('beforestart');
+      app.loader.loadAll();
+      return app.ready();
+    });
+
+    it('should beforeStart excute failed', done => {
+      app = utils.createApp('beforestart-error');
+      app.loader.loadAll();
+      app.once('error', err => {
+        assert(err.message === 'not ready');
+        done();
+      });
+    });
+
+    it('should beforeStart excute timeout', done => {
+      app = utils.createApp('beforestart-timeout');
+      app.loader.loadAll();
+      app.once('ready_timeout', id => {
+        const file = path.normalize('test/fixtures/beforestart-timeout/app.js');
+        assert(id.indexOf(file) >= 0);
         done();
       });
     });

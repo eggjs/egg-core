@@ -4,12 +4,12 @@ const path = require('path');
 const assert = require('assert');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_config.test.js', function() {
+describe('test/loader/mixin/load_config.test.js', () => {
 
   let app;
   afterEach(() => app.close());
 
-  it('should load application config overriding default of egg', function() {
+  it('should load application config overriding default of egg', () => {
     app = utils.createApp('config');
     const loader = app.loader;
     loader.loadPlugin();
@@ -26,7 +26,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     });
   });
 
-  it('should load plugin config overriding default of egg', function() {
+  it('should load plugin config overriding default of egg', () => {
     app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -34,7 +34,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     assert(loader.config.name === 'override default');
   });
 
-  it('should load application config overriding plugin', function() {
+  it('should load application config overriding plugin', () => {
     app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -46,7 +46,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
   //   framework config.default
   //     egg config.local
   //       framework config.local
-  it('should load config by env', function() {
+  it('should load config by env', () => {
     app = utils.createApp('config-env');
     const loader = app.loader;
     loader.loadPlugin();
@@ -54,7 +54,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     assert(loader.config.egg === 'egg-unittest');
   });
 
-  it('should not load config of plugin that is disabled', function() {
+  it('should not load config of plugin that is disabled', () => {
     app = utils.createApp('plugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -62,7 +62,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     assert(!loader.config.pluginA);
   });
 
-  it('should throw when plugin define middleware', function() {
+  it('should throw when plugin define middleware', done => {
     const pluginDir = utils.getFilepath('plugin/plugin-middleware');
     app = utils.createApp('plugin', {
       plugins: {
@@ -73,13 +73,16 @@ describe('test/loader/mixin/load_config.test.js', function() {
       },
     });
     const loader = app.loader;
-    assert.throws(() => {
+    try {
       loader.loadPlugin();
       loader.loadConfig();
-    }, new RegExp(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`));
+    } catch (err) {
+      assert(err.message.indexOf(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`) >= 0);
+      done();
+    }
   });
 
-  it('should throw when plugin define proxy', function() {
+  it('should throw when plugin define proxy', done => {
     const pluginDir = utils.getFilepath('plugin/plugin-proxy');
     app = utils.createApp('plugin', {
       plugins: {
@@ -90,13 +93,16 @@ describe('test/loader/mixin/load_config.test.js', function() {
       },
     });
     const loader = app.loader;
-    assert.throws(() => {
+    try {
       loader.loadPlugin();
       loader.loadConfig();
-    }, new RegExp(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`));
+    } catch (err) {
+      assert(err.message.indexOf(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`) >= 0);
+      done();
+    }
   });
 
-  it('should throw when app define coreMiddleware', function() {
+  it('should throw when app define coreMiddleware', () => {
     app = utils.createApp('app-core-middleware');
     assert.throws(() => {
       app.loader.loadPlugin();
@@ -104,7 +110,7 @@ describe('test/loader/mixin/load_config.test.js', function() {
     }, new RegExp('Can not define coreMiddleware in app or plugin'));
   });
 
-  it('should read appinfo from the function of config', function() {
+  it('should read appinfo from the function of config', () => {
     app = utils.createApp('preload-app-config');
     const loader = app.loader;
     loader.loadPlugin();
