@@ -2,6 +2,7 @@
 
 const mm = require('mm');
 const util = require('util');
+const path = require('path');
 const assert = require('assert');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
@@ -58,12 +59,15 @@ describe('test/egg.test.js', () => {
       }, /Directory not-exist not exists/);
     });
 
-    it('should throw options.baseDir is not a directory', () => {
-      assert.throws(() => {
+    it('should throw options.baseDir is not a directory', done => {
+      try {
         new Application({
           baseDir: __filename,
         });
-      }, new RegExp(`Directory ${__filename} is not a directory`));
+      } catch (err) {
+        assert(err.message.indexOf(`Directory ${__filename} is not a directory`) >= 0);
+        done();
+      }
     });
   });
 
@@ -178,7 +182,8 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('beforestart-timeout');
       app.loader.loadAll();
       app.once('ready_timeout', id => {
-        assert(id.match(/test\/fixtures\/beforestart-timeout\/app\.js/));
+        const file = path.normalize('test/fixtures/beforestart-timeout/app.js');
+        assert(id.indexOf(file) >= 0);
         done();
       });
     });
