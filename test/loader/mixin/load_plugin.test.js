@@ -262,7 +262,7 @@ describe('test/load_plugin.test.js', function() {
       //   - eagleeye required by [hsfclient]
       //   - configclient required by [hsfclient]
       //   - diamond required by [hsfclient]
-      assert(msg === `Following plugins will be enabled implicitly.\n  - eagleeye required by [hsfclient]\n  - configclient required by [hsfclient]\n  - diamond required by [hsfclient]`);
+      assert(msg === 'Following plugins will be enabled implicitly.\n  - eagleeye required by [hsfclient]\n  - configclient required by [hsfclient]\n  - diamond required by [hsfclient]');
       done();
     });
     const loader = app.loader;
