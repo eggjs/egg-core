@@ -1,4 +1,11 @@
 
+1.4.0 / 2017-01-12
+==================
+
+  * refactor: support config/env instead of config/serverEnv (#37)
+  * fix(router): support app.get(url, controllerName) (#38)
+  * feat: support app.beforeStart (#39)
+
 1.3.3 / 2016-12-28
 ==================
 
