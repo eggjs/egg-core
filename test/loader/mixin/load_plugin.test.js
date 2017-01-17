@@ -24,7 +24,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.b, {
       enable: true,
       name: 'b',
-      dep: [],
+      dependencies: [],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'node_modules/b'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -32,7 +33,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.c, {
       enable: true,
       name: 'c',
-      dep: [],
+      dependencies: [],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'node_modules/c'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -40,7 +42,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.e, {
       enable: true,
       name: 'e',
-      dep: [ 'f' ],
+      dependencies: [ 'f' ],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'plugins/e'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -58,7 +61,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.rds, {
       enable: true,
       name: 'rds',
-      dep: [ 'session' ],
+      dependencies: [ 'session' ],
+      optionalDependencies: [],
       env: [],
       package: 'rds',
       path: path.join(baseDir, 'node_modules/rds'),
@@ -77,7 +81,8 @@ describe('test/load_plugin.test.js', function() {
       enable: true,
       name: 'd1',
       package: 'd',
-      dep: [],
+      dependencies: [],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'node_modules/d'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -95,7 +100,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.g, {
       enable: true,
       name: 'g',
-      dep: [ 'f' ],
+      dependencies: [ 'f' ],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'plugins/g'),
       version: '1.0.0',
@@ -138,7 +144,8 @@ describe('test/load_plugin.test.js', function() {
       enable: true,
       name: 'd1',
       package: 'd',
-      dep: [],
+      dependencies: [],
+      optionalDependencies: [],
       env: [ 'unittest' ],
       path: path.join(baseDir, 'node_modules/d'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -146,7 +153,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader.plugins.foo, {
       enable: true,
       name: 'foo',
-      dep: [],
+      dependencies: [],
+      optionalDependencies: [],
       env: [],
       path: path.join(baseDir, 'node_modules/d'),
     });
@@ -323,7 +331,8 @@ describe('test/load_plugin.test.js', function() {
     assert.deepEqual(loader2.plugins.a1, {
       enable: true,
       name: 'a1',
-      dep: [ 'd1' ],
+      dependencies: [ 'd1' ],
+      optionalDependencies: [],
       env: [ 'local', 'prod' ],
       path: path.join(baseDir, 'node_modules/a1'),
       from: path.join(baseDir, 'config/plugin.js'),
@@ -417,7 +426,8 @@ describe('test/load_plugin.test.js', function() {
         enable: true,
         path: utils.getFilepath('egg/plugins/zzz'),
         name: 'zzz',
-        dep: [],
+        dependencies: [],
+        optionalDependencies: [],
         env: [],
         from: utils.getFilepath('egg/config/plugin.js'),
       });
@@ -426,5 +436,12 @@ describe('test/load_plugin.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     assert(loader.allPlugins.zzz.path === utils.getFilepath('load-plugin-config-override/plugins/zzz'));
+  });
+
+  it('should support optionalDependencies', () => {
+    app = utils.createApp('plugin-optional-dependencies');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'e', 'b', 'a' ]);
   });
 });
