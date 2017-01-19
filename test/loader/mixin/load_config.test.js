@@ -82,26 +82,6 @@ describe('test/loader/mixin/load_config.test.js', () => {
     }
   });
 
-  it('should throw when plugin define proxy', done => {
-    const pluginDir = utils.getFilepath('plugin/plugin-proxy');
-    app = utils.createApp('plugin', {
-      plugins: {
-        proxy: {
-          enable: true,
-          path: pluginDir,
-        },
-      },
-    });
-    const loader = app.loader;
-    try {
-      loader.loadPlugin();
-      loader.loadConfig();
-    } catch (err) {
-      assert(err.message.indexOf(`Can not define proxy in ${path.join(pluginDir, 'config/config.default.js')}`) >= 0);
-      done();
-    }
-  });
-
   it('should throw when app define coreMiddleware', () => {
     app = utils.createApp('app-core-middleware');
     assert.throws(() => {
