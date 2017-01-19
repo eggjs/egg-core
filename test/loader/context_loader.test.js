@@ -57,4 +57,14 @@ describe('test/loader/context_loader.test.js', () => {
     })
     .expect(200, done);
   });
+
+  it('should load file with pathname', () => {
+    const directory = path.join(__dirname, '../fixtures/context-loader/app/pathname');
+    app.loader.loadToContext(directory, 'pathname');
+
+    return request(app.callback())
+    .get('/pathname')
+    .expect('pathname.a.b.c')
+    .expect(200);
+  });
 });

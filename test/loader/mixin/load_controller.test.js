@@ -173,5 +173,13 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       .post('/resources-class/1')
       .expect(404);
     });
+
+    it('should get pathName from Controller', () => {
+      return request(app.callback())
+      .get('/class-pathname')
+      .expect(200)
+      .expect('controller.admin.config');
+    });
   });
+
 });

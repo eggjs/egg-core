@@ -27,4 +27,8 @@ module.exports = app => {
       service2: this.service2.user.userInfo,
     };
   });
+
+  app.get('/pathname', function* () {
+    this.body = yield this.pathname.a.b.c.getPathname();
+  });
 };
