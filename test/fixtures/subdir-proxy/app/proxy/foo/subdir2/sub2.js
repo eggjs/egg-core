@@ -1,18 +1,16 @@
 'use strict';
 
-const Service = require('../../../../../egg/service');
+module.exports = app => {
+  return class Sub2 extends app.Service {
+    constructor(ctx) {
+      super(ctx);
+    }
 
-class Sub2 extends Service {
-  constructor(ctx) {
-    super(ctx);
+    * get(name) {
+      return {
+        name: name,
+        bar: 'bar3',
+      };
+    }
   }
-
-  * get(name) {
-    return {
-      name: name,
-      bar: 'bar3',
-    };
-  }
-}
-
-module.exports = Sub2;
+};

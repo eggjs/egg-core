@@ -3,9 +3,10 @@
 const symbol = require('../../../../utils').symbol;
 
 module.exports = {
-  Proxy: require('../../proxy'),
-  Service: require('../../service'),
+  get Proxy() {
+    return this.BaseContextClass;
+  },
   get [symbol.view]() {
     return 'egg';
-  }
+  },
 };

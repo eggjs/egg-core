@@ -14,6 +14,7 @@ class AppLoader extends EggLoader {
     this.loadResponseExtend();
     this.loadCustomApp();
     this.loadMiddleware();
+    this.loadService();
     this.loadController();
     this.loadRouter();
   }
