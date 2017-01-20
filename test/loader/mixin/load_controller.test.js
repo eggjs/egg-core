@@ -1,6 +1,5 @@
 'use strict';
 
-// const path = require('path');
 const assert = require('assert');
 const request = require('supertest');
 const utils = require('../../utils');
@@ -182,4 +181,15 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
   });
 
+  describe('next argument', () => {
+    it('should throw error', () => {
+      try {
+        const app = utils.createApp('controller-next-argument');
+        app.loader.loadAll();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(/controller `next` should not use next as argument from file/.test(err.message));
+      }
+    });
+  });
 });
