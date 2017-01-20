@@ -119,6 +119,6 @@ describe('test/loader/mixin/load_service.test.js', function() {
       })
       .expect(200, done);
     });
-
   });
+
 });
