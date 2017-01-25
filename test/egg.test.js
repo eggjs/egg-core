@@ -221,4 +221,20 @@ describe('test/egg.test.js', () => {
     });
   });
 
+  describe('app.onClose', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('app-onclose');
+      app.loader.loadAll();
+      return app.ready();
+    });
+
+    it('should wait onClose', function* () {
+      yield app.close();
+      assert(app.closeFn === true);
+      assert(app.closeGeneratorFn === true);
+      assert(app.closeAsyncFn === true);
+    });
+  });
+
 });
