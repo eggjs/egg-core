@@ -221,15 +221,15 @@ describe('test/egg.test.js', () => {
     });
   });
 
-  describe('app.onClose', () => {
+  describe('app.beforeClose', () => {
     let app;
     before(() => {
-      app = utils.createApp('app-onclose');
+      app = utils.createApp('app-before-close');
       app.loader.loadAll();
       return app.ready();
     });
 
-    it('should wait onClose', function* () {
+    it('should wait beforeClose', function* () {
       yield app.close();
       assert(app.closeFn === true);
       assert(app.closeGeneratorFn === true);

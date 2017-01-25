@@ -5,13 +5,13 @@ module.exports = app => {
   app.closeGeneratorFn = false;
   app.closeAsyncFn = false;
 
-  app.onClose(() => {
+  app.beforeClose(() => {
     app.closeFn = true;
   });
-  app.onClose(function* () {
+  app.beforeClose(function* () {
     app.closeGeneratorFn = true;
   });
-  app.onClose(function() {
+  app.beforeClose(function() {
     return new Promise(resolve => {
       app.closeAsyncFn = true;
       resolve();
@@ -27,6 +27,6 @@ module.exports = app => {
     }
     count++;
   }
-  app.onClose(onlyOnce);
-  app.onClose(onlyOnce);
+  app.beforeClose(onlyOnce);
+  app.beforeClose(onlyOnce);
 };
