@@ -1,4 +1,9 @@
 
+1.7.0 / 2017-01-26
+==================
+
+  * feat: add app.beforeClose to register close function (#43)
+
 1.6.0 / 2017-01-20
 ==================
 
