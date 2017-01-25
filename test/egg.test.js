@@ -223,11 +223,12 @@ describe('test/egg.test.js', () => {
 
   describe('app.beforeClose', () => {
     let app;
-    before(() => {
+    beforeEach(() => {
       app = utils.createApp('app-before-close');
       app.loader.loadAll();
       return app.ready();
     });
+    afterEach(() => app && app.close());
 
     it('should wait beforeClose', function* () {
       yield app.close();
@@ -235,6 +236,19 @@ describe('test/egg.test.js', () => {
       assert(app.closeGeneratorFn === true);
       assert(app.closeAsyncFn === true);
       assert(app.onlyOnce === false);
+      assert(app.closeEvent === 'after');
+    });
+
+    it('should throw when call beforeClose without function', () => {
+      assert.throws(() => {
+        app.beforeClose();
+      }, /argument should be function/);
+    });
+
+    it('should close only once', function* () {
+      yield app.close();
+      yield app.close();
+      assert(app.callCount === 1);
     });
   });
 

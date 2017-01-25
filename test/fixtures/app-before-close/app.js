@@ -29,4 +29,19 @@ module.exports = app => {
   }
   app.beforeClose(onlyOnce);
   app.beforeClose(onlyOnce);
+
+  app.beforeClose(() => {
+    app.closeEvent = 'before';
+  });
+  app.once('close', () => {
+    app.closeEvent = 'after';
+  });
+
+  app.beforeClose(() => {
+    if (!app.callCount) {
+      app.callCount = 1;
+    } else {
+      app.callCount++;
+    }
+  });
 };
