@@ -234,6 +234,7 @@ describe('test/egg.test.js', () => {
       assert(app.closeFn === true);
       assert(app.closeGeneratorFn === true);
       assert(app.closeAsyncFn === true);
+      assert(app.onlyOnce === false);
     });
   });
 

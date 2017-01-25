@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = app => {
-  console.log(1111);
   app.closeFn = false;
   app.closeGeneratorFn = false;
   app.closeAsyncFn = false;
@@ -18,4 +17,16 @@ module.exports = app => {
       resolve();
     });
   });
+
+  let count = 0;
+  function onlyOnce() {
+    if (count === 0) {
+      app.onlyOnce = false;
+    } else {
+      app.onlyOnce = true;
+    }
+    count++;
+  }
+  app.onClose(onlyOnce);
+  app.onClose(onlyOnce);
 };
