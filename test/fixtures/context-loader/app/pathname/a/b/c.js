@@ -5,5 +5,9 @@ module.exports = app => {
     * getPathname() {
       return this.pathName;
     }
+
+    * getName() {
+      return this.config.name;
+    }
   };
 };

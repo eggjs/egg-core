@@ -31,4 +31,8 @@ module.exports = app => {
   app.get('/pathname', function* () {
     this.body = yield this.pathname.a.b.c.getPathname();
   });
+
+  app.get('/config', function* () {
+    this.body = yield this.pathname.a.b.c.getName();
+  });
 };
