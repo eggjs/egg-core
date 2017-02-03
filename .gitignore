@@ -2,3 +2,4 @@
 coverage
 .logs
 npm-debug.log
+.vscode

@@ -237,6 +237,7 @@ describe('test/egg.test.js', () => {
       assert(app.closeAsyncFn === true);
       assert(app.onlyOnce === false);
       assert(app.closeEvent === 'after');
+      assert(app.closeOrderArray.join(',') === 'closeAsyncFn,closeGeneratorFn,closeFn');
     });
 
     it('should throw when call beforeClose without function', () => {
