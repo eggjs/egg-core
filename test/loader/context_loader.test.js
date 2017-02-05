@@ -72,4 +72,11 @@ describe('test/loader/context_loader.test.js', () => {
     .expect('config')
     .expect(200);
   });
+
+  it('should load file with service', () => {
+    return request(app.callback())
+    .get('/BaseContextClass/service')
+    .expect('user:post')
+    .expect(200);
+  });
 });
