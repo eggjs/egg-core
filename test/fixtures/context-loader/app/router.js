@@ -35,4 +35,8 @@ module.exports = app => {
   app.get('/config', function* () {
     this.body = yield this.pathname.a.b.c.getName();
   });
+
+  app.get('/BaseContextClass/service', function*() {
+    this.body = this.service.user.info;
+  })
 };
