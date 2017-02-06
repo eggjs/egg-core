@@ -157,16 +157,21 @@ describe('test/egg.test.js', () => {
         app = utils.createApp('beforestart-params-error');
         app.loader.loadAll();
       } catch (err) {
-        assert(err.message === 'beforeStart only support generator function');
+        assert(err.message === 'beforeStart only support function');
         done();
       }
     });
 
-
-    it('should beforeStart excute success', () => {
+    it('should beforeStart excute success', function* () {
       app = utils.createApp('beforestart');
       app.loader.loadAll();
-      return app.ready();
+      assert(app.beforeStartFunction === false);
+      assert(app.beforeStartGeneratorFunction === false);
+      assert(app.beforeStartAsyncFunction === false);
+      yield app.ready();
+      assert(app.beforeStartFunction === true);
+      assert(app.beforeStartGeneratorFunction === true);
+      assert(app.beforeStartAsyncFunction === true);
     });
 
     it('should beforeStart excute failed', done => {
