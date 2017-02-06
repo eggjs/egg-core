@@ -1,4 +1,13 @@
 
+1.8.0 / 2017-02-06
+==================
+
+  * feat: app.beforeStart support async function same as beforeClose (#48)
+  * test: fix test on windows (#47)
+  * feat: add this.service in BaseContextClass (#46)
+  * feat: add this.config in BaseContextClass (#44)
+  * fix: execute beforeClose hooks in reverse order (#45)
+
 1.7.0 / 2017-01-26
 ==================
 
