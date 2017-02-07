@@ -1,3 +1,4 @@
 test/fixtures
 node_modules
 coverage
+benchmark
