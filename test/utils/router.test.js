@@ -197,5 +197,12 @@ describe('test/utils/router.test.js', () => {
         .expect(200)
         .expect([ 'generator', 'async', 'common' ]);
     });
+
+    it('should support all kinds of middlewares with register', () => {
+      return request(app.callback())
+        .get('/register_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
   });
 });
