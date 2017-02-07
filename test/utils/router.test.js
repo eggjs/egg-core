@@ -140,7 +140,6 @@ describe('test/utils/router.test.js', () => {
     });
   });
 
-
   describe('router.url', () => {
     it('should work', () => {
       assert(app.router.url('posts') === '/posts');
@@ -181,6 +180,22 @@ describe('test/utils/router.test.js', () => {
   describe('router.method', () => {
     it('router method include HEAD', () => {
       assert(app.router.methods.indexOf('HEAD') > -1);
+    });
+  });
+
+  describe('router middleware', () => {
+    it('should support all kinds of middlewares', () => {
+      return request(app.callback())
+        .get('/middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+
+    it('should support all kinds of middlewares with name', () => {
+      return request(app.callback())
+        .get('/named_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
     });
   });
 });
