@@ -204,5 +204,28 @@ describe('test/utils/router.test.js', () => {
         .expect(200)
         .expect([ 'generator', 'async', 'common' ]);
     });
+
+    it('should app.router support all kinds of middlewares', () => {
+      return request(app.callback())
+        .get('/router_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+  });
+
+  describe('redirect', () => {
+    it('should app.redirect to target', () => {
+      return request(app.callback())
+        .get('/redirect')
+        .expect(302)
+        .expect('location', '/middleware');
+    });
+
+    it('should app.router.redirect to target', () => {
+      return request(app.callback())
+        .get('/router_redirect')
+        .expect(301)
+        .expect('location', '/middleware');
+    });
   });
 });
