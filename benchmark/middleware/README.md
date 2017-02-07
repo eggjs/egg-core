@@ -1,7 +1,9 @@
 
+**Please run benchmark with node 7+ for async await support.**
+
 ## Benchmark Result
 
-```
+```sh
 v7.4.0
 server started at 7001
 ------- generator middleware -------
