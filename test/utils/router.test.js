@@ -140,7 +140,6 @@ describe('test/utils/router.test.js', () => {
     });
   });
 
-
   describe('router.url', () => {
     it('should work', () => {
       assert(app.router.url('posts') === '/posts');
@@ -181,6 +180,52 @@ describe('test/utils/router.test.js', () => {
   describe('router.method', () => {
     it('router method include HEAD', () => {
       assert(app.router.methods.indexOf('HEAD') > -1);
+    });
+  });
+
+  describe('router middleware', () => {
+    it('should support all kinds of middlewares', () => {
+      return request(app.callback())
+        .get('/middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+
+    it('should support all kinds of middlewares with name', () => {
+      return request(app.callback())
+        .get('/named_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+
+    it('should support all kinds of middlewares with register', () => {
+      return request(app.callback())
+        .get('/register_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+
+    it('should app.router support all kinds of middlewares', () => {
+      return request(app.callback())
+        .get('/router_middleware')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+  });
+
+  describe('redirect', () => {
+    it('should app.redirect to target', () => {
+      return request(app.callback())
+        .get('/redirect')
+        .expect(302)
+        .expect('location', '/middleware');
+    });
+
+    it('should app.router.redirect to target', () => {
+      return request(app.callback())
+        .get('/router_redirect')
+        .expect(301)
+        .expect('location', '/middleware');
     });
   });
 });

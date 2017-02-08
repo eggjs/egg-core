@@ -52,7 +52,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadMiddleware();
-    }, /Middleware session must be a generator function, but actual is {}/);
+    }, /Middleware session must be a function, but actual is {}/);
   });
 
   it('should throw when not load that is not configured', function() {
@@ -135,5 +135,54 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     .get('/static')
     .expect(404);
     app.close();
+  });
+
+  describe('async functions and common functions', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('middleware-aa');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadCustomApp();
+      app.loader.loadMiddleware();
+      app.loader.loadController();
+      app.loader.loadRouter();
+    });
+
+    after(() => app.close());
+
+    it('should support config.middleware', function* () {
+      yield request(app.callback())
+      .get('/static')
+      .expect('static', 'static')
+      .expect('hello');
+    });
+
+    it('should support app.use', function* () {
+      yield request(app.callback())
+      .get('/')
+      .expect('custom', 'custom')
+      .expect('hello');
+    });
+
+    it('should support with router', function* () {
+      yield request(app.callback())
+      .get('/router')
+      .expect('router', 'router')
+      .expect('hello');
+    });
+
+    it('should support with options.match', function* () {
+      yield request(app.callback())
+      .get('/match')
+      .expect('match', 'match')
+      .expect('hello');
+    });
+
+    it('should support common functions', function* () {
+      yield request(app.callback())
+      .get('/common')
+      .expect('common');
+    });
   });
 });
