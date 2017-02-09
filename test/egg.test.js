@@ -239,6 +239,27 @@ describe('test/egg.test.js', () => {
       }).catch(done);
       assert(app.close().then);
     });
+
+    it('should set closing = false when close error', function* () {
+      let count = 0;
+      const fn = spy();
+      app = utils.createApp('close');
+      app.beforeClose(() => {
+        if (count === 0) {
+          count++;
+          throw new Error('error');
+        }
+      });
+      app.on('close', fn);
+      try {
+        yield app.close();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'error');
+      }
+      yield app.close();
+      assert(fn.callCount === 1);
+    });
   });
 
   describe('app.beforeClose', () => {
