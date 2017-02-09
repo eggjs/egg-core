@@ -5,6 +5,7 @@ const util = require('util');
 const path = require('path');
 const assert = require('assert');
 const spy = require('spy');
+const sleep = require('mz-modules/sleep');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const EggLoader = require('..').EggLoader;
@@ -240,25 +241,36 @@ describe('test/egg.test.js', () => {
       assert(app.close().then);
     });
 
-    it('should set closing = false when close error', function* () {
-      let count = 0;
-      const fn = spy();
+    it('should throw error when call after error', function* () {
       app = utils.createApp('close');
       app.beforeClose(() => {
-        if (count === 0) {
-          count++;
-          throw new Error('error');
-        }
+        throw new Error('error');
       });
-      app.on('close', fn);
       try {
         yield app.close();
         throw new Error('should not run');
       } catch (err) {
         assert(err.message === 'error');
       }
-      yield app.close();
-      assert(fn.callCount === 1);
+      try {
+        yield app.close();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'error');
+      }
+    });
+
+    it('should return same promise when call twice', done => {
+      const first = spy();
+      const second = spy();
+      app = utils.createApp('close');
+      app.beforeClose(() => sleep(200));
+      app.close().then(first);
+      app.close().then(second);
+      setTimeout(() => {
+        assert(first.calledBefore(second));
+        done();
+      }, 500);
     });
   });
 
