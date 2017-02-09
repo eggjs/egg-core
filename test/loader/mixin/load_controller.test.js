@@ -22,7 +22,7 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         const app = utils.createApp('async-controller-app');
         app.loader.loadController();
       } catch (err) {
-        assert(err.message === 'app/controller/async.js cannot be async function');
+        assert(err.message.match(/^app(\/|\\)controller(\/|\\)async\.js cannot be async function/));
         done();
       }
     });
