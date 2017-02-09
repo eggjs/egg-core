@@ -237,6 +237,7 @@ describe('test/egg.test.js', () => {
         assert(fn.callCount === 1);
         done();
       }).catch(done);
+      assert(app.close().then);
     });
   });
 
