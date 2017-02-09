@@ -185,6 +185,17 @@ describe('test/egg.test.js', () => {
       });
     });
 
+    it('should get error from ready when beforeStart excute failed', function* () {
+      app = utils.createApp('beforestart-error');
+      app.loader.loadAll();
+      try {
+        yield app.ready();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'not ready');
+      }
+    });
+
     it('should beforeStart excute timeout', done => {
       app = utils.createApp('beforestart-timeout');
       app.loader.loadAll();
