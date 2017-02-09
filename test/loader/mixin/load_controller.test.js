@@ -15,6 +15,19 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   });
   after(() => app.close());
 
+  describe('when controller is async function', () => {
+
+    it('should thrown', done => {
+      try {
+        const app = utils.createApp('async-controller-app');
+        app.loader.loadController();
+      } catch (err) {
+        assert(err.message === 'app/controller/async.js cannot be async function');
+        done();
+      }
+    });
+  });
+
   describe('when controller is generator function', () => {
 
     it('should use it as middleware', () => {
