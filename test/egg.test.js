@@ -4,6 +4,8 @@ const mm = require('mm');
 const util = require('util');
 const path = require('path');
 const assert = require('assert');
+const spy = require('spy');
+const sleep = require('mz-modules/sleep');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const EggLoader = require('..').EggLoader;
@@ -223,6 +225,52 @@ describe('test/egg.test.js', () => {
         assert(err.message === 'removeAllListeners error');
         done();
       });
+    });
+
+    it('should close only once', done => {
+      const fn = spy();
+      app = utils.createApp('close');
+      app.beforeClose(fn);
+      Promise.all([
+        app.close(),
+        app.close(),
+      ]).then(() => {
+        assert(fn.callCount === 1);
+        done();
+      }).catch(done);
+      assert(app.close().then);
+    });
+
+    it('should throw error when call after error', function* () {
+      app = utils.createApp('close');
+      app.beforeClose(() => {
+        throw new Error('error');
+      });
+      try {
+        yield app.close();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'error');
+      }
+      try {
+        yield app.close();
+        throw new Error('should not run');
+      } catch (err) {
+        assert(err.message === 'error');
+      }
+    });
+
+    it('should return same promise when call twice', done => {
+      const first = spy();
+      const second = spy();
+      app = utils.createApp('close');
+      app.beforeClose(() => sleep(200));
+      app.close().then(first);
+      app.close().then(second);
+      setTimeout(() => {
+        assert(first.calledBefore(second));
+        done();
+      }, 500);
     });
   });
 
