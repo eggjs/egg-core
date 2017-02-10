@@ -316,5 +316,4 @@ describe('test/egg.test.js', () => {
       assert(app.callCount === 1);
     });
   });
-
 });
