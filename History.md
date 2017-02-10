@@ -1,4 +1,13 @@
 
+2.0.0 / 2017-02-10
+==================
+
+  * feat: [BREAKING_CHANGE] can get error from .ready() (#53)
+  * fix: make sure close once (#51)
+  * feat: imporve error message of async controller (#52)
+  * deps: remove unuse devDeps (#49)
+  * feat: [BREAKING_CHANGE] all middleware support async function and common function (#50)
+
 1.8.0 / 2017-02-06
 ==================
 
