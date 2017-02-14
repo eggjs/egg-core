@@ -55,6 +55,25 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert('aa' in app.serviceClasses.foo);
   });
 
+  it('should each request has unique ctx', function* () {
+    app = utils.createApp('service-unique');
+    app.loader.loadPlugin();
+    app.loader.loadApplicationExtend();
+    app.loader.loadService();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+    .get('/same?t=1')
+    .expect('true')
+    .expect(200);
+
+    yield request(app.callback())
+    .get('/same?t=2')
+    .expect('true')
+    .expect(200);
+  });
+
   it('should extend app.Service', function(done) {
     app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
