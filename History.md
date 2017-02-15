@@ -1,4 +1,9 @@
 
+2.0.1 / 2017-02-15
+==================
+
+  * fix: context loader cache independent in each request (#54)
+
 2.0.0 / 2017-02-10
 ==================
 
