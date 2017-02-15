@@ -417,6 +417,16 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.c.enable === true);
   });
 
+  it('should not load plugin.js when plugin.default.js exist', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'unittest');
+    app = utils.createApp('load-plugin-default');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(!loader.allPlugins.a);
+    assert(loader.allPlugins.b.enable === true);
+    assert(loader.allPlugins.c.enable === true);
+  });
+
   it('should warn when redefine plugin', () => {
     app = utils.createApp('load-plugin-config-override');
     mm(app.console, 'warn', function(msg, name, targetPlugin, from) {
