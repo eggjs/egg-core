@@ -1,4 +1,10 @@
 
+2.1.0 / 2017-02-15
+==================
+
+  * feat: load plugin.default.js rather than plugin.js (#57)
+  * refactor: seperate router api from app (#55)
+
 2.0.1 / 2017-02-15
 ==================
 
