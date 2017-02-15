@@ -121,6 +121,20 @@ describe('test/utils/router.test.js', () => {
           .get('/POSTS')
           .expect(404);
       });
+
+      it('should GET /members/delete/:id', () => {
+        return request(app.callback())
+          .delete('/members/delete/1')
+          .expect(200)
+          .expect('delete - 1');
+      });
+
+      it('should GET /members/del/:id', () => {
+        return request(app.callback())
+          .del('/members/del/1')
+          .expect(200)
+          .expect('delete - 1');
+      });
     });
 
     describe('no name', function() {
@@ -142,6 +156,8 @@ describe('test/utils/router.test.js', () => {
 
   describe('router.url', () => {
     it('should work', () => {
+      assert(app.url('posts') === '/posts');
+
       assert(app.router.url('posts') === '/posts');
       assert(app.router.url('members') === '/members');
       assert(app.router.url('post', { id: 1 }) === '/posts/1');

@@ -13,3 +13,7 @@ exports.new = function* () {
 exports.show = function* () {
   this.body = 'show - ' + this.params.id;
 };
+
+exports.delete = function* () {
+  this.body = `delete - ${this.params.id}`;
+};

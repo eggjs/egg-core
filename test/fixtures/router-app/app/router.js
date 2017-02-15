@@ -6,6 +6,8 @@ module.exports = function (app) {
   app
     .get('/locals/router', app.controller.locals.router)
     .get('/members/index', 'members.index')
+    .delete('/members/delete/:id', 'members.delete')
+    .del('/members/del/:id', 'members.delete')
     .resources('posts', '/posts', 'posts')
     .resources('members', '/members', app.controller.members)
     .resources('/comments', app.controller.comments)
