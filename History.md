@@ -1,4 +1,9 @@
 
+2.1.1 / 2017-02-17
+==================
+
+  * fix: define egg.Service and egg.Controller in constructor (#58)
+
 2.1.0 / 2017-02-15
 ==================
 
