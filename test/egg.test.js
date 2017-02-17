@@ -6,6 +6,7 @@ const path = require('path');
 const assert = require('assert');
 const spy = require('spy');
 const sleep = require('mz-modules/sleep');
+const request = require('supertest');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const EggLoader = require('..').EggLoader;
@@ -314,6 +315,27 @@ describe('test/egg.test.js', () => {
       yield app.close();
       yield app.close();
       assert(app.callCount === 1);
+    });
+  });
+
+  describe('Service and Controller', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('extend-controller-service');
+      app.loader.loadAll();
+      return app.ready();
+    });
+
+    it('should redefine Controller and Service ok', function* () {
+      yield request(app.callback())
+      .get('/success')
+      .expect(200)
+      .expect({ success: true, result: { foo: 'bar' } });
+
+      yield request(app.callback())
+      .get('/fail')
+      .expect(200)
+      .expect({ success: false, message: 'something wrong' });
     });
   });
 });
