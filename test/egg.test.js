@@ -326,6 +326,8 @@ describe('test/egg.test.js', () => {
       return app.ready();
     });
 
+    after(() => app.close());
+
     it('should redefine Controller and Service ok', function* () {
       yield request(app.callback())
       .get('/success')
