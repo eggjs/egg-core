@@ -156,7 +156,7 @@ describe('test/file_loader.test.js', () => {
     assert(app.services.someDir.someSubClass);
   });
 
-  it('should support options.initializer with es6 class ', () => {
+  it('should support options.initializer with es6 class', () => {
     const app = { dao: {} };
     new FileLoader({
       directory: path.join(dirBase, 'dao'),
@@ -227,5 +227,96 @@ describe('test/file_loader.test.js', () => {
         target: mod,
       }).load();
     }, /_private is not match 'a-z0-9_-' in _private.js/);
+  });
+
+  describe('caseStyle', () => {
+    it('should load when caseStyle = upper', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'upper',
+      }).load();
+
+      assert(target.FooBar1);
+      assert(target.FooBar2);
+      assert(target.FooBar3);
+      assert(target.FooBar4);
+    });
+
+    it('should load when caseStyle = camel', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'camel',
+      }).load();
+
+      assert(target.fooBar1);
+      assert(target.fooBar2);
+      assert(target.FooBar3);
+      assert(target.fooBar4);
+    });
+
+    it('should load when caseStyle = lower', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'lower',
+      }).load();
+
+      assert(target.fooBar1);
+      assert(target.fooBar2);
+      assert(target.fooBar3);
+      assert(target.fooBar4);
+    });
+
+    it('should load when caseStyle is function', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle(filepath) {
+          return filepath
+            .replace('.js', '')
+            .split('/')
+            .map(property => property.replace(/_/g, ''));
+        },
+      }).load();
+
+      assert(target.foobar1);
+      assert(target.fooBar2);
+      assert(target.FooBar3);
+      assert(target['foo-bar4']);
+    });
+
+    it('should throw when caseStyle do not return array', () => {
+      const target = {};
+      assert.throws(() => {
+        new FileLoader({
+          directory: path.join(dirBase, 'camelize'),
+          target,
+          caseStyle(filepath) {
+            return filepath;
+          },
+        }).load();
+      }, /caseStyle expect an array, but got foo_bar1.js/);
+    });
+
+    it('should be overridden by lowercaseFirst', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'upper',
+        lowercaseFirst: true,
+      }).load();
+
+      assert(target.fooBar1);
+      assert(target.fooBar2);
+      assert(target.fooBar3);
+      assert(target.fooBar4);
+    });
   });
 });
