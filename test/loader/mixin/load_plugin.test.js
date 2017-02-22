@@ -5,6 +5,7 @@ const fs = require('fs');
 const mm = require('mm');
 const assert = require('assert');
 const rimraf = require('rimraf');
+const spy = require('spy');
 const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
@@ -219,20 +220,7 @@ describe('test/load_plugin.test.js', function() {
     }), [
       'session',
       'zzz',
-      // 'depd',
-      // 'onerror',
-      // 'userservice',
-      // 'userrole',
-      // 'session',
-      // 'locals',
-      // 'security',
-      // 'watcher',
-      // 'view',
-      // 'i18n',
-      // 'validate',
-      // 'multipart',
-      // 'development',
-      // 'logrotater',
+      'package',
       'b',
       'c1',
       'f',
@@ -452,6 +440,15 @@ describe('test/load_plugin.test.js', function() {
     app = utils.createApp('plugin-optional-dependencies');
     const loader = app.loader;
     loader.loadPlugin();
-    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'e', 'b', 'a' ]);
+    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'package', 'e', 'b', 'a' ]);
+  });
+
+  it('should warn when redefine plugin', () => {
+    app = utils.createApp('redefin-plugin');
+    const warn = spy();
+    mm(app.console, 'warn', warn);
+    app.loader.loadPlugin();
+    assert(warn.callCount === 1);
+    assert(warn.calls[0].arguments[0], 'plugin %s has been defined that is %j, but you define again in %s');
   });
 });

@@ -16,11 +16,11 @@ describe('test/get_load_units.test.js', function() {
     // delete cache
     delete app.loader.dirs;
     const units = app.loader.getLoadUnits();
-    assert(units.length === 11);
-    assert(units[9].type === 'framework');
-    assert(units[9].path === utils.getFilepath('egg'));
-    assert(units[10].type === 'app');
-    assert(units[10].path === utils.getFilepath('plugin'));
+    assert(units.length === 12);
+    assert(units[10].type === 'framework');
+    assert(units[10].path === utils.getFilepath('egg'));
+    assert(units[11].type === 'app');
+    assert(units[11].path === utils.getFilepath('plugin'));
   });
 
   it('should not get plugin dir', function() {
