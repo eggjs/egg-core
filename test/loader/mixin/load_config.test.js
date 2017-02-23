@@ -3,6 +3,8 @@
 const path = require('path');
 const assert = require('assert');
 const utils = require('../../utils');
+const Application = require('../../..').EggCore;
+
 
 describe('test/loader/mixin/load_config.test.js', () => {
 
@@ -99,5 +101,14 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(loader.config.plugin.val === 2);
     assert(loader.config.plugin.sub !== loader.config.app.sub);
     assert(loader.config.appInApp === false);
+  });
+
+  it('should load config without coreMiddleware', () => {
+    app = new Application({
+      baseDir: path.join(__dirname, '../../fixtures/no-core-middleware'),
+    });
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    assert(app.config.coreMiddleware.length === 0);
   });
 });

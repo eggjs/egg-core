@@ -22,4 +22,6 @@ module.exports = function (app) {
   app.router
     .get('/router_middleware', common, asyncMw, generator, 'middleware')
     .redirect('/router_redirect', '/middleware');
+
+  app.get('packages', /^\/packages\/(.*)/, 'package.get');
 };

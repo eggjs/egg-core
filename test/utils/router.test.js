@@ -135,6 +135,12 @@ describe('test/utils/router.test.js', () => {
           .expect(200)
           .expect('delete - 1');
       });
+
+      it('should GET /packages/(.*)', () => {
+        return request(app.callback())
+        .get('/packages/urllib')
+        .expect('urllib');
+      });
     });
 
     describe('no name', function() {
@@ -185,6 +191,11 @@ describe('test/utils/router.test.js', () => {
          === '/posts/10/edit?page=2&tags=chair&tags=develop');
     });
 
+    it('should not support regular url', () => {
+      assert.throws(() => {
+        app.router.url('packages', [ 'urllib' ]);
+      }, 'Can\'t get the url for regExp /^\/packages\/(.*)/ for by name \'posts\'');
+    });
   });
 
   describe('router.pathFor', () => {

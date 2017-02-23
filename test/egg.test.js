@@ -9,38 +9,28 @@ const sleep = require('mz-modules/sleep');
 const request = require('supertest');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
-const EggLoader = require('..').EggLoader;
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
 
   describe('create EggCore', () => {
 
-    class Application extends EggCore {
-      get [Symbol.for('egg#loader')]() {
-        return EggLoader;
-      }
-      get [Symbol.for('egg#eggPath')]() {
-        return utils.getFilepath('egg');
-      }
-    }
-
     let app;
     after(() => app && app.close());
 
     it('should use cwd when no options', () => {
-      app = new Application();
+      app = new EggCore();
       assert(app._options.baseDir === process.cwd());
     });
 
     it('should set default application when no type', () => {
-      app = new Application();
+      app = new EggCore();
       assert(app.type === 'application');
     });
 
     it('should not set value expect for application and agent', () => {
       assert.throws(() => {
-        new Application({
+        new EggCore({
           type: 'nothing',
         });
       }, /options.type should be application or agent/);
@@ -48,7 +38,7 @@ describe('test/egg.test.js', () => {
 
     it('should throw options.baseDir required', () => {
       assert.throws(() => {
-        new Application({
+        new EggCore({
           baseDir: 1,
         });
       }, /options.baseDir required, and must be a string/);
@@ -56,7 +46,7 @@ describe('test/egg.test.js', () => {
 
     it('should throw options.baseDir not exist', () => {
       assert.throws(() => {
-        new Application({
+        new EggCore({
           baseDir: 'not-exist',
         });
       }, /Directory not-exist not exists/);
@@ -64,7 +54,7 @@ describe('test/egg.test.js', () => {
 
     it('should throw options.baseDir is not a directory', done => {
       try {
-        new Application({
+        new EggCore({
           baseDir: __filename,
         });
       } catch (err) {

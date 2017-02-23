@@ -33,4 +33,8 @@ module.exports = {
     path: path.join(__dirname, '../plugins/zzz'),
   },
 
+  package: {
+    enable: true,
+    package: 'package',
+  },
 };
