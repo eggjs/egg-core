@@ -1,4 +1,11 @@
 
+2.2.0 / 2017-02-27
+==================
+
+  * fix: improve getPathName (#62)
+  * feat: FileLoader support caseStyle (#59)
+  * fix: improve require es module (#61)
+
 2.1.1 / 2017-02-17
 ==================
 
