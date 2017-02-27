@@ -319,4 +319,19 @@ describe('test/file_loader.test.js', () => {
       assert(target.fooBar4);
     });
   });
+
+  it('should load files with inject', () => {
+    const inject = {};
+    const target = {};
+    new FileLoader({
+      directory: path.join(dirBase, 'inject'),
+      target,
+      inject,
+    }).load();
+
+    assert(inject.b === true);
+
+    new target.a(inject);
+    assert(inject.a === true);
+  });
 });
