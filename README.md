@@ -242,3 +242,9 @@ Please open an issue [here](https://github.com/eggjs/egg/issues).
 [MIT](LICENSE)
 
 [egg]: https://github.com/eggjs/egg
+
+## Visualize dependencies
+
+Thanks to [dependency-cruiser](https://github.com/sverweij/dependency-cruiser).
+
+![](depgraph.svg)
