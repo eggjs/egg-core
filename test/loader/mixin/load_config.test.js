@@ -111,4 +111,11 @@ describe('test/loader/mixin/load_config.test.js', () => {
     app.loader.loadConfig();
     assert(app.config.coreMiddleware.length === 0);
   });
+
+  it.only('should override array', () => {
+    app = utils.createApp('config-array');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    assert.deepEqual(app.config.array, [ 1, 2 ]);
+  });
 });
