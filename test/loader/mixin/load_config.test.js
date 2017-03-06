@@ -112,7 +112,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(app.config.coreMiddleware.length === 0);
   });
 
-  it.only('should override array', () => {
+  it('should override array', () => {
     app = utils.createApp('config-array');
     app.loader.loadPlugin();
     app.loader.loadConfig();
