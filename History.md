@@ -1,4 +1,9 @@
 
+3.0.0 / 2017-03-07
+==================
+
+  * feat: [BREAKING_CHANGE] array will be overridden when load config (#64)
+
 2.2.0 / 2017-02-27
 ==================
 
