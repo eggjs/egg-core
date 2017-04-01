@@ -2,6 +2,7 @@ module.exports = function (app) {
   const common = app.middlewares.common();
   const asyncMw = app.middlewares.async();
   const generator = app.middlewares.generator();
+  const generatorBoth = app.middlewares.generatorBoth();
 
   app
     .get('/locals/router', app.controller.locals.router)
@@ -15,6 +16,7 @@ module.exports = function (app) {
     .get('params', '/params/:a/:b', app.controller.locals.router)
     .get('/middleware', common, asyncMw, generator, 'middleware')
     .get('middleware', '/named_middleware', common, asyncMw, generator, 'middleware')
+    .get('/mix', generatorBoth , 'async.index')
     .register('/comments', [ 'post' ] , app.controller.comments.new)
     .register('/register_middleware', [ 'get' ], [ common, asyncMw, generator, 'middleware' ])
     .redirect('/redirect', '/middleware', 302);
