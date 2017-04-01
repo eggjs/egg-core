@@ -158,6 +158,15 @@ describe('test/utils/router.test.js', () => {
           .expect(200);
       });
     });
+
+    describe('async controller', () => {
+      it('should execute by the correct order', () => {
+        return request(app.callback())
+        .get('/mix')
+        .expect([ 'generator before', 'async', 'generator after' ])
+        .expect(200);
+      });
+    });
   });
 
   describe('router.url', () => {
