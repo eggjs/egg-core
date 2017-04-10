@@ -107,12 +107,12 @@ describe('test/egg.test.js', () => {
       let deprecate = app.deprecate;
       assert(deprecate._namespace === 'egg');
       assert(deprecate === app.deprecate);
-      assert(deprecate._file.endsWith('test/egg.test.js'));
+      assert(deprecate._file.match(/test(\/|\\)egg\.test\.js/));
 
       deprecate = app.env;
       assert(deprecate._namespace === 'egg');
       assert(deprecate !== app.deprecate);
-      assert(deprecate._file.endsWith('app/extend/application.js'));
+      assert(deprecate._file.match(/extend(\/|\\)application\.js/));
     });
   });
 
