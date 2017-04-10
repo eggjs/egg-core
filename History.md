@@ -1,4 +1,9 @@
 
+3.0.1 / 2017-04-10
+==================
+
+  * fix: ensure deprecate display the right call stack (#67)
+
 3.0.0 / 2017-03-07
 ==================
 
