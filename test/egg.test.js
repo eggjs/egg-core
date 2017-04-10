@@ -102,10 +102,17 @@ describe('test/egg.test.js', () => {
     afterEach(() => app && app.close());
 
     it('should deprecate with namespace egg', () => {
-      app = utils.createApp('plugin');
-      const deprecate = app.deprecate;
+      app = utils.createApp('deprecate');
+      app.loader.loadAll();
+      let deprecate = app.deprecate;
       assert(deprecate._namespace === 'egg');
       assert(deprecate === app.deprecate);
+      assert(deprecate._file.endsWith('test/egg.test.js'));
+
+      deprecate = app.env;
+      assert(deprecate._namespace === 'egg');
+      assert(deprecate !== app.deprecate);
+      assert(deprecate._file.endsWith('app/extend/application.js'));
     });
   });
 
