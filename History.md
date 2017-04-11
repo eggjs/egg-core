@@ -1,4 +1,12 @@
 
+3.2.0 / 2017-04-11
+==================
+
+  * test: add testcase for appPlugins and customPlugins (#72)
+  * fix: find the true callee bebind proxy (#70)
+  * feat:expose appPlugins & customPlugins (#68)
+  * feat: expose BaseContextClass (#71)
+
 3.1.0 / 2017-04-10
 ==================
 
