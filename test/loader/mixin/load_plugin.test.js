@@ -16,6 +16,15 @@ describe('test/load_plugin.test.js', function() {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
+  it('should exports allPlugins, appPlugins, customPlugins', () => {
+    app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert('allPlugins' in loader);
+    assert('appPlugins' in loader);
+    assert('customPlugins' in loader);
+  });
+
   it('should loadConfig all plugins', function() {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
