@@ -5,8 +5,7 @@ const mm = require('mm');
 const assert = require('assert');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_extend.test.js', function() {
-
+describe('test/loader/mixin/load_extend.test.js', () => {
   let app;
   before(function() {
     app = utils.createApp('extend');
@@ -21,7 +20,7 @@ describe('test/loader/mixin/load_extend.test.js', function() {
   });
   after(() => app.close());
 
-  it('should load app.context app.request app.response', function(done) {
+  it('should load app.context app.request app.response', () => {
     assert(app.context.appContext);
     assert(app.context.pluginbContext);
     assert(!app.context.pluginaContext);
@@ -35,7 +34,7 @@ describe('test/loader/mixin/load_extend.test.js', function() {
     assert(app.pluginbApplication);
     assert(!app.pluginaApplication);
 
-    request(app.callback())
+    return request(app.callback())
     .get('/')
     .expect({
       returnAppContext: 'app context',
@@ -46,8 +45,10 @@ describe('test/loader/mixin/load_extend.test.js', function() {
       returnPluginbResponse: 'plugin b response',
       returnAppApplication: 'app application',
       returnPluginbApplication: 'plugin b application',
+      status: 200,
+      etag: 'etag ok',
     })
-    .expect(200, done);
+    .expect(200);
   });
 
   it('should load application overriding framework', function(done) {
