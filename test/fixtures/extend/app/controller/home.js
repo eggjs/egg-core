@@ -1,6 +1,9 @@
 'use strict';
 
 module.exports = function*() {
+  const status = Number(this.query.status || 200);
+  this.status = status;
+  this.etag = '2.2.2.2';
   this.body = {
     returnAppContext: this.appContext,
     returnPluginbContext: this.pluginbContext,
@@ -10,5 +13,7 @@ module.exports = function*() {
     returnPluginbResponse: this.response.pluginbResponse,
     returnAppApplication: this.app.appApplication,
     returnPluginbApplication: this.app.pluginbApplication,
+    status: this.status,
+    etag: this.etag,
   };
 };
