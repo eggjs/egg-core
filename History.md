@@ -1,4 +1,9 @@
 
+3.2.2 / 2017-04-14
+==================
+
+  * fix: don't replace plugin.default.js when serverEnv is default (#74)
+
 3.2.1 / 2017-04-13
 ==================
 
