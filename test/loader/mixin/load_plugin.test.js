@@ -453,11 +453,20 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should warn when redefine plugin', () => {
-    app = utils.createApp('redefin-plugin');
+    app = utils.createApp('redefine-plugin');
     const warn = spy();
     mm(app.console, 'warn', warn);
     app.loader.loadPlugin();
     assert(warn.callCount === 1);
     assert(warn.calls[0].arguments[0], 'plugin %s has been defined that is %j, but you define again in %s');
+  });
+
+  it('should not warn when not redefine plugin', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'default');
+    app = utils.createApp('no-redefine-plugin');
+    const warn = spy();
+    mm(app.console, 'warn', warn);
+    app.loader.loadPlugin();
+    assert(warn.callCount === 0);
   });
 });
