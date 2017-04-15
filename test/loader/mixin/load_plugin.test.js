@@ -469,4 +469,5 @@ describe('test/load_plugin.test.js', function() {
     app.loader.loadPlugin();
     assert(warn.callCount === 0);
   });
+
 });

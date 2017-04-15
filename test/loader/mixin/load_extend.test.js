@@ -19,6 +19,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     app.loader.loadRouter();
   });
   after(() => app.close());
+  afterEach(mm.restore);
 
   it('should load app.context app.request app.response', () => {
     assert(app.context.appContext);
@@ -110,4 +111,26 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert(app.b === 'b1');
   });
 
+  describe('load unittest extend', () => {
+    let app;
+    after(() => app.close());
+
+    it('should load unittext.js when unittest', function* () {
+      app = utils.createApp('load-plugin-unittest');
+      app.loader.loadPlugin();
+      app.loader.loadApplicationExtend();
+      assert(app.unittest === true);
+      assert(app.local !== true);
+    });
+
+    it('should load unittext.js when mm.env(default)', function* () {
+      mm(process.env, 'EGG_SERVER_ENV', 'local');
+      mm(process.env, 'EGG_MOCK_SERVER_ENV', 'local');
+      app = utils.createApp('load-plugin-unittest');
+      app.loader.loadPlugin();
+      app.loader.loadApplicationExtend();
+      assert(app.unittest === true);
+      assert(app.local === true);
+    });
+  });
 });
