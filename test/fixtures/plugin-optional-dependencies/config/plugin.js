@@ -24,4 +24,8 @@ module.exports = {
     enable: true,
     package: 'e',
   },
+  f: {
+    enable: true,
+    package: 'f',
+  },
 };

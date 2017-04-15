@@ -37,4 +37,9 @@ module.exports = {
     enable: true,
     package: 'package',
   },
+
+  opt: {
+    enable: false,
+    package: 'opt',
+  },
 };
