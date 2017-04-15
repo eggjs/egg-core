@@ -1,4 +1,9 @@
 
+3.3.0 / 2017-04-15
+==================
+
+  * feat: always load extend/xx.unittest.js when run test (#75)
+
 3.2.2 / 2017-04-14
 ==================
 
