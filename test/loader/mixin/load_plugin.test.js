@@ -449,7 +449,7 @@ describe('test/load_plugin.test.js', function() {
     app = utils.createApp('plugin-optional-dependencies');
     const loader = app.loader;
     loader.loadPlugin();
-    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'package', 'e', 'b', 'a' ]);
+    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'package', 'e', 'b', 'a', 'f' ]);
   });
 
   it('should warn when redefine plugin', () => {
