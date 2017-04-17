@@ -1,4 +1,9 @@
 
+3.3.1 / 2017-04-17
+==================
+
+  * fix: optionally depend on a plugin which is disabled. (#76)
+
 3.3.0 / 2017-04-15
 ==================
 
