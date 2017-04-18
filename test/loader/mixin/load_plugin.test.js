@@ -23,6 +23,7 @@ describe('test/load_plugin.test.js', function() {
     assert('allPlugins' in loader);
     assert('appPlugins' in loader);
     assert('customPlugins' in loader);
+    assert('eggPlugins' in loader);
   });
 
   it('should loadConfig all plugins', function() {
