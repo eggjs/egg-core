@@ -17,7 +17,7 @@ describe('test/loader/egg_loader.test.js', () => {
     assert(app.loader.ContextLoader);
   });
 
-  describe('utils.getHomedir()', () => {
+  describe('loader.getHomedir()', () => {
     afterEach(mm.restore);
 
     it('should return process.env.HOME', () => {
