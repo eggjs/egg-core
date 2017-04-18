@@ -1,4 +1,10 @@
 
+3.4.0 / 2017-04-18
+==================
+
+  * refactor: export getHomedir that can be extended (#78)
+  * feat: expose eggPlugins (#77)
+
 3.3.1 / 2017-04-17
 ==================
 
