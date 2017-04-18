@@ -9,7 +9,8 @@
     "test": "npm run lint && egg-bin test",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
-    "ci": "npm run lint && npm run cov"
+    "ci": "npm run lint && npm run cov",
+    "depgraph": "dependency-cruiser --exclude \"(^node_modules|^test|^docs|^coverage|^scripts|^benchmark|^(fs|path|assert|util)$)\" --output-type dot . | dot -T svg > depgraph.svg"
   },
   "repository": {
     "type": "git",
@@ -29,10 +30,12 @@
     "node": ">= 6.0.0"
   },
   "ci": {
-    "version": "6, 7"
+    "version": "6, 7",
+    "license": true
   },
   "devDependencies": {
     "autod": "^2.7.1",
+    "dependency-cruiser": "^2.0.1",
     "egg-bin": "^2.2.1",
     "egg-ci": "^1.1.0",
     "eslint": "^3.16.1",
