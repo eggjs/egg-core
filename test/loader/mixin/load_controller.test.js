@@ -38,6 +38,15 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         .expect(200)
         .expect('done');
     });
+
+    it('should first argument is ctx', () => {
+      assert(app.controller.generatorFunction);
+
+      return request(app.callback())
+        .get('/generator-function-ctx')
+        .expect(200)
+        .expect('done');
+    });
   });
 
   describe('when controller is object', () => {
@@ -218,6 +227,12 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         desc: 'account.foo.bar',
         checkSign: true,
       });
+    });
+  });
+
+  describe('not controller', () => {
+    it('should load a number', () => {
+      assert(app.controller.number === 123);
     });
   });
 });
