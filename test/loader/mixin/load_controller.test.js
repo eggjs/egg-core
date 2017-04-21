@@ -229,4 +229,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       });
     });
   });
+
+  describe('not controller', () => {
+    it('should load a number', () => {
+      assert(app.controller.number === 123);
+    });
+  });
 });
