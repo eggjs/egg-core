@@ -1,4 +1,9 @@
 
+3.4.1 / 2017-04-21
+==================
+
+  * fix: should support module.exports = function*(ctx) {} as a controller (#79)
+
 3.4.0 / 2017-04-18
 ==================
 
