@@ -471,7 +471,7 @@ describe('test/load_plugin.test.js', function() {
     assert(warn.callCount === 0);
   });
 
-  it.only('should parse complex dependencies', () => {
+  it('should parse complex dependencies', () => {
     class Application extends EggCore {
       get [Symbol.for('egg#eggPath')]() {
         return utils.getFilepath('plugin-complex-dependencies');
