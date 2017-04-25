@@ -134,12 +134,22 @@ describe('test/file_loader.test.js', () => {
     assert(app.middlewares.dm2);
   });
 
-  it('should support ignore', () => {
+  it('should support ignore string', () => {
     const app = { services: {} };
     new FileLoader({
       directory: path.join(dirBase, 'ignore'),
       target: app.services,
       ignore: 'util/**',
+    }).load();
+    assert.deepEqual(app.services.a, { a: 1 });
+  });
+
+  it('should support ignore array', () => {
+    const app = { services: {} };
+    new FileLoader({
+      directory: path.join(dirBase, 'ignore'),
+      target: app.services,
+      ignore: [ 'util/a.js', 'util/b/b.js' ],
     }).load();
     assert.deepEqual(app.services.a, { a: 1 });
   });
