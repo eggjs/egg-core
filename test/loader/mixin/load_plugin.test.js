@@ -471,4 +471,26 @@ describe('test/load_plugin.test.js', function() {
     assert(warn.callCount === 0);
   });
 
+  it('should parse complex dependencies', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-complex-dependencies');
+      }
+    }
+    app = utils.createApp('plugin-complex-dependencies', {
+      // use clean framework
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert.deepEqual(loader.orderPlugins.map(p => p.name), [
+      'zookeeper',
+      'ddcs',
+      'vip',
+      'zoneclient',
+      'rpc',
+      'ldc',
+    ]);
+  });
+
 });
