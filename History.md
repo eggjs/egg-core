@@ -1,4 +1,10 @@
 
+3.5.0 / 2017-04-26
+==================
+
+  * feat(file_loader): ignore option support array in FileLoader (#81)
+  * fix: wrong optional dependencies in complex demo (#80)
+
 3.4.1 / 2017-04-21
 ==================
 
