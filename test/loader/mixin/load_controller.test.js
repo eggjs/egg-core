@@ -3,6 +3,7 @@
 const is = require('is-type-of');
 const assert = require('assert');
 const request = require('supertest');
+const path = require('path');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_controller.test.js', () => {
@@ -195,11 +196,18 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         .expect(404);
     });
 
-    it('should get pathName from Controller', () => {
+    it('should get pathName from Controller instance', () => {
       return request(app.callback())
         .get('/class-pathname')
         .expect(200)
         .expect('controller.admin.config');
+    });
+
+    it('should get fullPath from Controller instance', () => {
+      return request(app.callback())
+        .get('/class-fullpath')
+        .expect(200)
+        .expect(path.join(utils.getFilepath('controller-app'), 'app/controller/admin/config.js'));
     });
   });
 
