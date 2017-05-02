@@ -18,6 +18,7 @@ module.exports = app => {
 
   app.get('/class-wrap-function', 'classWrapFunction.get');
   app.get('/class-pathname', 'admin.config.getName');
+  app.get('/class-fullpath', 'admin.config.getFullPath');
 
   app.resources('/resources-class', 'resourceClass');
   app.resources('/resources-object', 'resourceObject');
