@@ -1,4 +1,11 @@
 
+3.7.0 / 2017-05-03
+==================
+
+  * feat(file_loader): support filter options (#86)
+  * feat: support custom directory (#85)
+  * refact: use es6 default parameter value synax. (#83)
+
 3.6.0 / 2017-05-02
 ==================
 
