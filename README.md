@@ -232,6 +232,7 @@ caseStyle      | `String/Function` | set property's case when converting a filep
 override       | `Boolean`      | determine whether override the property when get the same name
 call           | `Boolean`      | determine whether invoke when exports is function
 inject         | `Object`       | an object that be the argument when invoke the function
+filter         | `Function`     | a function that filter the exports which can be loaded
 
 ## Questions & Suggestions
 

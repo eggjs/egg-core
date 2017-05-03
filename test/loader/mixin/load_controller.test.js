@@ -243,4 +243,21 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       assert(app.controller.number === 123);
     });
   });
+
+  describe('controller in other directory', () => {
+    let app;
+    before(() => {
+      const baseDir = utils.getFilepath('other-directory');
+      app = utils.createApp('other-directory');
+      app.loader.loadController({
+        directory: path.join(baseDir, 'app/other-controller'),
+      });
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should load', () => {
+      assert(app.controller.user);
+    });
+  });
 });
