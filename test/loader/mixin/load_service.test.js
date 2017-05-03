@@ -141,7 +141,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     });
   });
 
-  describe.only('service in other directory', () => {
+  describe('service in other directory', () => {
     let app;
     before(() => {
       const baseDir = utils.getFilepath('other-directory');

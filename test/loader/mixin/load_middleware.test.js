@@ -187,7 +187,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     });
   });
 
-  describe.only('middleware in other directory', () => {
+  describe('middleware in other directory', () => {
     let app;
     before(() => {
       const baseDir = utils.getFilepath('other-directory');
