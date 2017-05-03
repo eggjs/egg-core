@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const request = require('supertest');
 const mm = require('mm');
 const assert = require('assert');
@@ -8,7 +9,7 @@ const utils = require('../../utils');
 describe('test/loader/mixin/load_service.test.js', function() {
   let app;
   afterEach(mm.restore);
-  afterEach(() => app.close());
+  afterEach(() => app && app.close());
 
   it('should load from application and plugin', function(done) {
     app = utils.createApp('plugin');
@@ -140,4 +141,20 @@ describe('test/loader/mixin/load_service.test.js', function() {
     });
   });
 
+  describe.only('service in other directory', () => {
+    let app;
+    before(() => {
+      const baseDir = utils.getFilepath('other-directory');
+      app = utils.createApp('other-directory');
+      app.loader.loadService({
+        directory: path.join(baseDir, 'app/other-service'),
+      });
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should load', () => {
+      assert(app.serviceClasses.user);
+    });
+  });
 });

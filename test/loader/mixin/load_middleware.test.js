@@ -1,5 +1,6 @@
 'use strict';
 
+const path = require('path');
 const assert = require('assert');
 const request = require('supertest');
 const utils = require('../../utils');
@@ -183,6 +184,28 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       yield request(app.callback())
       .get('/common')
       .expect('common');
+    });
+  });
+
+  describe.only('middleware in other directory', () => {
+    let app;
+    before(() => {
+      const baseDir = utils.getFilepath('other-directory');
+      app = utils.createApp('other-directory');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+
+      const directory = app.loader.getLoadUnits().map(unit => path.join(unit.path, 'app/middleware'));
+      directory.push(path.join(baseDir, 'app/other-middleware'));
+      app.loader.loadMiddleware({
+        directory,
+      });
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should load', () => {
+      assert(app.middlewares.user);
     });
   });
 });
