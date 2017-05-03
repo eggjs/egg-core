@@ -3,6 +3,7 @@
 const assert = require('assert');
 const pedding = require('pedding');
 const path = require('path');
+const is = require('is-type-of');
 const FileLoader = require('../../lib/loader/file_loader');
 const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
@@ -343,5 +344,26 @@ describe('test/file_loader.test.js', () => {
 
     new target.a(inject);
     assert(inject.a === true);
+  });
+
+  it('should load files with filter', () => {
+    const target = {};
+    new FileLoader({
+      directory: path.join(dirBase, 'filter'),
+      target,
+      filter(obj) {
+        return Array.isArray(obj);
+      },
+    }).load();
+    assert.deepEqual(Object.keys(target), [ 'arr' ]);
+
+    new FileLoader({
+      directory: path.join(dirBase, 'filter'),
+      target,
+      filter(obj) {
+        return is.class(obj);
+      },
+    }).load();
+    assert.deepEqual(Object.keys(target), [ 'arr', 'class' ]);
   });
 });
