@@ -9,7 +9,7 @@ const utils = require('../../utils');
 describe('test/loader/mixin/load_service.test.js', function() {
   let app;
   afterEach(mm.restore);
-  afterEach(() => app && app.close());
+  afterEach(() => app.close());
 
   it('should load from application and plugin', function(done) {
     app = utils.createApp('plugin');
@@ -142,7 +142,6 @@ describe('test/loader/mixin/load_service.test.js', function() {
   });
 
   describe('service in other directory', () => {
-    let app;
     before(() => {
       const baseDir = utils.getFilepath('other-directory');
       app = utils.createApp('other-directory');
@@ -151,7 +150,6 @@ describe('test/loader/mixin/load_service.test.js', function() {
       });
       return app.ready();
     });
-    after(() => app.close());
 
     it('should load', () => {
       assert(app.serviceClasses.user);
