@@ -194,14 +194,14 @@ describe('test/file_loader.test.js', () => {
     assert.deepEqual(app.model.mod, { a: 1 });
   });
 
-  it.skip('should contain syntax error filepath', () => {
+  it('should contain syntax error filepath', () => {
     const app = { model: {} };
     assert.throws(() => {
       new FileLoader({
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
-    }, /Parse Error: Unexpected token/);
+    }, /Parse Error:/);
   });
 
   it('should throw when directory contains dot', () => {
