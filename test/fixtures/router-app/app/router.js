@@ -26,4 +26,29 @@ module.exports = function (app) {
     .redirect('/router_redirect', '/middleware');
 
   app.get('packages', /^\/packages\/(.*)/, 'package.get');
+
+  // sub router
+  const subRouter = app.prefix('/sub');
+  subRouter.get('/test', function* () {
+    this.body = 'sub test get';
+  });
+  subRouter.post('/test', function* () {
+    this.body = 'sub test post';
+  });
+  subRouter.put('/test', function* () {
+    this.body = 'sub test put';
+  });
+  subRouter.del('/test', function* () {
+    this.body = 'sub test del';
+  });
+  subRouter.head('/test', function* () {
+    this.body = 'sub test head';
+  });
+  subRouter.delete('/delete', function* () {
+    this.body = 'sub test delete';
+  });
+  subRouter.patch('/test', function* () {
+    this.body = 'sub test patch';
+  });
+
 };

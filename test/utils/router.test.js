@@ -264,4 +264,48 @@ describe('test/utils/router.test.js', () => {
         .expect('location', '/middleware');
     });
   });
+
+  describe('prefix', () => {
+    it('should GET /sub/test', () => {
+      return request(app.callback())
+        .get('/sub/test')
+        .expect(200)
+        .expect('sub test get');
+    });
+
+    it('should POST /sub/test', () => {
+      return request(app.callback())
+        .post('/sub/test')
+        .expect(200)
+        .expect('sub test post');
+    });
+
+    it('should PUT /sub/test', () => {
+      return request(app.callback())
+        .put('/sub/test')
+        .expect(200)
+        .expect('sub test put');
+    });
+
+    it('should PATCH /sub/test', () => {
+      return request(app.callback())
+        .patch('/sub/test')
+        .expect(200)
+        .expect('sub test patch');
+    });
+
+    it('should DELETE /sub/test', () => {
+      return request(app.callback())
+        .del('/sub/test')
+        .expect(200)
+        .expect('sub test del');
+    });
+
+    it('should DELETE /sub/delete', () => {
+      return request(app.callback())
+        .delete('/sub/delete')
+        .expect(200)
+        .expect('sub test delete');
+    });
+  });
 });
