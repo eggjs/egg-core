@@ -172,6 +172,7 @@ describe('test/utils/router.test.js', () => {
   describe('router.url', () => {
     it('should work', () => {
       assert(app.url('posts') === '/posts');
+      assert(app.url('noname') === '');
 
       assert(app.router.url('posts') === '/posts');
       assert(app.router.url('members') === '/members');
@@ -204,6 +205,11 @@ describe('test/utils/router.test.js', () => {
       assert.throws(() => {
         app.router.url('packages', [ 'urllib' ]);
       }, 'Can\'t get the url for regExp /^\/packages\/(.*)/ for by name \'posts\'');
+    });
+
+    it('should support sub router url', () => {
+      assert(app.url('url') === '/url');
+      assert(app.url('sub_url', { id: 123 }) === '/sub/url/123');
     });
   });
 
@@ -265,7 +271,7 @@ describe('test/utils/router.test.js', () => {
     });
   });
 
-  describe('prefix', () => {
+  describe('sub router', () => {
     it('should GET /sub/test', () => {
       return request(app.callback())
         .get('/sub/test')

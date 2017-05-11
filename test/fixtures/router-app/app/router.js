@@ -28,7 +28,7 @@ module.exports = function (app) {
   app.get('packages', /^\/packages\/(.*)/, 'package.get');
 
   // sub router
-  const subRouter = app.prefix('/sub');
+  const subRouter = app.getRouter('/sub');
   subRouter.get('/test', function* () {
     this.body = 'sub test get';
   });
@@ -41,14 +41,23 @@ module.exports = function (app) {
   subRouter.del('/test', function* () {
     this.body = 'sub test del';
   });
-  subRouter.head('/test', function* () {
-    this.body = 'sub test head';
-  });
   subRouter.delete('/delete', function* () {
     this.body = 'sub test delete';
   });
   subRouter.patch('/test', function* () {
     this.body = 'sub test patch';
+  });
+
+  app.get('url', '/url', function* () {
+    this.body = 'main url';
+  });
+
+  subRouter.get('url', '/url', function* () {
+    this.body = 'sub url';
+  });
+
+  subRouter.get('sub_url', '/url/:id', function* () {
+    this.body = 'sub url';
   });
 
 };
