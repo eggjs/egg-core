@@ -80,5 +80,10 @@ describe('test/utils/index.test.js', () => {
       const result = utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
       assert(result === null);
     });
+
+    it('should load no js file', () => {
+      const result = utils.loadFile(path.join(baseDir, 'no-js.yml')).toString();
+      assert(result === '---\nmap:\n a: 1\n b: 2');
+    });
   });
 });

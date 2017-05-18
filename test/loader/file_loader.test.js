@@ -4,6 +4,7 @@ const assert = require('assert');
 const pedding = require('pedding');
 const path = require('path');
 const is = require('is-type-of');
+const yaml = require('js-yaml');
 const FileLoader = require('../../lib/loader/file_loader');
 const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
@@ -183,6 +184,20 @@ describe('test/file_loader.test.js', () => {
     assert(app.dao.TestClass.path === path.join(dirBase, 'dao/TestClass.js'));
     assert.deepEqual(app.dao.testFunction, { user: { name: 'kai.fangk' } });
     assert.deepEqual(app.dao.testReturnFunction, { user: { name: 'kai.fangk' } });
+  });
+
+  it('should support options.initializer custom type', () => {
+    const app = { yml: {} };
+    new FileLoader({
+      directory: path.join(dirBase, 'yml'),
+      glob: '**/*.yml',
+      target: app.yml,
+      initializer(exports) {
+        return yaml.load(exports.toString());
+      },
+    }).load();
+    assert(app.yml.config);
+    assert.deepEqual(app.yml.config, { map: { a: 1, b: 2 } });
   });
 
   it('should pass es6 module', () => {

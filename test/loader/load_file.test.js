@@ -29,4 +29,10 @@ describe('test/load_file.test.js', function() {
     }, /Parse Error: Unexpected token/);
   });
 
+  it('should load custom file', function() {
+    app = utils.createApp('load_file');
+    const result = app.loader.loadFile(utils.getFilepath('load_file/no-js.yml')).toString();
+    assert(result === '---\nmap:\n a: 1\n b: 2');
+  });
+
 });
