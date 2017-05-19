@@ -190,7 +190,7 @@ describe('test/file_loader.test.js', () => {
     const app = { yml: {} };
     new FileLoader({
       directory: path.join(dirBase, 'yml'),
-      glob: '**/*.yml',
+      match: '**/*.yml',
       target: app.yml,
       initializer(exports) {
         return yaml.load(exports.toString());

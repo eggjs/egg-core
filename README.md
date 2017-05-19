@@ -226,6 +226,7 @@ Param          | Type           | Description
 -------------- | -------------- | ------------------------
 directory      | `String/Array` | directories to be loaded
 target         | `Object`       | attach the target object from loaded files
+match          | `String|Array` | match the files when load, default to `**/*.js`
 ignore         | `String|Array` | ignore the files when load
 initializer    | `Function`     | custom file exports, receive two parameters, first is the inject object, second is an `options` object that contain `path`
 caseStyle      | `String/Function` | set property's case when converting a filepath to property list.
