@@ -1,4 +1,14 @@
 
+3.8.0 / 2017-05-20
+==================
+
+  * feat: support load custom file type (#93)
+  * chore(documentation): fix typo (#92)
+  * test: fix the testcase that is skipped (#89)
+  * refactor: change private function name to Symbol from being called outside. (#87)
+  * test: skip the failed testcase (#88)
+  * refactor: use es6 rest parameter. (#84)
+
 3.7.0 / 2017-05-03
 ==================
 
