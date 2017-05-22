@@ -123,8 +123,9 @@ describe('test/egg.test.js', () => {
     it('should log info when plugin is not ready', done => {
       app = utils.createApp('notready');
       app.loader.loadAll();
-      mm(app.console, 'warn', (message, a) => {
-        assert(message === '[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
+      mm(app.console, 'warn', (message, b, a) => {
+        assert(message === '[egg:core:ready_timeout] %s seconds later %s was still unable to finish.');
+        assert(b === 10);
         assert(a === 'a');
         done();
       });
@@ -150,6 +151,7 @@ describe('test/egg.test.js', () => {
 
   describe('app.beforeStart()', () => {
     let app;
+    afterEach(mm.restore);
     afterEach(() => app.close());
 
     it('should beforeStart param error', done => {
@@ -172,6 +174,15 @@ describe('test/egg.test.js', () => {
       assert(app.beforeStartFunction === true);
       assert(app.beforeStartGeneratorFunction === true);
       assert(app.beforeStartAsyncFunction === true);
+    });
+
+    it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', function* () {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', '12000');
+      const start = Date.now();
+      app = utils.createApp('beforestart-timeout');
+      app.loader.loadAll();
+      yield app.ready();
+      assert(Date.now() - start > 11000);
     });
 
     it('should beforeStart excute failed', done => {
