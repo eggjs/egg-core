@@ -62,6 +62,13 @@ describe('test/egg.test.js', () => {
         done();
       }
     });
+
+    it('should throw process.env.EGG_READY_TIMEOUT_ENV should be able to parseInt', () => {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', 'notAnNumber');
+      assert.throws(() => {
+        new EggCore();
+      }, /process.env.EGG_READY_TIMEOUT_ENV notAnNumber should be able to parseInt/);
+    });
   });
 
   describe('getters', () => {
@@ -151,7 +158,6 @@ describe('test/egg.test.js', () => {
 
   describe('app.beforeStart()', () => {
     let app;
-    afterEach(mm.restore);
     afterEach(() => app.close());
 
     it('should beforeStart param error', done => {
@@ -178,11 +184,22 @@ describe('test/egg.test.js', () => {
 
     it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', function* () {
       mm(process.env, 'EGG_READY_TIMEOUT_ENV', '12000');
-      const start = Date.now();
-      app = utils.createApp('beforestart-timeout');
+      app = utils.createApp('beforestart-with-timeout-env');
       app.loader.loadAll();
+      assert(app.beforeStartFunction === false);
       yield app.ready();
-      assert(Date.now() - start > 11000);
+      assert(app.beforeStartFunction === true);
+    });
+
+    it('should beforeStart excute timeout without EGG_READY_TIMEOUT_ENV too short', function(done) {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', '1000');
+      app = utils.createApp('beforestart-with-timeout-env');
+      app.loader.loadAll();
+      app.once('ready_timeout', id => {
+        const file = path.normalize('test/fixtures/beforestart-with-timeout-env/app.js');
+        assert(id.indexOf(file) >= 0);
+        done();
+      });
     });
 
     it('should beforeStart excute failed', done => {
