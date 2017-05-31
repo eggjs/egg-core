@@ -62,6 +62,13 @@ describe('test/egg.test.js', () => {
         done();
       }
     });
+
+    it('should throw process.env.EGG_READY_TIMEOUT_ENV should be able to parseInt', () => {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', 'notAnNumber');
+      assert.throws(() => {
+        new EggCore();
+      }, /process.env.EGG_READY_TIMEOUT_ENV notAnNumber should be able to parseInt/);
+    });
   });
 
   describe('getters', () => {
@@ -123,8 +130,9 @@ describe('test/egg.test.js', () => {
     it('should log info when plugin is not ready', done => {
       app = utils.createApp('notready');
       app.loader.loadAll();
-      mm(app.console, 'warn', (message, a) => {
-        assert(message === '[egg:core:ready_timeout] 10 seconds later %s was still unable to finish.');
+      mm(app.console, 'warn', (message, b, a) => {
+        assert(message === '[egg:core:ready_timeout] %s seconds later %s was still unable to finish.');
+        assert(b === 10);
         assert(a === 'a');
         done();
       });
@@ -172,6 +180,26 @@ describe('test/egg.test.js', () => {
       assert(app.beforeStartFunction === true);
       assert(app.beforeStartGeneratorFunction === true);
       assert(app.beforeStartAsyncFunction === true);
+    });
+
+    it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', function* () {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', '12000');
+      app = utils.createApp('beforestart-with-timeout-env');
+      app.loader.loadAll();
+      assert(app.beforeStartFunction === false);
+      yield app.ready();
+      assert(app.beforeStartFunction === true);
+    });
+
+    it('should beforeStart excute timeout without EGG_READY_TIMEOUT_ENV too short', function(done) {
+      mm(process.env, 'EGG_READY_TIMEOUT_ENV', '1000');
+      app = utils.createApp('beforestart-with-timeout-env');
+      app.loader.loadAll();
+      app.once('ready_timeout', id => {
+        const file = path.normalize('test/fixtures/beforestart-with-timeout-env/app.js');
+        assert(id.indexOf(file) >= 0);
+        done();
+      });
     });
 
     it('should beforeStart excute failed', done => {
