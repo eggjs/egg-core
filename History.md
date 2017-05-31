@@ -1,4 +1,11 @@
 
+3.9.0 / 2017-05-31
+==================
+
+  * feat: app timeout support config by env (#94)
+  * fix: load class controller should skip getter & setter (#96)
+  * refactor: use template literals in lib/utils/index.js (#95)
+
 3.8.0 / 2017-05-20
 ==================
 
