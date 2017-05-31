@@ -42,4 +42,12 @@ module.exports = class HomeController {
   get nofunction() {
     return 'done';
   }
+
+  get request() {
+    return this.ctx.request;
+  }
+
+  set body(val) {
+    this.ctx.body = val;
+  }
 };
