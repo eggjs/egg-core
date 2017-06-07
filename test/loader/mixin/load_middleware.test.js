@@ -26,6 +26,15 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert(!('a' in app.middlewares));
   });
 
+  it('should also support app.middleware', function() {
+    assert('static' in app.middleware);
+    assert('status' in app.middleware);
+    assert('custom' in app.middleware);
+    assert('b' in app.middleware);
+    assert(!('a' in app.middleware));
+
+  });
+
   it('should override middlewares of plugin by framework', function(done) {
     request(app.callback())
     .get('/status')
