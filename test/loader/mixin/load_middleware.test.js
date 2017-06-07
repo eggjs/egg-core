@@ -33,6 +33,13 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert('b' in app.middleware);
     assert(!('a' in app.middleware));
 
+    assert(app.middleware.static === app.middlewares.static);
+    let count = 0;
+    for (const mw of app.middleware) {
+      assert(typeof mw === 'function');
+      count++;
+    }
+    assert(count === 3);
   });
 
   it('should override middlewares of plugin by framework', function(done) {
