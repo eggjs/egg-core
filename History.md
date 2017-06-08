@@ -1,4 +1,11 @@
 
+3.10.0 / 2017-06-08
+===================
+
+  * chore: improve cov (#91)
+  * feat: support app.middleware[name] (#98)
+  * test: add node 8 (#97)
+
 3.9.0 / 2017-05-31
 ==================
 
