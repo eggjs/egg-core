@@ -1,4 +1,9 @@
 
+3.11.0 / 2017-06-21
+==================
+
+  * feat: framework can override getExtendFilePaths (#100)
+
 3.10.0 / 2017-06-08
 ===================
 
