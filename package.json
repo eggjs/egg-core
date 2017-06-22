@@ -30,7 +30,7 @@
     "node": ">= 6.0.0"
   },
   "ci": {
-    "version": "6, 7"
+    "version": "6, 7, 8"
   },
   "devDependencies": {
     "autod": "^2.8.0",
