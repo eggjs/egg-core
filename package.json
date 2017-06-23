@@ -34,10 +34,10 @@
   },
   "devDependencies": {
     "autod": "^2.8.0",
-    "egg-bin": "^3.4.0",
-    "egg-ci": "^1.6.0",
+    "egg-bin": "^4.0.4",
+    "egg-ci": "^1.8.0",
     "eslint": "^3.19.0",
-    "eslint-config-egg": "^4.2.0",
+    "eslint-config-egg": "^4.2.1",
     "js-yaml": "^3.8.4",
     "mm": "^2.1.0",
     "mz-modules": "^1.0.0",
