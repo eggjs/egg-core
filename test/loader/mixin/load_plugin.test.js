@@ -493,4 +493,11 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
+  it.only('should support optionalDependencies', () => {
+    app = utils.createApp('plugin-optional-dependencies-case2');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'package', 'c', 'a', 'b' ]);
+  });
+
 });
