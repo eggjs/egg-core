@@ -17,14 +17,14 @@ describe('test/loader/context_loader.test.js', () => {
     app.loader.loadToContext(directory, 'depth');
 
     request(app.callback())
-    .get('/depth')
-    .expect({
-      one: 'context:one',
-      two: 'context:two',
-      three: 'context:three',
-      four: 'context:four',
-    })
-    .expect(200, done);
+      .get('/depth')
+      .expect({
+        one: 'context:one',
+        two: 'context:two',
+        three: 'context:three',
+        four: 'context:four',
+      })
+      .expect(200, done);
   });
 
   it('should load different types', done => {
@@ -32,15 +32,15 @@ describe('test/loader/context_loader.test.js', () => {
     app.loader.loadToContext(directory, 'type');
 
     request(app.callback())
-    .get('/type')
-    .expect({
-      class: 'context',
-      functionClass: 'context:config',
-      generator: 'generator',
-      object: 'object.get',
-      number: 1,
-    })
-    .expect(200, done);
+      .get('/type')
+      .expect({
+        class: 'context',
+        functionClass: 'context:config',
+        generator: 'generator',
+        object: 'object.get',
+        number: 1,
+      })
+      .expect(200, done);
   });
 
   it('should use different cache key', done => {
@@ -50,12 +50,12 @@ describe('test/loader/context_loader.test.js', () => {
     app.loader.loadToContext(service2Dir, 'service2');
 
     request(app.callback())
-    .get('/service')
-    .expect({
-      service1: 'service1',
-      service2: 'service2',
-    })
-    .expect(200, done);
+      .get('/service')
+      .expect({
+        service1: 'service1',
+        service2: 'service2',
+      })
+      .expect(200, done);
   });
 
   it('should load file with pathname and config', function* () {
@@ -63,20 +63,20 @@ describe('test/loader/context_loader.test.js', () => {
     app.loader.loadToContext(directory, 'pathname');
 
     yield request(app.callback())
-    .get('/pathname')
-    .expect('pathname.a.b.c')
-    .expect(200);
+      .get('/pathname')
+      .expect('pathname.a.b.c')
+      .expect(200);
 
     yield request(app.callback())
-    .get('/config')
-    .expect('config')
-    .expect(200);
+      .get('/config')
+      .expect('config')
+      .expect(200);
   });
 
   it('should load file with service', () => {
     return request(app.callback())
-    .get('/BaseContextClass/service')
-    .expect('user:post')
-    .expect(200);
+      .get('/BaseContextClass/service')
+      .expect('user:post')
+      .expect(200);
   });
 });

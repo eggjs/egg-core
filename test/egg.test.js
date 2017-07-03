@@ -355,14 +355,14 @@ describe('test/egg.test.js', () => {
 
     it('should redefine Controller and Service ok', function* () {
       yield request(app.callback())
-      .get('/success')
-      .expect(200)
-      .expect({ success: true, result: { foo: 'bar' } });
+        .get('/success')
+        .expect(200)
+        .expect({ success: true, result: { foo: 'bar' } });
 
       yield request(app.callback())
-      .get('/fail')
-      .expect(200)
-      .expect({ success: false, message: 'something wrong' });
+        .get('/fail')
+        .expect(200)
+        .expect({ success: false, message: 'something wrong' });
     });
   });
 });

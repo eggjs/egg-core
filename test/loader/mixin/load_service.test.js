@@ -25,16 +25,16 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert(app.serviceClasses.foo4);
 
     request(app.callback())
-    .get('/')
-    .expect({
-      foo2: 'foo2',
-      foo3: 'foo3',
-      foo4: true,
-      foo5: true,
-      foo: true,
-      bar2: true,
-    })
-    .expect(200, done);
+      .get('/')
+      .expect({
+        foo2: 'foo2',
+        foo3: 'foo3',
+        foo4: true,
+        foo5: true,
+        foo: true,
+        bar2: true,
+      })
+      .expect(200, done);
   });
 
   it('should throw when dulplicate', function() {
@@ -65,14 +65,14 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .get('/same?t=1')
-    .expect('true')
-    .expect(200);
+      .get('/same?t=1')
+      .expect('true')
+      .expect(200);
 
     yield request(app.callback())
-    .get('/same?t=2')
-    .expect('true')
-    .expect(200);
+      .get('/same?t=2')
+      .expect('true')
+      .expect(200);
   });
 
   it('should extend app.Service', function(done) {
@@ -84,11 +84,11 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadRouter();
 
     request(app.callback())
-    .get('/user')
-    .expect(function(res) {
-      assert(res.body.user === '123mock');
-    })
-    .expect(200, done);
+      .get('/user')
+      .expect(function(res) {
+        assert(res.body.user === '123mock');
+      })
+      .expect(200, done);
   });
 
   describe('subdir', function() {
@@ -102,42 +102,42 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadController();
       app.loader.loadRouter();
       request(app.callback())
-      .get('/')
-      .expect({
-        user: {
-          uid: '123',
-        },
-        cif: {
-          uid: '123cif',
-          cif: true,
-        },
-        bar1: {
-          name: 'bar1name',
-          bar: 'bar1',
-        },
-        bar2: {
-          name: 'bar2name',
-          bar: 'bar2',
-        },
-        'foo.subdir2.sub2': {
-          name: 'bar3name',
-          bar: 'bar3',
-        },
-        subdir11bar: {
-          bar: 'bar111',
-        },
-        ok: {
-          ok: true,
-        },
-        cmd: {
-          cmd: 'hihi',
-          method: 'GET',
-          url: '/',
-        },
-        serviceIsSame: true,
-        oldStyle: '/',
-      })
-      .expect(200, done);
+        .get('/')
+        .expect({
+          user: {
+            uid: '123',
+          },
+          cif: {
+            uid: '123cif',
+            cif: true,
+          },
+          bar1: {
+            name: 'bar1name',
+            bar: 'bar1',
+          },
+          bar2: {
+            name: 'bar2name',
+            bar: 'bar2',
+          },
+          'foo.subdir2.sub2': {
+            name: 'bar3name',
+            bar: 'bar3',
+          },
+          subdir11bar: {
+            bar: 'bar111',
+          },
+          ok: {
+            ok: true,
+          },
+          cmd: {
+            cmd: 'hihi',
+            method: 'GET',
+            url: '/',
+          },
+          serviceIsSame: true,
+          oldStyle: '/',
+        })
+        .expect(200, done);
     });
   });
 
