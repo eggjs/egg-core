@@ -19,27 +19,27 @@ describe('test/loader/mixin/load_helper_extend.test.js', function() {
     });
     after(() => app.close());
 
-    it('should load extend from chair, plugin and helper', function(done) {
-      request(app.callback())
+    it('should load extend from chair, plugin and helper', function* () {
+      yield request(app.callback())
         .get('/')
         .expect(/app: true/)
         .expect(/plugin a: false/)
         .expect(/plugin b: true/)
-        .expect(200, done);
+        .expect(200);
     });
 
-    it('should override chair by application', function(done) {
-      request(app.callback())
+    it('should override chair by application', function* () {
+      yield request(app.callback())
         .get('/')
         .expect(/override: app/)
-        .expect(200, done);
+        .expect(200);
     });
 
-    it('should not call directly', function(done) {
-      request(app.callback())
+    it('should not call directly', function* () {
+      yield request(app.callback())
         .get('/')
         .expect(/not exists on locals: false/)
-        .expect(200, done);
+        .expect(200);
     });
   });
 

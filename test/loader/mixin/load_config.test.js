@@ -64,7 +64,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(!loader.config.pluginA);
   });
 
-  it('should throw when plugin define middleware', done => {
+  it('should throw when plugin define middleware', () => {
     const pluginDir = utils.getFilepath('plugin/plugin-middleware');
     app = utils.createApp('plugin', {
       plugins: {
@@ -78,9 +78,9 @@ describe('test/loader/mixin/load_config.test.js', () => {
     try {
       loader.loadPlugin();
       loader.loadConfig();
+      throw new Error('should not run');
     } catch (err) {
       assert(err.message.indexOf(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`) >= 0);
-      done();
     }
   });
 

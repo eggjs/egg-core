@@ -12,11 +12,11 @@ describe('test/loader/context_loader.test.js', () => {
     app.loader.loadAll();
   });
 
-  it('should load files ', done => {
+  it('should load files ', function* () {
     const directory = path.join(__dirname, '../fixtures/context-loader/app/depth');
     app.loader.loadToContext(directory, 'depth');
 
-    request(app.callback())
+    yield request(app.callback())
       .get('/depth')
       .expect({
         one: 'context:one',
@@ -24,14 +24,14 @@ describe('test/loader/context_loader.test.js', () => {
         three: 'context:three',
         four: 'context:four',
       })
-      .expect(200, done);
+      .expect(200);
   });
 
-  it('should load different types', done => {
+  it('should load different types', function* () {
     const directory = path.join(__dirname, '../fixtures/context-loader/app/type');
     app.loader.loadToContext(directory, 'type');
 
-    request(app.callback())
+    yield request(app.callback())
       .get('/type')
       .expect({
         class: 'context',
@@ -40,22 +40,22 @@ describe('test/loader/context_loader.test.js', () => {
         object: 'object.get',
         number: 1,
       })
-      .expect(200, done);
+      .expect(200);
   });
 
-  it('should use different cache key', done => {
+  it('should use different cache key', function* () {
     const service1Dir = path.join(__dirname, '../fixtures/context-loader/app/service1');
     app.loader.loadToContext(service1Dir, 'service1');
     const service2Dir = path.join(__dirname, '../fixtures/context-loader/app/service2');
     app.loader.loadToContext(service2Dir, 'service2');
 
-    request(app.callback())
+    yield request(app.callback())
       .get('/service')
       .expect({
         service1: 'service1',
         service2: 'service2',
       })
-      .expect(200, done);
+      .expect(200);
   });
 
   it('should load file with pathname and config', function* () {

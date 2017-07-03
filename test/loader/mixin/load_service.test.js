@@ -11,7 +11,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it('should load from application and plugin', function(done) {
+  it('should load from application and plugin', function* () {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
@@ -24,7 +24,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert(app.serviceClasses.bar2);
     assert(app.serviceClasses.foo4);
 
-    request(app.callback())
+    yield request(app.callback())
       .get('/')
       .expect({
         foo2: 'foo2',
@@ -34,7 +34,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
         foo: true,
         bar2: true,
       })
-      .expect(200, done);
+      .expect(200);
   });
 
   it('should throw when dulplicate', function() {
@@ -75,7 +75,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       .expect(200);
   });
 
-  it('should extend app.Service', function(done) {
+  it('should extend app.Service', function* () {
     app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
@@ -83,17 +83,17 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    request(app.callback())
+    yield request(app.callback())
       .get('/user')
       .expect(function(res) {
         assert(res.body.user === '123mock');
       })
-      .expect(200, done);
+      .expect(200);
   });
 
   describe('subdir', function() {
 
-    it('should load 2 level dir', function(done) {
+    it('should load 2 level dir', function* () {
       mm(process.env, 'NO_DEPRECATION', '*');
       app = utils.createApp('subdir-services');
       app.loader.loadPlugin();
@@ -101,7 +101,8 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
-      request(app.callback())
+
+      yield request(app.callback())
         .get('/')
         .expect({
           user: {
@@ -137,7 +138,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
           serviceIsSame: true,
           oldStyle: '/',
         })
-        .expect(200, done);
+        .expect(200);
     });
   });
 

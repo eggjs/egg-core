@@ -40,25 +40,22 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert(Object.keys(app.middleware).length === 3);
   });
 
-  it('should override middlewares of plugin by framework', function(done) {
-    request(app.callback())
+  it('should override middlewares of plugin by framework', function* () {
+    yield request(app.callback())
       .get('/status')
-      .expect('egg status')
-      .end(done);
+      .expect('egg status');
   });
 
-  it('should override middlewares of plugin by application', function(done) {
-    request(app.callback())
+  it('should override middlewares of plugin by application', function* () {
+    yield request(app.callback())
       .get('/custom')
-      .expect('app custom')
-      .end(done);
+      .expect('app custom');
   });
 
-  it('should override middlewares of egg by application', function(done) {
-    request(app.callback())
+  it('should override middlewares of egg by application', function* () {
+    yield request(app.callback())
       .get('/static')
-      .expect('static')
-      .end(done);
+      .expect('static');
   });
 
   it('should throw when middleware return no-generator', function() {

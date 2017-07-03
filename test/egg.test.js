@@ -52,14 +52,14 @@ describe('test/egg.test.js', () => {
       }, /Directory not-exist not exists/);
     });
 
-    it('should throw options.baseDir is not a directory', done => {
+    it('should throw options.baseDir is not a directory', () => {
       try {
         new EggCore({
           baseDir: __filename,
         });
+        throw new Error('should not run');
       } catch (err) {
         assert(err.message.indexOf(`Directory ${__filename} is not a directory`) >= 0);
-        done();
       }
     });
 

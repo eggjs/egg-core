@@ -52,31 +52,31 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       .expect(200);
   });
 
-  it('should load application overriding framework', function(done) {
-    request(app.callback())
+  it('should load application overriding framework', function* () {
+    yield request(app.callback())
       .get('/merge/app_override_chair')
       .expect({
         value: 'app ajax patch',
       })
-      .expect(200, done);
+      .expect(200);
   });
 
-  it('should load plugin overriding framework', function(done) {
-    request(app.callback())
+  it('should load plugin overriding framework', function* () {
+    yield request(app.callback())
       .get('/merge/plugin_override_chair')
       .expect({
         value: '0.0.0.0',
       })
-      .expect(200, done);
+      .expect(200);
   });
 
-  it('should load application overriding plugin', function(done) {
-    request(app.callback())
+  it('should load application overriding plugin', function* () {
+    yield request(app.callback())
       .get('/merge/app_override_plugin')
       .expect({
         value: 'will override plugin',
       })
-      .expect(200, done);
+      .expect(200);
   });
 
   it('should throw when no deps', function() {
