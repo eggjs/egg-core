@@ -40,25 +40,22 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert(Object.keys(app.middleware).length === 3);
   });
 
-  it('should override middlewares of plugin by framework', function(done) {
-    request(app.callback())
-    .get('/status')
-    .expect('egg status')
-    .end(done);
+  it('should override middlewares of plugin by framework', function* () {
+    yield request(app.callback())
+      .get('/status')
+      .expect('egg status');
   });
 
-  it('should override middlewares of plugin by application', function(done) {
-    request(app.callback())
-    .get('/custom')
-    .expect('app custom')
-    .end(done);
+  it('should override middlewares of plugin by application', function* () {
+    yield request(app.callback())
+      .get('/custom')
+      .expect('app custom');
   });
 
-  it('should override middlewares of egg by application', function(done) {
-    request(app.callback())
-    .get('/static')
-    .expect('static')
-    .end(done);
+  it('should override middlewares of egg by application', function* () {
+    yield request(app.callback())
+      .get('/static')
+      .expect('static');
   });
 
   it('should throw when middleware return no-generator', function() {
@@ -97,8 +94,8 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .get('/status')
-    .expect(404);
+      .get('/status')
+      .expect(404);
     app.close();
   });
 
@@ -111,12 +108,12 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .get('/status')
-    .expect('egg status');
+      .get('/status')
+      .expect('egg status');
 
     yield request(app.callback())
-    .post('/status')
-    .expect(404);
+      .post('/status')
+      .expect(404);
     app.close();
   });
 
@@ -129,12 +126,12 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .post('/status')
-    .expect('egg status');
+      .post('/status')
+      .expect('egg status');
 
     yield request(app.callback())
-    .get('/status')
-    .expect(404);
+      .get('/status')
+      .expect(404);
     app.close();
   });
 
@@ -147,8 +144,8 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .get('/static')
-    .expect(404);
+      .get('/static')
+      .expect(404);
     app.close();
   });
 
@@ -168,36 +165,36 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
 
     it('should support config.middleware', function* () {
       yield request(app.callback())
-      .get('/static')
-      .expect('static', 'static')
-      .expect('hello');
+        .get('/static')
+        .expect('static', 'static')
+        .expect('hello');
     });
 
     it('should support app.use', function* () {
       yield request(app.callback())
-      .get('/')
-      .expect('custom', 'custom')
-      .expect('hello');
+        .get('/')
+        .expect('custom', 'custom')
+        .expect('hello');
     });
 
     it('should support with router', function* () {
       yield request(app.callback())
-      .get('/router')
-      .expect('router', 'router')
-      .expect('hello');
+        .get('/router')
+        .expect('router', 'router')
+        .expect('hello');
     });
 
     it('should support with options.match', function* () {
       yield request(app.callback())
-      .get('/match')
-      .expect('match', 'match')
-      .expect('hello');
+        .get('/match')
+        .expect('match', 'match')
+        .expect('hello');
     });
 
     it('should support common functions', function* () {
       yield request(app.callback())
-      .get('/common')
-      .expect('common');
+        .get('/common')
+        .expect('common');
     });
   });
 

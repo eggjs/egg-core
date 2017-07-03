@@ -138,8 +138,8 @@ describe('test/utils/router.test.js', () => {
 
       it('should GET /packages/(.*)', () => {
         return request(app.callback())
-        .get('/packages/urllib')
-        .expect('urllib');
+          .get('/packages/urllib')
+          .expect('urllib');
       });
     });
 
@@ -162,9 +162,9 @@ describe('test/utils/router.test.js', () => {
     describe('async controller', () => {
       it('should execute by the correct order', () => {
         return request(app.callback())
-        .get('/mix')
-        .expect([ 'generator before', 'async', 'generator after' ])
-        .expect(200);
+          .get('/mix')
+          .expect([ 'generator before', 'async', 'generator after' ])
+          .expect(200);
       });
     });
   });

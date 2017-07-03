@@ -11,7 +11,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it('should load from application and plugin', function(done) {
+  it('should load from application and plugin', function* () {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
@@ -24,17 +24,17 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert(app.serviceClasses.bar2);
     assert(app.serviceClasses.foo4);
 
-    request(app.callback())
-    .get('/')
-    .expect({
-      foo2: 'foo2',
-      foo3: 'foo3',
-      foo4: true,
-      foo5: true,
-      foo: true,
-      bar2: true,
-    })
-    .expect(200, done);
+    yield request(app.callback())
+      .get('/')
+      .expect({
+        foo2: 'foo2',
+        foo3: 'foo3',
+        foo4: true,
+        foo5: true,
+        foo: true,
+        bar2: true,
+      })
+      .expect(200);
   });
 
   it('should throw when dulplicate', function() {
@@ -65,17 +65,17 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadRouter();
 
     yield request(app.callback())
-    .get('/same?t=1')
-    .expect('true')
-    .expect(200);
+      .get('/same?t=1')
+      .expect('true')
+      .expect(200);
 
     yield request(app.callback())
-    .get('/same?t=2')
-    .expect('true')
-    .expect(200);
+      .get('/same?t=2')
+      .expect('true')
+      .expect(200);
   });
 
-  it('should extend app.Service', function(done) {
+  it('should extend app.Service', function* () {
     app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
     app.loader.loadApplicationExtend();
@@ -83,17 +83,17 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    request(app.callback())
-    .get('/user')
-    .expect(function(res) {
-      assert(res.body.user === '123mock');
-    })
-    .expect(200, done);
+    yield request(app.callback())
+      .get('/user')
+      .expect(function(res) {
+        assert(res.body.user === '123mock');
+      })
+      .expect(200);
   });
 
   describe('subdir', function() {
 
-    it('should load 2 level dir', function(done) {
+    it('should load 2 level dir', function* () {
       mm(process.env, 'NO_DEPRECATION', '*');
       app = utils.createApp('subdir-services');
       app.loader.loadPlugin();
@@ -101,43 +101,44 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
-      request(app.callback())
-      .get('/')
-      .expect({
-        user: {
-          uid: '123',
-        },
-        cif: {
-          uid: '123cif',
-          cif: true,
-        },
-        bar1: {
-          name: 'bar1name',
-          bar: 'bar1',
-        },
-        bar2: {
-          name: 'bar2name',
-          bar: 'bar2',
-        },
-        'foo.subdir2.sub2': {
-          name: 'bar3name',
-          bar: 'bar3',
-        },
-        subdir11bar: {
-          bar: 'bar111',
-        },
-        ok: {
-          ok: true,
-        },
-        cmd: {
-          cmd: 'hihi',
-          method: 'GET',
-          url: '/',
-        },
-        serviceIsSame: true,
-        oldStyle: '/',
-      })
-      .expect(200, done);
+
+      yield request(app.callback())
+        .get('/')
+        .expect({
+          user: {
+            uid: '123',
+          },
+          cif: {
+            uid: '123cif',
+            cif: true,
+          },
+          bar1: {
+            name: 'bar1name',
+            bar: 'bar1',
+          },
+          bar2: {
+            name: 'bar2name',
+            bar: 'bar2',
+          },
+          'foo.subdir2.sub2': {
+            name: 'bar3name',
+            bar: 'bar3',
+          },
+          subdir11bar: {
+            bar: 'bar111',
+          },
+          ok: {
+            ok: true,
+          },
+          cmd: {
+            cmd: 'hihi',
+            method: 'GET',
+            url: '/',
+          },
+          serviceIsSame: true,
+          oldStyle: '/',
+        })
+        .expect(200);
     });
   });
 

@@ -36,47 +36,47 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert(!app.pluginaApplication);
 
     return request(app.callback())
-    .get('/')
-    .expect({
-      returnAppContext: 'app context',
-      returnPluginbContext: 'plugin b context',
-      returnAppRequest: 'app request',
-      returnPluginbRequest: 'plugin b request',
-      returnAppResponse: 'app response',
-      returnPluginbResponse: 'plugin b response',
-      returnAppApplication: 'app application',
-      returnPluginbApplication: 'plugin b application',
-      status: 200,
-      etag: 'etag ok',
-    })
-    .expect(200);
+      .get('/')
+      .expect({
+        returnAppContext: 'app context',
+        returnPluginbContext: 'plugin b context',
+        returnAppRequest: 'app request',
+        returnPluginbRequest: 'plugin b request',
+        returnAppResponse: 'app response',
+        returnPluginbResponse: 'plugin b response',
+        returnAppApplication: 'app application',
+        returnPluginbApplication: 'plugin b application',
+        status: 200,
+        etag: 'etag ok',
+      })
+      .expect(200);
   });
 
-  it('should load application overriding framework', function(done) {
-    request(app.callback())
-    .get('/merge/app_override_chair')
-    .expect({
-      value: 'app ajax patch',
-    })
-    .expect(200, done);
+  it('should load application overriding framework', function* () {
+    yield request(app.callback())
+      .get('/merge/app_override_chair')
+      .expect({
+        value: 'app ajax patch',
+      })
+      .expect(200);
   });
 
-  it('should load plugin overriding framework', function(done) {
-    request(app.callback())
-    .get('/merge/plugin_override_chair')
-    .expect({
-      value: '0.0.0.0',
-    })
-    .expect(200, done);
+  it('should load plugin overriding framework', function* () {
+    yield request(app.callback())
+      .get('/merge/plugin_override_chair')
+      .expect({
+        value: '0.0.0.0',
+      })
+      .expect(200);
   });
 
-  it('should load application overriding plugin', function(done) {
-    request(app.callback())
-    .get('/merge/app_override_plugin')
-    .expect({
-      value: 'will override plugin',
-    })
-    .expect(200, done);
+  it('should load application overriding plugin', function* () {
+    yield request(app.callback())
+      .get('/merge/app_override_plugin')
+      .expect({
+        value: 'will override plugin',
+      })
+      .expect(200);
   });
 
   it('should throw when no deps', function() {
