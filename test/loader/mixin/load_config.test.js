@@ -119,7 +119,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert.deepEqual(app.config.array, [ 1, 2 ]);
   });
 
-  it.only('should generate configMeta', () => {
+  it('should generate configMeta', () => {
     app = utils.createApp('configmeta');
     app.loader.loadPlugin();
     app.loader.loadConfig();
