@@ -131,10 +131,15 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(configMeta.zero === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.number === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.no === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.date === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.ooooo === utils.getFilepath('configmeta/config/config.js'));
+
     assert(configMeta.urllib.keepAlive === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.timeout === utils.getFilepath('egg/config/config.default.js'));
     assert(configMeta.urllib.foo === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.n === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.urllib.dd === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.urllib.httpclient === utils.getFilepath('configmeta/config/config.js'));
     // undefined will be ignore
     assert(!configMeta.urllib.bar);
   });
