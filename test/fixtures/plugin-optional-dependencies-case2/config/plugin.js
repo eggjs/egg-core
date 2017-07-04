@@ -7,7 +7,7 @@
 // result: c > a > b
 module.exports = {
   a: {
-    enable: true,
+    enable: false,
     package: 'a',
   },
   b: {

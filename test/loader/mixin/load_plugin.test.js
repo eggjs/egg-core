@@ -494,10 +494,20 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it.only('should support optionalDependencies', () => {
-    app = utils.createApp('plugin-optional-dependencies-case2');
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-optional-dependencies-case2');
+      }
+    }
+    app = utils.createApp('plugin-optional-dependencies-case2/app', {
+      // use clean framework
+      Application,
+    });
     const loader = app.loader;
     loader.loadPlugin();
-    assert.deepEqual(loader.orderPlugins.slice(2).map(p => p.name), [ 'package', 'c', 'a', 'b' ]);
+    assert.deepEqual(loader.orderPlugins.map(p => p.name), [
+      'b', 'a', 'c',
+    ]);
   });
 
 });
