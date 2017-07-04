@@ -5,9 +5,7 @@ const assert = require('assert');
 const utils = require('../../utils');
 const Application = require('../../..').EggCore;
 
-
 describe('test/loader/mixin/load_config.test.js', () => {
-
   let app;
   afterEach(() => app.close());
 
@@ -127,8 +125,18 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(configMeta.console === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.array === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.buffer === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.ok === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.f === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.empty === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.zero === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.number === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.no === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.keepAlive === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.timeout === utils.getFilepath('egg/config/config.default.js'));
+    assert(configMeta.urllib.foo === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.urllib.n === utils.getFilepath('configmeta/config/config.js'));
+    // undefined will be ignore
+    assert(!configMeta.urllib.bar);
   });
 
 });
