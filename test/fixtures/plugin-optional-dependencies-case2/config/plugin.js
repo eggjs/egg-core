@@ -4,7 +4,7 @@
 //   (opt)/      /
 // b <-----------
 //
-// result: c > a > b
+// result: [ 'b', 'a', 'c' ]
 module.exports = {
   a: {
     enable: false,
