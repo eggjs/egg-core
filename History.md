@@ -1,4 +1,13 @@
 
+3.12.0 / 2017-07-05
+===================
+
+  * feat: generate configMeta (#106)
+  * deps: upgrade eslint (#104)
+  * docs: fix typo (#103)
+  * deps: upgrade dependencies (#102)
+  * refactor(plugin): ignore loop when push plugin.default.js (#101)
+
 3.11.0 / 2017-06-21
 ==================
 
