@@ -124,6 +124,8 @@ describe('test/loader/mixin/load_config.test.js', () => {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     const configMeta = app.loader.configMeta;
+    assert(configMeta.array === utils.getFilepath('configmeta/config/config.js'));
+    assert(configMeta.buffer === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.keepAlive === utils.getFilepath('configmeta/config/config.js'));
     assert(configMeta.urllib.timeout === utils.getFilepath('egg/config/config.default.js'));
   });
