@@ -7,6 +7,7 @@ const assert = require('assert');
 const spy = require('spy');
 const sleep = require('mz-modules/sleep');
 const request = require('supertest');
+const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 
@@ -69,6 +70,7 @@ describe('test/egg.test.js', () => {
         new EggCore();
       }, /process.env.EGG_READY_TIMEOUT_ENV notAnNumber should be able to parseInt/);
     });
+
   });
 
   describe('getters', () => {
@@ -363,6 +365,17 @@ describe('test/egg.test.js', () => {
         .get('/fail')
         .expect(200)
         .expect({ success: false, message: 'something wrong' });
+    });
+  });
+
+  describe('run with DEBUG', () => {
+    after(mm.restore);
+    it.only('should ready', function* () {
+      mm(process.env, 'DEBUG', '*');
+      yield coffee.fork(utils.getFilepath('run-with-debug/index.js'))
+        .debug()
+        .expect('code', 0)
+        .end();
     });
   });
 });
