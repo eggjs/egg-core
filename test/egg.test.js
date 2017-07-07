@@ -370,7 +370,7 @@ describe('test/egg.test.js', () => {
 
   describe('run with DEBUG', () => {
     after(mm.restore);
-    it.only('should ready', function* () {
+    it('should ready', function* () {
       mm(process.env, 'DEBUG', '*');
       yield coffee.fork(utils.getFilepath('run-with-debug/index.js'))
         .debug()
