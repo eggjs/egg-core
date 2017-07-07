@@ -1,4 +1,9 @@
 
+3.12.1 / 2017-07-05
+==================
+
+  * fix: should ignore Object.getPrototypeOf check on null/undefined (#107)
+
 3.12.0 / 2017-07-05
 ===================
 
