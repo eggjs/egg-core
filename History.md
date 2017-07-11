@@ -1,4 +1,9 @@
 
+3.12.2 / 2017-07-11
+===================
+
+  * fix: check loader existing before retrieve properties (#108)
+
 3.12.1 / 2017-07-05
 ==================
 
