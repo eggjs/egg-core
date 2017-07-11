@@ -26,7 +26,7 @@ describe('test/load_plugin.test.js', function() {
     assert('eggPlugins' in loader);
   });
 
-  it('should loadConfig all plugins', function() {
+  it.only('should loadConfig all plugins', function() {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
