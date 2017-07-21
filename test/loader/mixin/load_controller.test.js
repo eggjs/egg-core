@@ -260,4 +260,40 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       assert(app.controller.user);
     });
   });
+
+  describe('when controller.supportParams === true', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('controller-params');
+      app.loader.loadAll();
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should use as controller', function* () {
+      yield request(app.callback())
+        .get('/generator-function')
+        .expect(200)
+        .expect('done');
+      yield request(app.callback())
+        .get('/class-function')
+        .expect(200)
+        .expect('done');
+      yield request(app.callback())
+        .get('/object-function')
+        .expect(200)
+        .expect('done');
+    });
+
+    it('should support parameter', function* () {
+      const ctx = { app };
+      const args = [ 1, 2, 3 ];
+      let r = yield app.controller.generatorFunction.call(ctx, ...args);
+      assert.deepEqual(args, r);
+      r = yield app.controller.object.callFunction.call(ctx, ...args);
+      assert.deepEqual(args, r);
+      r = yield app.controller.class.callFunction.call(ctx, ...args);
+      assert.deepEqual(args, r);
+    });
+  });
 });
