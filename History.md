@@ -1,4 +1,10 @@
 
+3.13.0 / 2017-07-24
+===================
+
+  * feat: controller support params by config (#110)
+  * style: spelling mistakes，orginal -> original (#109)
+
 3.12.2 / 2017-07-11
 ===================
 
