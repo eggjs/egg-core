@@ -14,6 +14,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   it('should load from application and plugin', function* () {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
@@ -41,6 +42,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert.throws(() => {
       app = utils.createApp('service-override');
       app.loader.loadPlugin();
+      app.loader.loadConfig();
       app.loader.loadService();
     }, /can't overwrite property 'foo'/);
   });
@@ -48,6 +50,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   it('should check es6', function() {
     app = utils.createApp('services_loader_verify');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     assert('foo' in app.serviceClasses);
@@ -59,6 +62,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   it('should each request has unique ctx', function* () {
     app = utils.createApp('service-unique');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
@@ -78,6 +82,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   it('should extend app.Service', function* () {
     app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
@@ -97,6 +102,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       mm(process.env, 'NO_DEPRECATION', '*');
       app = utils.createApp('subdir-services');
       app.loader.loadPlugin();
+      app.loader.loadConfig();
       app.loader.loadApplicationExtend();
       app.loader.loadService();
       app.loader.loadController();
