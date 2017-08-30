@@ -149,6 +149,20 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.close();
   });
 
+  it('should app middleware support config as object', function* () {
+    const app = utils.createApp('middleware-app-object');
+    app.loader.loadPlugin();
+    app.loader.loadConfig();
+    app.loader.loadMiddleware();
+    app.loader.loadController();
+    app.loader.loadRouter();
+
+    yield request(app.callback())
+      .get('/static')
+      .expect(404);
+    app.close();
+  });
+
   describe('async functions and common functions', () => {
     let app;
     before(() => {
