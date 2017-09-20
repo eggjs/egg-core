@@ -255,7 +255,7 @@ describe('test/file_loader.test.js', () => {
     }, /_private is not match 'a-z0-9_-' in _private.js/);
   });
 
-  describe.only('caseStyle', () => {
+  describe('caseStyle', () => {
     it('should load when caseStyle = upper', () => {
       const target = {};
       new FileLoader({
