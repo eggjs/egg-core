@@ -1,4 +1,10 @@
 
+3.14.0 / 2017-10-17
+==================
+
+**features**
+  * [[`c2dec90`](http://github.com/eggjs/egg-core/commit/c2dec90b0f942384f62c432d61f4917c55652fd4)] - feat(core): adding support to register inherited methods when loading controllers (#119) (lkspc <<lkspc@qq.com>>)
+
 3.13.1 / 2017-09-01
 ===================
 
