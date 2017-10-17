@@ -165,6 +165,20 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         .expect('done');
     });
 
+    it('should load class that is inherited from its super class', () => {
+      return request(app.callback())
+        .get('/class-inherited-function')
+        .expect(200)
+        .expect('inherited');
+    });
+
+    it('should load inherited class without overriding its own function', () => {
+      return request(app.callback())
+        .get('/class-overridden-function')
+        .expect(200)
+        .expect('own');
+    });
+
     it('should not load properties that are not function', () => {
       assert(!app.controller.class.nofunction);
     });
