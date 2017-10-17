@@ -16,6 +16,9 @@ module.exports = app => {
   app.get('/class-async-function', 'class.callAsyncFunction');
   app.get('/class-async-function-arg', 'class.callAsyncFunctionWithArg');
 
+  app.get('/class-inherited-function', 'classInherited.callInheritedFunction');
+  app.get('/class-overridden-function', 'classInherited.callOverriddenFunction');
+
   app.get('/class-wrap-function', 'classWrapFunction.get');
   app.get('/class-pathname', 'admin.config.getName');
   app.get('/class-fullpath', 'admin.config.getFullPath');
