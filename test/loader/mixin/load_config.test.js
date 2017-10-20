@@ -2,12 +2,14 @@
 
 const path = require('path');
 const assert = require('assert');
+const mm = require('mm');
 const utils = require('../../utils');
 const Application = require('../../..').EggCore;
 
 describe('test/loader/mixin/load_config.test.js', () => {
   let app;
   afterEach(() => app.close());
+  afterEach(mm.restore);
 
   it('should load application config overriding default of egg', () => {
     app = utils.createApp('config');
@@ -144,4 +146,43 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(!configMeta.urllib.bar);
   });
 
+  describe('get config with scope', () => {
+    it('should return without scope when env = default', function* () {
+      mm(process.env, 'EGG_SERVER_ENV', 'default');
+      app = utils.createApp('scope-env');
+      const loader = app.loader;
+      loader.loadPlugin();
+      app.loader.loadConfig();
+      assert(loader.config.from === 'default');
+    });
+
+    it('should return without scope when env = prod', function* () {
+      mm(process.env, 'EGG_SERVER_ENV', 'prod');
+      app = utils.createApp('scope-env');
+      const loader = app.loader;
+      loader.loadPlugin();
+      app.loader.loadConfig();
+      assert(loader.config.from === 'prod');
+    });
+
+    it('should return with scope when env = default', function* () {
+      mm(process.env, 'EGG_SERVER_ENV', 'default');
+      mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+      app = utils.createApp('scope-env');
+      const loader = app.loader;
+      loader.loadPlugin();
+      app.loader.loadConfig();
+      assert(loader.config.from === 'en');
+    });
+
+    it('should return with scope when env = prod', function* () {
+      mm(process.env, 'EGG_SERVER_ENV', 'prod');
+      mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+      app = utils.createApp('scope-env');
+      const loader = app.loader;
+      loader.loadPlugin();
+      app.loader.loadConfig();
+      assert(loader.config.from === 'en_prod');
+    });
+  });
 });

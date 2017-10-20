@@ -493,4 +493,35 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
+  it('should load plugin from scope', () => {
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+  });
+
+  it('should load plugin from scope and default env', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'default');
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+    assert(loader.allPlugins.b.enable === true);
+    assert(!loader.allPlugins.c);
+    assert(!loader.allPlugins.d);
+  });
+
+  it('should load plugin from scope and prod env', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'prod');
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+    assert(loader.allPlugins.b.enable === false);
+    assert(loader.allPlugins.c.enable === false);
+    assert(loader.allPlugins.d.enable === true);
+  });
 });
