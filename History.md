@@ -1,4 +1,10 @@
 
+3.15.0 / 2017-10-20
+==================
+
+**features**
+  * [[`eedfd3d`](http://github.com/eggjs/egg-core/commit/eedfd3d4517f1931f541d0201c3f7d1c2fbf85a3)] - feat: support serverScope (#120) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.14.0 / 2017-10-17
 ==================
 
