@@ -247,6 +247,13 @@ describe('test/utils/router.test.js', () => {
         .expect(200)
         .expect([ 'generator', 'async', 'common' ]);
     });
+
+    it('should take middleware as controller when it\'s passed as string', () => {
+      return request(app.callback())
+        .get('/middleware_as_controller')
+        .expect(200)
+        .expect([ 'async' ]);
+    });
   });
 
   describe('redirect', () => {

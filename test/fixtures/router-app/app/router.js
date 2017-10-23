@@ -15,6 +15,7 @@ module.exports = function (app) {
     .get('comment_index', '/comments/:id?filter=', app.controller.comments.index)
     .get('params', '/params/:a/:b', app.controller.locals.router)
     .get('/middleware', common, asyncMw, generator, 'middleware')
+    .get('/middleware_as_controller', 'middleware.index', 'async.index')
     .get('middleware', '/named_middleware', common, asyncMw, generator, 'middleware')
     .get('/mix', generatorBoth , 'async.index')
     .register('/comments', [ 'post' ] , app.controller.comments.new)
