@@ -1,4 +1,10 @@
 
+3.15.1 / 2017-10-29
+==================
+
+**others**
+  * [[`1eaa0c6`](http://github.com/eggjs/egg-core/commit/1eaa0c689aabd650955d0150228d3bd2a3dd8aa9)] - refactor: use utility to read json (#122) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.15.0 / 2017-10-20
 ==================
 
