@@ -1,4 +1,10 @@
 
+3.16.0 / 2017-11-06
+==================
+
+**features**
+  * [[`f9b4ae8`](git@github.com:eggjs/egg-core/commit/f9b4ae89b9d0b51a042fe7f80ab0cee184f30445)] - feat: add toPromise and toAsyncFunction (#124) (Yiyu He <<dead_horse@qq.com>>)
+
 3.15.1 / 2017-10-29
 ==================
 
