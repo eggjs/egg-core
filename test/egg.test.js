@@ -378,4 +378,52 @@ describe('test/egg.test.js', () => {
         .end();
     });
   });
+
+  describe('toAsyncFunction', () => {
+    let app;
+    before(() => {
+      app = new EggCore();
+    });
+
+    it('translate generator function', () => {
+      const fn = function* (arg) {
+        return arg;
+      };
+      const wrapped = app.toAsyncFunction(fn);
+      return wrapped(true).then(res => assert(res === true));
+    });
+  });
+
+  describe('toPromise', () => {
+    let app;
+    before(() => {
+      app = new EggCore();
+    });
+
+    it('translate array', () => {
+      const fn = function* (arg) {
+        return arg;
+      };
+      const arr = [ fn(1), fn(2) ];
+      const promise = app.toPromise(arr);
+      return promise.then(res => assert.deepEqual(res, [ 1, 2 ]));
+    });
+
+    it('translate object', () => {
+      const fn = function* (arg) {
+        return arg;
+      };
+      const obj = {
+        first: fn(1),
+        second: fn(2),
+        third: 3,
+      };
+      const promise = app.toPromise(obj);
+      return promise.then(res => assert.deepEqual(res, {
+        first: 1,
+        second: 2,
+        third: 3,
+      }));
+    });
+  });
 });
