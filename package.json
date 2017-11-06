@@ -27,17 +27,17 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 8.0.0"
   },
   "ci": {
-    "version": "6, 7, 8"
+    "version": "8, 9"
   },
   "devDependencies": {
     "autod": "^2.10.1",
     "coffee": "^4.1.0",
     "egg-bin": "^4.3.5",
     "egg-ci": "^1.8.0",
-    "eslint": "^4.9.0",
+    "eslint": "^4.10.0",
     "eslint-config-egg": "^5.1.1",
     "js-yaml": "^3.10.0",
     "mm": "^2.2.0",
@@ -57,8 +57,9 @@
     "globby": "^6.1.0",
     "inflection": "^1.12.0",
     "is-type-of": "^1.2.0",
-    "koa": "^1.4.1",
-    "koa-router": "^5.4.2",
+    "koa": "^2.4.1",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.2.1",
     "node-homedir": "^1.1.0",
     "ready-callback": "^2.0.1",
     "utility": "^1.13.1"

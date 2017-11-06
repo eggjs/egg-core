@@ -240,9 +240,9 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   describe('function attribute', () => {
     it('should keep function attribute ok', () => {
       assert(is.function(app.controller.functionAttr.getAccountInfo));
-      assert(is.generatorFunction(app.controller.functionAttr.getAccountInfo));
+      assert(is.asyncFunction(app.controller.functionAttr.getAccountInfo));
       assert(app.controller.functionAttr.getAccountInfo.operationType);
-      assert(app.controller.functionAttr.foo && is.generatorFunction(app.controller.functionAttr.foo.bar));
+      assert(app.controller.functionAttr.foo && is.asyncFunction(app.controller.functionAttr.foo.bar));
       assert.deepEqual(app.controller.functionAttr.foo.bar.operationType, {
         value: 'account.foo.bar',
         name: 'account.foo.bar',
