@@ -19,10 +19,15 @@ module.exports = function (app) {
   app.beforeStart(function () {
     return __awaiter(this, void 0, void 0, function* () {
       yield sleep(1000);
-      app.beforeStartAsyncFunction = true;
+      app.beforeStartTranslateAsyncFunction = true;
     });
   });
+  app.beforeStart(async () => {
+    await sleep(1000);
+    app.beforeStartAsyncFunction = true;
+  });
   app.beforeStartFunction = false;
-  app.beforeStartAsyncFunction = false;
+  app.beforeStartTranslateAsyncFunction = false;
   app.beforeStartGeneratorFunction = false;
+  app.beforeStartAsyncFunction = false;
 };

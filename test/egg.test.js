@@ -187,10 +187,12 @@ describe('test/egg.test.js', () => {
       assert(app.beforeStartFunction === false);
       assert(app.beforeStartGeneratorFunction === false);
       assert(app.beforeStartAsyncFunction === false);
+      assert(app.beforeStartTranslateAsyncFunction === false);
       yield app.ready();
       assert(app.beforeStartFunction === true);
       assert(app.beforeStartGeneratorFunction === true);
       assert(app.beforeStartAsyncFunction === true);
+      assert(app.beforeStartTranslateAsyncFunction === true);
     });
 
     it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', function* () {
