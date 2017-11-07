@@ -7,7 +7,7 @@ module.exports = app => {
       ctx.body = 'index';
     }
 
-    * create(ctx) {
+    async create(ctx) {
       ctx.body = 'create';
     }
   };
