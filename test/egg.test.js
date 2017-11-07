@@ -392,6 +392,12 @@ describe('test/egg.test.js', () => {
       const wrapped = app.toAsyncFunction(fn);
       return wrapped(true).then(res => assert(res === true));
     });
+
+    it('not translate common function', () => {
+      const fn = arg => Promise.resolve(arg);
+      const wrapped = app.toAsyncFunction(fn);
+      return wrapped(true).then(res => assert(res === true));
+    });
   });
 
   describe('toPromise', () => {
