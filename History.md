@@ -1,4 +1,10 @@
 
+3.17.0 / 2017-11-07
+==================
+
+**features**
+  * [[`08b498f`](git@github.com:eggjs/egg-core/commit/08b498f76ff259ee049c20eb1933c5a294179cc8)] - feat: toAsyncFunction compact with async function (#126) (Yiyu He <<dead_horse@qq.com>>)
+
 3.16.0 / 2017-11-06
 ==================
 
