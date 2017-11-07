@@ -11,19 +11,20 @@ server started at 7001
 Running 10s test @ http://127.0.0.1:7001/generator
   8 threads and 50 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     8.41ms    2.16ms  23.98ms   81.95%
-    Req/Sec   740.78    118.95     0.94k    65.72%
-  56808 requests in 10.00s, 41.69MB read
-Requests/sec:   5682.76
-Transfer/sec:      4.17MB
+    Latency     7.35ms    1.76ms  26.71ms   89.82%
+    Req/Sec   835.10     90.14     1.00k    77.15%
+  64366 requests in 10.00s, 47.37MB read
+Requests/sec:   6436.48
+Transfer/sec:      4.74MB
 ------- async middleware -------
 ["async middleware #1","async middleware #2","async middleware #3","async middleware #4","async middleware #5","async middleware #6","async middleware #7","async middleware #8","async middleware #9","async middleware #10","async middleware #11","async middleware #12","async middleware #13","async middleware #14","async middleware #15","async middleware #16","async middleware #17","async middleware #18","async middleware #19","async middleware #20"]
 Running 10s test @ http://127.0.0.1:7001/async
   8 threads and 50 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency     5.90ms    1.28ms  18.68ms   90.46%
-    Req/Sec     1.07k   138.46     1.47k    82.79%
-  82023 requests in 10.00s, 54.40MB read
-Requests/sec:   8202.83
-Transfer/sec:      5.44MB
+    Latency     5.35ms    1.27ms  20.44ms   92.48%
+    Req/Sec     1.18k   157.98     1.57k    75.69%
+  90415 requests in 10.00s, 60.08MB read
+Requests/sec:   9040.45
+Transfer/sec:      6.01MB
+
 ```

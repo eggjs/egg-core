@@ -10,6 +10,6 @@ module.exports = app => {
     generatorMiddlewares.push(app.middlewares.generator());
   }
 
-  app.get('/async', ...asyncMiddlewares, 'home');
-  app.get('/generator', ...generatorMiddlewares, 'home');
+  app.get('/async', ...asyncMiddlewares, 'home.async');
+  app.get('/generator', ...generatorMiddlewares, 'home.generator');
 }
