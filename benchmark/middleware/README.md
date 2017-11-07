@@ -26,5 +26,6 @@ Running 10s test @ http://127.0.0.1:7001/async
   90415 requests in 10.00s, 60.08MB read
 Requests/sec:   9040.45
 Transfer/sec:      6.01MB
-
 ```
+
+![](https://user-images.githubusercontent.com/985607/32474444-2f4b7cde-c332-11e7-923f-8dfb709a7a24.png)
