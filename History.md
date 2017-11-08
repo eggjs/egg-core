@@ -1,4 +1,10 @@
 
+3.18.0 / 2017-11-08
+==================
+
+**features**
+  * [[`c944f79`](git@github.com:eggjs/egg-core/commit/c944f79cf9c4ec160bb56d97b41fc7d7e2c8d27c)] - feat: export app.options (#127) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.17.0 / 2017-11-07
 ==================
 
