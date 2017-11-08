@@ -9,7 +9,6 @@ const FileLoader = require('../../lib/loader/file_loader');
 const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
 describe('test/file_loader.test.js', () => {
-
   it('should load files', done => {
     const services = {};
     new FileLoader({

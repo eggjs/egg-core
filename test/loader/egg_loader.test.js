@@ -6,7 +6,6 @@ const mm = require('mm');
 const utils = require('../utils');
 
 describe('test/loader/egg_loader.test.js', () => {
-
   let app;
   before(() => {
     app = utils.createApp('nothing');
@@ -41,5 +40,4 @@ describe('test/loader/egg_loader.test.js', () => {
       assert(app.loader.getHomedir() === '/path/to/home');
     });
   });
-
 });

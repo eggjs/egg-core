@@ -6,7 +6,6 @@ const request = require('supertest');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_middleware.test.js', function() {
-
   let app;
   before(function() {
     app = utils.createApp('middleware-override');
@@ -40,20 +39,20 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert(Object.keys(app.middleware).length === 3);
   });
 
-  it('should override middlewares of plugin by framework', function* () {
-    yield request(app.callback())
+  it('should override middlewares of plugin by framework', async () => {
+    await request(app.callback())
       .get('/status')
       .expect('egg status');
   });
 
-  it('should override middlewares of plugin by application', function* () {
-    yield request(app.callback())
+  it('should override middlewares of plugin by application', async () => {
+    await request(app.callback())
       .get('/custom')
       .expect('app custom');
   });
 
-  it('should override middlewares of egg by application', function* () {
-    yield request(app.callback())
+  it('should override middlewares of egg by application', async () => {
+    await request(app.callback())
       .get('/static')
       .expect('static');
   });
@@ -85,7 +84,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     }, /Middleware status redefined/);
   });
 
-  it('should core middleware support options.enable', function* () {
+  it('should core middleware support options.enable', async () => {
     const app = utils.createApp('middleware-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -93,13 +92,13 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/status')
       .expect(404);
     app.close();
   });
 
-  it('should core middleware support options.match', function* () {
+  it('should core middleware support options.match', async () => {
     const app = utils.createApp('middleware-match');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -107,17 +106,17 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/status')
       .expect('egg status');
 
-    yield request(app.callback())
+    await request(app.callback())
       .post('/status')
       .expect(404);
     app.close();
   });
 
-  it('should core middleware support options.ignore', function* () {
+  it('should core middleware support options.ignore', async () => {
     const app = utils.createApp('middleware-ignore');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -125,17 +124,17 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .post('/status')
       .expect('egg status');
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/status')
       .expect(404);
     app.close();
   });
 
-  it('should app middleware support options.enable', function* () {
+  it('should app middleware support options.enable', async () => {
     const app = utils.createApp('middleware-app-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -143,7 +142,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/static')
       .expect(404);
     app.close();
@@ -163,36 +162,36 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
 
     after(() => app.close());
 
-    it('should support config.middleware', function* () {
-      yield request(app.callback())
+    it('should support config.middleware', async () => {
+      await request(app.callback())
         .get('/static')
         .expect('static', 'static')
         .expect('hello');
     });
 
-    it('should support app.use', function* () {
-      yield request(app.callback())
+    it('should support app.use', async () => {
+      await request(app.callback())
         .get('/')
         .expect('custom', 'custom')
         .expect('hello');
     });
 
-    it('should support with router', function* () {
-      yield request(app.callback())
+    it('should support with router', async () => {
+      await request(app.callback())
         .get('/router')
         .expect('router', 'router')
         .expect('hello');
     });
 
-    it('should support with options.match', function* () {
-      yield request(app.callback())
+    it('should support with options.match', async () => {
+      await request(app.callback())
         .get('/match')
         .expect('match', 'match')
         .expect('hello');
     });
 
-    it('should support common functions', function* () {
-      yield request(app.callback())
+    it('should support common functions', async () => {
+      await request(app.callback())
         .get('/common')
         .expect('common');
     });

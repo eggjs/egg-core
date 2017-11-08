@@ -4,7 +4,6 @@ const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_custom_agent.test.js', function() {
-
   let agent;
   before(function() {
     agent = utils.createApp('plugin');

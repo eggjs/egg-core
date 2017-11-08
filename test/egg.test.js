@@ -15,7 +15,6 @@ describe('test/egg.test.js', () => {
   afterEach(mm.restore);
 
   describe('create EggCore', () => {
-
     let app;
     after(() => app && app.close());
 
@@ -79,7 +78,6 @@ describe('test/egg.test.js', () => {
         new EggCore();
       }, /process.env.EGG_READY_TIMEOUT_ENV notAnNumber should be able to parseInt/);
     });
-
   });
 
   describe('getters', () => {
@@ -181,26 +179,26 @@ describe('test/egg.test.js', () => {
       }
     });
 
-    it('should beforeStart excute success', function* () {
+    it('should beforeStart excute success', async () => {
       app = utils.createApp('beforestart');
       app.loader.loadAll();
       assert(app.beforeStartFunction === false);
       assert(app.beforeStartGeneratorFunction === false);
       assert(app.beforeStartAsyncFunction === false);
       assert(app.beforeStartTranslateAsyncFunction === false);
-      yield app.ready();
+      await app.ready();
       assert(app.beforeStartFunction === true);
       assert(app.beforeStartGeneratorFunction === true);
       assert(app.beforeStartAsyncFunction === true);
       assert(app.beforeStartTranslateAsyncFunction === true);
     });
 
-    it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', function* () {
+    it('should beforeStart excute success with EGG_READY_TIMEOUT_ENV', async () => {
       mm(process.env, 'EGG_READY_TIMEOUT_ENV', '12000');
       app = utils.createApp('beforestart-with-timeout-env');
       app.loader.loadAll();
       assert(app.beforeStartFunction === false);
-      yield app.ready();
+      await app.ready();
       assert(app.beforeStartFunction === true);
     });
 
@@ -224,11 +222,11 @@ describe('test/egg.test.js', () => {
       });
     });
 
-    it('should get error from ready when beforeStart excute failed', function* () {
+    it('should get error from ready when beforeStart excute failed', async () => {
       app = utils.createApp('beforestart-error');
       app.loader.loadAll();
       try {
-        yield app.ready();
+        await app.ready();
         throw new Error('should not run');
       } catch (err) {
         assert(err.message === 'not ready');
@@ -291,19 +289,19 @@ describe('test/egg.test.js', () => {
       assert(app.close().then);
     });
 
-    it('should throw error when call after error', function* () {
+    it('should throw error when call after error', async () => {
       app = utils.createApp('close');
       app.beforeClose(() => {
         throw new Error('error');
       });
       try {
-        yield app.close();
+        await app.close();
         throw new Error('should not run');
       } catch (err) {
         assert(err.message === 'error');
       }
       try {
-        yield app.close();
+        await app.close();
         throw new Error('should not run');
       } catch (err) {
         assert(err.message === 'error');
@@ -333,8 +331,8 @@ describe('test/egg.test.js', () => {
     });
     afterEach(() => app && app.close());
 
-    it('should wait beforeClose', function* () {
-      yield app.close();
+    it('should wait beforeClose', async () => {
+      await app.close();
       assert(app.closeFn === true);
       assert(app.closeGeneratorFn === true);
       assert(app.closeAsyncFn === true);
@@ -349,9 +347,9 @@ describe('test/egg.test.js', () => {
       }, /argument should be function/);
     });
 
-    it('should close only once', function* () {
-      yield app.close();
-      yield app.close();
+    it('should close only once', async () => {
+      await app.close();
+      await app.close();
       assert(app.callCount === 1);
     });
   });
@@ -366,13 +364,13 @@ describe('test/egg.test.js', () => {
 
     after(() => app.close());
 
-    it('should redefine Controller and Service ok', function* () {
-      yield request(app.callback())
+    it('should redefine Controller and Service ok', async () => {
+      await request(app.callback())
         .get('/success')
         .expect(200)
         .expect({ success: true, result: { foo: 'bar' } });
 
-      yield request(app.callback())
+      await request(app.callback())
         .get('/fail')
         .expect(200)
         .expect({ success: false, message: 'something wrong' });
@@ -381,9 +379,9 @@ describe('test/egg.test.js', () => {
 
   describe('run with DEBUG', () => {
     after(mm.restore);
-    it('should ready', function* () {
+    it('should ready', async () => {
       mm(process.env, 'DEBUG', '*');
-      yield coffee.fork(utils.getFilepath('run-with-debug/index.js'))
+      await coffee.fork(utils.getFilepath('run-with-debug/index.js'))
         .debug()
         .expect('code', 0)
         .end();

@@ -5,18 +5,17 @@ const path = require('path');
 const utils = require('../utils');
 
 describe('test/loader/context_loader.test.js', () => {
-
   let app;
   before(() => {
     app = utils.createApp('context-loader');
     app.loader.loadAll();
   });
 
-  it('should load files ', function* () {
+  it('should load files ', async () => {
     const directory = path.join(__dirname, '../fixtures/context-loader/app/depth');
     app.loader.loadToContext(directory, 'depth');
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/depth')
       .expect({
         one: 'context:one',
@@ -27,11 +26,11 @@ describe('test/loader/context_loader.test.js', () => {
       .expect(200);
   });
 
-  it('should load different types', function* () {
+  it('should load different types', async () => {
     const directory = path.join(__dirname, '../fixtures/context-loader/app/type');
     app.loader.loadToContext(directory, 'type');
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/type')
       .expect({
         class: 'context',
@@ -43,13 +42,13 @@ describe('test/loader/context_loader.test.js', () => {
       .expect(200);
   });
 
-  it('should use different cache key', function* () {
+  it('should use different cache key', async () => {
     const service1Dir = path.join(__dirname, '../fixtures/context-loader/app/service1');
     app.loader.loadToContext(service1Dir, 'service1');
     const service2Dir = path.join(__dirname, '../fixtures/context-loader/app/service2');
     app.loader.loadToContext(service2Dir, 'service2');
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/service')
       .expect({
         service1: 'service1',
@@ -58,16 +57,16 @@ describe('test/loader/context_loader.test.js', () => {
       .expect(200);
   });
 
-  it('should load file with pathname and config', function* () {
+  it('should load file with pathname and config', async () => {
     const directory = path.join(__dirname, '../fixtures/context-loader/app/pathname');
     app.loader.loadToContext(directory, 'pathname');
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/pathname')
       .expect('pathname.a.b.c')
       .expect(200);
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/config')
       .expect('config')
       .expect(200);

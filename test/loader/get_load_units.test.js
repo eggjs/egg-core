@@ -5,7 +5,6 @@ const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/get_load_units.test.js', function() {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -28,5 +27,4 @@ describe('test/get_load_units.test.js', function() {
     const units = app.loader.getLoadUnits();
     assert(units.length === 2);
   });
-
 });

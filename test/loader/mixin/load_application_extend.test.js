@@ -4,7 +4,6 @@ const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_application_extend.test.js', function() {
-
   let app;
   before(function() {
     app = utils.createApp('application');
@@ -32,5 +31,4 @@ describe('test/loader/mixin/load_application_extend.test.js', function() {
     assert(app.foo === 'app bar');
     assert(app.bar === 'foo');
   });
-
 });
