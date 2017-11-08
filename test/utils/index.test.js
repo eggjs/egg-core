@@ -7,44 +7,51 @@ const sleep = require('mz-modules/sleep');
 const utils = require('../../lib/utils');
 
 describe('test/utils/index.test.js', () => {
-
   afterEach(mm.restore);
 
   describe('callFn', () => {
-
-    it('should not call that is not a function', function* () {
-      yield utils.callFn();
+    it('should not call that is not a function', async () => {
+      await utils.callFn();
     });
 
-    it('should call function', function* () {
+    it('should call function', async () => {
       function fn() { return 1; }
-      const result = yield utils.callFn(fn);
+      const result = await utils.callFn(fn);
       assert(result === 1);
     });
 
-    it('should call generator function', function* () {
+    it('should call generator function', async () => {
       function* fn() {
         yield sleep(10);
         return 1;
       }
-      const result = yield utils.callFn(fn);
+      const result = await utils.callFn(fn);
       assert(result === 1);
     });
 
-    it('should call async function', function* () {
+    it('should call return promise function', async () => {
       function fn() {
         return sleep(10).then(() => (1));
       }
-      const result = yield utils.callFn(fn);
+      const result = await utils.callFn(fn);
       assert(result === 1);
     });
 
-    it('should call with args', function* () {
-      function* fn(...args) {
-        yield sleep(10);
+    it('should call async function', async () => {
+      async function fn() {
+        await sleep(10);
+        return 1;
+      }
+      const result = await utils.callFn(fn);
+      assert(result === 1);
+    });
+
+    it('should call with args', async () => {
+      async function fn(...args) {
+        await sleep(10);
         return args;
       }
-      const result = yield utils.callFn(fn, [ 1, 2 ]);
+      const result = await utils.callFn(fn, [ 1, 2 ]);
       assert.deepEqual(result, [ 1, 2 ]);
     });
   });

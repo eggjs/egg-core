@@ -4,7 +4,6 @@ const request = require('supertest');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_helper_extend.test.js', function() {
-
   describe('helper', () => {
     let app;
     before(function() {
@@ -19,8 +18,8 @@ describe('test/loader/mixin/load_helper_extend.test.js', function() {
     });
     after(() => app.close());
 
-    it('should load extend from chair, plugin and helper', function* () {
-      yield request(app.callback())
+    it('should load extend from chair, plugin and helper', async () => {
+      await request(app.callback())
         .get('/')
         .expect(/app: true/)
         .expect(/plugin a: false/)
@@ -28,15 +27,15 @@ describe('test/loader/mixin/load_helper_extend.test.js', function() {
         .expect(200);
     });
 
-    it('should override chair by application', function* () {
-      yield request(app.callback())
+    it('should override chair by application', async () => {
+      await request(app.callback())
         .get('/')
         .expect(/override: app/)
         .expect(200);
     });
 
-    it('should not call directly', function* () {
-      yield request(app.callback())
+    it('should not call directly', async () => {
+      await request(app.callback())
         .get('/')
         .expect(/not exists on locals: false/)
         .expect(200);

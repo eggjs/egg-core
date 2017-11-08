@@ -11,7 +11,6 @@ const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
 
 describe('test/load_plugin.test.js', function() {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());

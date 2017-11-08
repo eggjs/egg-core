@@ -5,7 +5,6 @@ const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/loader/get_server_env.test.js', function() {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -40,5 +39,4 @@ describe('test/loader/get_server_env.test.js', function() {
     app = utils.createApp('serverenv-file');
     assert(app.loader.serverEnv === 'prod');
   });
-
 });

@@ -192,12 +192,12 @@ describe('test/utils/router.test.js', () => {
       assert(app.router.url('posts', { name: 'foo&?', page: 2 }) === '/posts?name=foo%26%3F&page=2');
       assert(app.router.url('edit_post', { id: 10, page: 2 }) === '/posts/10/edit?page=2');
       assert(app.router.url('edit_post', { i: 2, id: 10 }) === '/posts/10/edit?i=2');
-      assert(app.router.url('edit_post', { id: 10, page: 2, tags: [ 'chair', 'develop' ] })
-         === '/posts/10/edit?page=2&tags=chair&tags=develop');
-      assert(app.router.url('edit_post', { id: [ 10 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
-         === '/posts/10/edit?page=2&tags=chair&tags=develop');
-      assert(app.router.url('edit_post', { id: [ 10, 11 ], page: [ 2 ], tags: [ 'chair', 'develop' ] })
-         === '/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('edit_post', { id: 10, page: 2, tags: [ 'chair', 'develop' ] }) ===
+         '/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('edit_post', { id: [ 10 ], page: [ 2 ], tags: [ 'chair', 'develop' ] }) ===
+         '/posts/10/edit?page=2&tags=chair&tags=develop');
+      assert(app.router.url('edit_post', { id: [ 10, 11 ], page: [ 2 ], tags: [ 'chair', 'develop' ] }) ===
+         '/posts/10/edit?page=2&tags=chair&tags=develop');
     });
 
     it('should not support regular url', () => {

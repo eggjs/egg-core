@@ -7,7 +7,6 @@ const path = require('path');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_controller.test.js', () => {
-
   let app;
   before(() => {
     app = utils.createApp('controller-app');
@@ -28,7 +27,6 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   });
 
   describe('when controller is generator function', () => {
-
     it('should use it as middleware', () => {
       assert(app.controller.generatorFunction);
 
@@ -49,7 +47,6 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   });
 
   describe('when controller is object', () => {
-
     it('should define method which is function', () => {
       assert(app.controller.object.callFunction);
 
@@ -99,25 +96,24 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       assert(!app.controller.object.nofunction);
     });
 
-    it('should match app.resources', function* () {
-      yield request(app.callback())
+    it('should match app.resources', async () => {
+      await request(app.callback())
         .get('/resources-object')
         .expect(200)
         .expect('index');
 
-      yield request(app.callback())
+      await request(app.callback())
         .post('/resources-object')
         .expect(200)
         .expect('create');
 
-      yield request(app.callback())
+      await request(app.callback())
         .post('/resources-object/1')
         .expect(404);
     });
   });
 
   describe('when controller is class', () => {
-
     it('should define method which is function', () => {
       assert(app.controller.class.callFunction);
 
@@ -192,18 +188,18 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         .expect('done');
     });
 
-    it('should match app.resources', function* () {
-      yield request(app.callback())
+    it('should match app.resources', async () => {
+      await request(app.callback())
         .get('/resources-class')
         .expect(200)
         .expect('index');
 
-      yield request(app.callback())
+      await request(app.callback())
         .post('/resources-class')
         .expect(200)
         .expect('create');
 
-      yield request(app.callback())
+      await request(app.callback())
         .post('/resources-class/1')
         .expect(404);
     });
@@ -282,31 +278,31 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
     after(() => app.close());
 
-    it('should use as controller', function* () {
-      yield request(app.callback())
+    it('should use as controller', async () => {
+      await request(app.callback())
         .get('/generator-function')
         .expect(200)
         .expect('done');
-      yield request(app.callback())
+      await request(app.callback())
         .get('/class-function')
         .expect(200)
         .expect('done');
-      yield request(app.callback())
+      await request(app.callback())
         .get('/object-function')
         .expect(200)
         .expect('done');
     });
 
-    it('should support parameter', function* () {
+    it('should support parameter', async () => {
       const ctx = { app };
       const args = [ 1, 2, 3 ];
-      let r = yield app.controller.generatorFunction.call(ctx, ...args);
+      let r = await app.controller.generatorFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
-      r = yield app.controller.object.callFunction.call(ctx, ...args);
+      r = await app.controller.object.callFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
-      r = yield app.controller.class.generatorFunction.call(ctx, ...args);
+      r = await app.controller.class.generatorFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
-      r = yield app.controller.class.asyncFunction.call(ctx, ...args);
+      r = await app.controller.class.asyncFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
     });
   });

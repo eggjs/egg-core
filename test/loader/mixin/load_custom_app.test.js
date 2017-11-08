@@ -4,7 +4,6 @@ const assert = require('assert');
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_custom_app.test.js', () => {
-
   describe('app.js as function', () => {
     let app;
     before(() => {

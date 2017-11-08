@@ -5,7 +5,6 @@ const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/load_file.test.js', function() {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -34,5 +33,4 @@ describe('test/load_file.test.js', function() {
     const result = app.loader.loadFile(utils.getFilepath('load_file/no-js.yml')).toString();
     assert(result === '---\nmap:\n a: 1\n b: 2');
   });
-
 });

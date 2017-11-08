@@ -5,7 +5,6 @@ const assert = require('assert');
 const utils = require('../utils');
 
 describe('test/loader/get_appname.test.js', () => {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app && app.close());
