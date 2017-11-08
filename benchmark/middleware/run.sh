@@ -2,7 +2,7 @@
 
 echo
 node -v
-node --harmony-async-await `dirname $0`/start.js $1 &
+node `dirname $0`/start.js $1 &
 pid=$!
 
 sleep 3

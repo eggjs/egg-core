@@ -4,6 +4,6 @@ exports.index = function* () {
   this.body = 'index';
 };
 
-exports.create = function* () {
-  this.body = 'create';
+exports.create = async ctx => {
+  ctx.body = 'create';
 };

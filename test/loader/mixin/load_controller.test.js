@@ -17,15 +17,13 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   after(() => app.close());
 
   describe('when controller is async function', () => {
+    it('should use it as middleware', () => {
+      assert(app.controller.asyncFunction);
 
-    it('should thrown', done => {
-      try {
-        const app = utils.createApp('async-controller-app');
-        app.loader.loadController();
-      } catch (err) {
-        assert(err.message.match(/^app(\/|\\)controller(\/|\\)async\.js cannot be async function/));
-        done();
-      }
+      return request(app.callback())
+        .get('/async-function')
+        .expect(200)
+        .expect('done');
     });
   });
 
@@ -240,9 +238,9 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   describe('function attribute', () => {
     it('should keep function attribute ok', () => {
       assert(is.function(app.controller.functionAttr.getAccountInfo));
-      assert(is.generatorFunction(app.controller.functionAttr.getAccountInfo));
+      assert(is.asyncFunction(app.controller.functionAttr.getAccountInfo));
       assert(app.controller.functionAttr.getAccountInfo.operationType);
-      assert(app.controller.functionAttr.foo && is.generatorFunction(app.controller.functionAttr.foo.bar));
+      assert(app.controller.functionAttr.foo && is.asyncFunction(app.controller.functionAttr.foo.bar));
       assert.deepEqual(app.controller.functionAttr.foo.bar.operationType, {
         value: 'account.foo.bar',
         name: 'account.foo.bar',
@@ -306,7 +304,9 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       assert.deepEqual(args, r);
       r = yield app.controller.object.callFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
-      r = yield app.controller.class.callFunction.call(ctx, ...args);
+      r = yield app.controller.class.generatorFunction.call(ctx, ...args);
+      assert.deepEqual(args, r);
+      r = yield app.controller.class.asyncFunction.call(ctx, ...args);
       assert.deepEqual(args, r);
     });
   });

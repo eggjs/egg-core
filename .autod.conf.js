@@ -16,8 +16,4 @@ module.exports = {
   ],
   keep: [
   ],
-  semver: [
-    'koa@1',
-    'koa-router@5',
-  ],
 };
