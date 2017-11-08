@@ -1,4 +1,10 @@
 
+4.0.0 / 2017-11-08
+==================
+
+**others**
+  * [[`ba0c9b9`](git@github.com:eggjs/egg-core/commit/ba0c9b9e44c57333485e5424b81f047249232232)] - refactor: upgrade to koa@2 and koa-router@7 [BREAKING_CHANGE] (#125) (Yiyu He <<dead_horse@qq.com>>)
+
 3.18.0 / 2017-11-08
 ==================
 
