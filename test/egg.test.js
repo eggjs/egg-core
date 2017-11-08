@@ -19,6 +19,15 @@ describe('test/egg.test.js', () => {
     let app;
     after(() => app && app.close());
 
+    it('should set options and _options', () => {
+      app = new EggCore();
+      assert(app.options === app._options);
+      assert.deepEqual(app.options, {
+        baseDir: process.cwd(),
+        type: 'application',
+      });
+    });
+
     it('should use cwd when no options', () => {
       app = new EggCore();
       assert(app._options.baseDir === process.cwd());
