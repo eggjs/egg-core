@@ -1,4 +1,13 @@
 
+4.1.0 / 2017-11-20
+==================
+
+**features**
+  * [[`4bb7472`](git@github.com:eggjs/egg-core/commit/4bb7472b1c2365e5b44d5f7c7f7050cb5915aa75)] - feat: export egg utils (#130) (Yiyu He <<dead_horse@qq.com>>)
+
+**others**
+  * [[`a02df89`](git@github.com:eggjs/egg-core/commit/a02df8958f040dc1796dffb0094f535c5c3936e9)] - test: use async function instead of generator function (#128) (Yiyu He <<dead_horse@qq.com>>)
+
 4.0.0 / 2017-11-08
 ==================
 
