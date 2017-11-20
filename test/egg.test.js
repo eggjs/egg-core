@@ -441,4 +441,22 @@ describe('test/egg.test.js', () => {
       }));
     });
   });
+
+  describe('flat npm3', () => {
+    let app;
+    before(() => {
+      mm(process, 'cwd', () => utils.getFilepath('flat-npm3/base-dir'));
+      const EggApplication = require('./fixtures/flat-npm3/node_modules/egg');
+      app = utils.createApp('flat-npm3/base-dir', {
+        Application: EggApplication,
+      });
+      app.loader.loadPlugin();
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should has plugin of package', () => {
+      assert(app.plugins.package.name === 'package');
+    });
+  });
 });
