@@ -8,5 +8,6 @@ describe('test/index.test.js', () => {
     assert(EggCore.EggCore);
     assert(EggCore.EggLoader);
     assert(EggCore.BaseContextClass);
+    assert(EggCore.utils);
   });
 });
