@@ -1,4 +1,10 @@
 
+3.19.0 / 2017-11-24
+==================
+
+**features**
+  * [[`295915f`](http://github.com/eggjs/egg-core/commit/295915fd08909b0db8a6b818ccce2d4dbb608a27)] - feat: export controller function's FULLPATH (#131) (fengmk2 <<fengmk2@gmail.com>>)
+
 3.18.0 / 2017-11-08
 ==================
 
