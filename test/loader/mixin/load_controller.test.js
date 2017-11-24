@@ -33,6 +33,9 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should use it as middleware', () => {
       assert(app.controller.generatorFunction);
+      assert(app.controller.generatorFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/generator_function.js');
+      assert(app.controller.generatorFunction[app.loader.FileLoader.FULLPATH] === classFilePath);
 
       return request(app.callback())
         .get('/generator-function')
@@ -54,6 +57,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is function', () => {
       assert(app.controller.object.callFunction);
+      assert(app.controller.object.callFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.callFunction[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#callFunction()');
 
       return request(app.callback())
         .get('/object-function')
@@ -63,6 +70,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is generator function', () => {
       assert(app.controller.object.callGeneratorFunction);
+      assert(app.controller.object.callGeneratorFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.callGeneratorFunction[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#callGeneratorFunction()');
 
       return request(app.callback())
         .get('/object-generator-function')
@@ -72,6 +83,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is generator function with argument', () => {
       assert(app.controller.object.callGeneratorFunctionWithArg);
+      assert(app.controller.object.callGeneratorFunctionWithArg.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.callGeneratorFunctionWithArg[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#callGeneratorFunctionWithArg()');
 
       return request(app.callback())
         .get('/object-generator-function-arg')
@@ -81,6 +96,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is async function', () => {
       assert(app.controller.object.callAsyncFunction);
+      assert(app.controller.object.callAsyncFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.callAsyncFunction[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#callAsyncFunction()');
 
       return request(app.callback())
         .get('/object-async-function')
@@ -90,6 +109,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is async function with argument', () => {
       assert(app.controller.object.callAsyncFunctionWithArg);
+      assert(app.controller.object.callAsyncFunctionWithArg.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.callAsyncFunctionWithArg[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#callAsyncFunctionWithArg()');
 
       return request(app.callback())
         .get('/object-async-function-arg')
@@ -122,6 +145,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is function', () => {
       assert(app.controller.class.callFunction);
+      assert(app.controller.class.callFunction.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class.js');
+      assert(app.controller.class.callFunction[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callFunction()`);
 
       return request(app.callback())
         .get('/class-function')
@@ -131,6 +158,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is generator function', () => {
       assert(app.controller.class.callGeneratorFunction);
+      assert(app.controller.class.callGeneratorFunction.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class.js');
+      assert(app.controller.class.callGeneratorFunction[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callGeneratorFunction()`);
 
       return request(app.callback())
         .get('/class-generator-function')
@@ -140,6 +171,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is generator function with ctx', () => {
       assert(app.controller.class.callGeneratorFunctionWithArg);
+      assert(app.controller.class.callGeneratorFunctionWithArg.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class.js');
+      assert(app.controller.class.callGeneratorFunctionWithArg[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callGeneratorFunctionWithArg()`);
 
       return request(app.callback())
         .get('/class-generator-function-arg')
@@ -149,6 +184,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is async function', () => {
       assert(app.controller.class.callAsyncFunction);
+      assert(app.controller.class.callAsyncFunction.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class.js');
+      assert(app.controller.class.callAsyncFunction[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callAsyncFunction()`);
 
       return request(app.callback())
         .get('/class-async-function')
@@ -158,6 +197,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
 
     it('should define method which is async function with ctx', () => {
       assert(app.controller.class.callAsyncFunctionWithArg);
+      assert(app.controller.class.callAsyncFunctionWithArg.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class.js');
+      assert(app.controller.class.callAsyncFunctionWithArg[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callAsyncFunctionWithArg()`);
 
       return request(app.callback())
         .get('/class-async-function-arg')
@@ -166,6 +209,11 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
 
     it('should load class that is inherited from its super class', () => {
+      assert(app.controller.classInherited.callInheritedFunction.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class_inherited.js');
+      assert(app.controller.classInherited.callInheritedFunction[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callInheritedFunction()`);
+
       return request(app.callback())
         .get('/class-inherited-function')
         .expect(200)
@@ -173,6 +221,12 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
 
     it('should load inherited class without overriding its own function', () => {
+      assert(app.controller.classInherited.callOverriddenFunction);
+      assert(app.controller.classInherited.callOverriddenFunction.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class_inherited.js');
+      assert(app.controller.classInherited.callOverriddenFunction[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.callOverriddenFunction()`);
+
       return request(app.callback())
         .get('/class-overridden-function')
         .expect(200)
@@ -188,6 +242,12 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
 
     it('should load class that is wrapped by function', () => {
+      assert(app.controller.classWrapFunction.get);
+      assert(app.controller.classWrapFunction.get.name === 'classControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/class_wrap_function.js');
+      assert(app.controller.classWrapFunction.get[app.loader.FileLoader.FULLPATH] ===
+        `${classFilePath}#HomeController.get()`);
+
       return request(app.callback())
         .get('/class-wrap-function')
         .expect(200)
