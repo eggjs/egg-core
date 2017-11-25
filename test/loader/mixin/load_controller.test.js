@@ -81,6 +81,32 @@ describe('test/loader/mixin/load_controller.test.js', () => {
         .expect('done');
     });
 
+    it('should define method on subObject', () => {
+      assert(app.controller.object.subObject.callGeneratorFunction);
+      assert(app.controller.object.subObject.callGeneratorFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.subObject.callGeneratorFunction[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#subObject.callGeneratorFunction()');
+
+      return request(app.callback())
+        .get('/subObject-generator-function')
+        .expect(200)
+        .expect('done');
+    });
+
+    it('should define method on subObject.subSubObject', () => {
+      assert(app.controller.object.subObject.subSubObject.callGeneratorFunction);
+      assert(app.controller.object.subObject.subSubObject.callGeneratorFunction.name === 'objectControllerMiddleware');
+      const classFilePath = path.join(app.baseDir, 'app/controller/object.js');
+      assert(app.controller.object.subObject.subSubObject.callGeneratorFunction[app.loader.FileLoader.FULLPATH] ===
+        classFilePath + '#subObject.subSubObject.callGeneratorFunction()');
+
+      return request(app.callback())
+        .get('/subSubObject-generator-function')
+        .expect(200)
+        .expect('done');
+    });
+
     it('should define method which is generator function with argument', () => {
       assert(app.controller.object.callGeneratorFunctionWithArg);
       assert(app.controller.object.callGeneratorFunctionWithArg.name === 'objectControllerMiddleware');
