@@ -1,4 +1,10 @@
 
+3.19.1 / 2017-11-29
+==================
+
+**fixes**
+  * [[`c8d40ba`](http://github.com/eggjs/egg-core/commit/c8d40ba93f791023c35ee50e86f3e21ce5e0331b)] - fix: should add parent prefix (#133) (fengmk2 <<fengmk2@gmail.com>>)
+
 3.19.0 / 2017-11-24
 ==================
 
