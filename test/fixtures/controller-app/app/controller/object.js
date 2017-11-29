@@ -21,6 +21,17 @@ module.exports = {
     ctx.body = yield ctx.service.home.info();
   },
 
+  subObject: {
+    * callGeneratorFunction() {
+      this.body = yield this.service.home.info();
+    },
+    subSubObject: {
+      * callGeneratorFunction() {
+        this.body = yield this.service.home.info();
+      },
+    },
+  },
+
   callAsyncFunction() {
     return __awaiter(this, void 0, void 0, function* () {
       this.body = yield this.service.home.info();

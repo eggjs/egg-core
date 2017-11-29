@@ -7,6 +7,8 @@ module.exports = app => {
 
   app.get('/object-function', 'object.callFunction');
   app.get('/object-generator-function', 'object.callGeneratorFunction');
+  app.get('/subObject-generator-function', 'object.subObject.callGeneratorFunction');
+  app.get('/subSubObject-generator-function', 'object.subObject.subSubObject.callGeneratorFunction');
   app.get('/object-generator-function-arg', 'object.callGeneratorFunctionWithArg');
   app.get('/object-async-function', 'object.callAsyncFunction');
   app.get('/object-async-function-arg', 'object.callAsyncFunctionWithArg');
