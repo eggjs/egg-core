@@ -66,5 +66,8 @@
   "files": [
     "index.js",
     "lib"
-  ]
+  ],
+  "publishConfig": {
+    "tag": "latest-3"
+  }
 }
