@@ -1,4 +1,10 @@
 
+4.2.1 / 2017-12-01
+==================
+
+**fixes**
+  * [[`035098c`](http://github.com/eggjs/egg-core/commit/035098cfca5b20c05a8dde719f0e3995037b9a04)] - fix: adjust implicitly enable logic (#135) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 4.2.0 / 2017-11-29
 ==================
 
