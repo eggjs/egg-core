@@ -2,6 +2,7 @@
   "name": "a",
   "eggPlugin": {
     "name": "a",
-    "dep": ["b", "c"]
+    "dep": ["b"],
+    "optionalDependencies": ["c", "e"]
   }
 }

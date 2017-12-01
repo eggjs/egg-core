@@ -280,13 +280,26 @@ describe('test/load_plugin.test.js', function() {
     }
   });
 
-  it('should not override the plugin.js of app implicitly', () => {
-    assert.throws(() => {
-      app = utils.createApp('plugin-dep-disable');
-      const loader = app.loader;
-      loader.loadPlugin();
-      loader.loadConfig();
-    }, /sequencify plugins has problem, missing: \[b,c], recursive: \[]\n\t>> Plugin \[b] is disabled or missed, but is required by \[a,d]\n\t>> Plugin \[c] is disabled or missed, but is required by \[a]/);
+  it('should enable dependencies implicitly but not optionalDependencies', done => {
+    app = utils.createApp('plugin-dep-disable');
+    mm(app.console, 'info', msg => {
+      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
+        done(new Error('should no run here'));
+        return;
+      }
+      // Following plugins will be enabled implicitly.
+      //   - b required by [a,d]
+      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]');
+      done();
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    assert(loader.plugins.a && loader.plugins.a.enable);
+    assert(loader.plugins.b && loader.plugins.b.enable);
+    assert(loader.plugins.d && loader.plugins.d.enable);
+    assert(!loader.plugins.c);
+    assert(!loader.plugins.e);
   });
 
   it('should enable when not match env', function() {
