@@ -1,4 +1,13 @@
 
+3.19.2 / 2017-12-01
+==================
+
+**fixes**
+  * [[`cc21a24`](http://github.com/eggjs/egg-core/commit/cc21a24f1e1578ad2bc2c923a0382465c2cca4ba)] - fix: adjust implicitly enable logic (#134) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
+**others**
+  * [[`480abc4`](http://github.com/eggjs/egg-core/commit/480abc448adf27fe18203633d4236cd3b02e7f45)] - chore: add latest-3 tag (fengmk2 <<fengmk2@gmail.com>>)
+
 3.19.1 / 2017-11-29
 ==================
 
