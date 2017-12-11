@@ -66,16 +66,6 @@ describe('test/utils/router.test.js', () => {
     });
 
     describe('controller url', () => {
-      describe('controller not exists error', () => {
-        it('should throw when controller not exists', done => {
-          try {
-            app.get('/hello', 'not.exist.controller');
-          } catch (err) {
-            assert(err.message === 'controller \'not.exist.controller\' not exists');
-            done();
-          }
-        });
-      });
       it('should GET /members', () => {
         return request(app.callback())
           .get('/members')
@@ -262,6 +252,44 @@ describe('test/utils/router.test.js', () => {
         .get('/router_redirect')
         .expect(301)
         .expect('location', '/middleware');
+    });
+  });
+
+  describe('controller not exist', () => {
+    it('should check when app.router.VERB', () => {
+      try {
+        app.router.get('/test', app.controller.not_exist);
+        throw new Error('should not run here');
+      } catch (err) {
+        assert(err.message.includes('controller not exists'));
+      }
+    });
+
+    it('should check when app.router.VERB with controller string', () => {
+      try {
+        app.get('/hello', 'not.exist.controller');
+        throw new Error('should not run here');
+      } catch (err) {
+        assert(err.message.includes('controller \'not.exist.controller\' not exists'));
+      }
+    });
+
+    it('should check when app.router.resources', () => {
+      try {
+        app.router.resources('/test', app.controller.not_exist);
+        throw new Error('should not run here');
+      } catch (err) {
+        assert(err.message.includes('controller not exists'));
+      }
+    });
+
+    it('should check when app.router.resources with controller string', () => {
+      try {
+        app.router.resources('/test', 'not.exist.controller');
+        throw new Error('should not run here');
+      } catch (err) {
+        assert(err.message.includes('controller \'not.exist.controller\' not exists'));
+      }
     });
   });
 });
