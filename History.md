@@ -1,4 +1,10 @@
 
+3.19.3 / 2017-12-12
+==================
+
+**fixes**
+  * [[`3bb5492`](git@github.com:eggjs/egg-core/commit/3bb54928c73373496a758b3a254b153dc5ab2988)] - fix: should load router middleware in beforeStart (#139) (#140) (Yiyu He <<dead_horse@qq.com>>)
+
 3.19.2 / 2017-12-01
 ==================
 
