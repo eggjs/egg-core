@@ -38,7 +38,7 @@ describe('test/egg.test.js', () => {
       assert(app.type === 'application');
     });
 
-    it.only('should use options.serverScope', () => {
+    it('should use options.serverScope', () => {
       app = new EggCore({ serverScope: 'scope' });
       assert(app.loader.serverScope === 'scope');
     });
