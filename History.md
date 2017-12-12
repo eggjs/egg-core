@@ -1,4 +1,11 @@
 
+4.2.2 / 2017-12-12
+==================
+
+**fixes**
+  * [[`b327145`](git@github.com:eggjs/egg-core/commit/b327145d2c6f1328a5d0117186fef218c4b673a7)] - fix: should load router middleware in beforeStart (#139) (Yiyu He <<dead_horse@qq.com>>)
+  * [[`187fdec`](git@github.com:eggjs/egg-core/commit/187fdec6c63c22c73716741934771eefb54320a8)] - fix: check whether controller exists (#138) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.2.1 / 2017-12-01
 ==================
 
