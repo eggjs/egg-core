@@ -293,7 +293,7 @@ describe('test/utils/router.test.js', () => {
     });
   });
 
-  describe.only('router middleware', () => {
+  describe('router middleware', () => {
     before(() => {
       app = utils.createApp('router-in-app');
       app.loader.loadAll();
