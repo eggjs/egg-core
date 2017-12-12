@@ -292,4 +292,19 @@ describe('test/utils/router.test.js', () => {
       }
     });
   });
+
+  describe('router middleware', () => {
+    before(() => {
+      app = utils.createApp('router-in-app');
+      app.loader.loadAll();
+      return app.ready();
+    });
+
+    it('should always load router middleware at last', () => {
+      return request(app.callback())
+        .get('/')
+        .expect(200)
+        .expect('foo');
+    });
+  });
 });
