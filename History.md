@@ -1,4 +1,10 @@
 
+4.3.0 / 2017-12-13
+==================
+
+**features**
+  * [[`cbcf402`](http://github.com/eggjs/egg-core/commit/cbcf4028055a570c81b26dd39cadcfc548ffefd4)] - feat: support options.serverScope for egg-mock (#143) (Yiyu He <<dead_horse@qq.com>>)
+
 4.2.2 / 2017-12-12
 ==================
 
