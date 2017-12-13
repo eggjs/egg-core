@@ -123,7 +123,7 @@ describe('test/load_plugin.test.js', function() {
     let message;
     app = utils.createApp('plugin');
     mm(app.console, 'warn', function(m) {
-      if (!m.startsWith('[egg:loader] eggPlugin is missing') && !message) {
+      if (!m.startsWith('[egg:loader] pkg.eggPlugin is missing') && !message) {
         message = m;
       }
     });
@@ -259,8 +259,8 @@ describe('test/load_plugin.test.js', function() {
 
   it('should log when enable plugin implicitly', done => {
     app = utils.createApp('plugin-framework');
-    mm(app.console, 'info', msg => {
-      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
+    mm(app.console, 'warn', msg => {
+      if (msg.startsWith('[egg:loader] pkg.eggPlugin is missing')) {
         return;
       }
       // Following plugins will be enabled implicitly.
@@ -281,8 +281,8 @@ describe('test/load_plugin.test.js', function() {
 
   it('should enable dependencies implicitly but not optionalDependencies', done => {
     app = utils.createApp('plugin-dep-disable');
-    mm(app.console, 'info', msg => {
-      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
+    mm(app.console, 'warn', msg => {
+      if (msg.startsWith('[egg:loader] pkg.eggPlugin is missing')) {
         done(new Error('should no run here'));
         return;
       }
