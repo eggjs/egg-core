@@ -1,4 +1,10 @@
 
+3.20.2 / 2017-12-19
+==================
+
+**fixes**
+  * [[`a300a1a`](http://github.com/eggjs/egg-core/commit/a300a1a2c58e7bb9b3c33f4d6f29f141573e463a)] - fix: only filter the plugin which is disabled by app (#145) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.20.1 / 2017-12-19
 ==================
 
