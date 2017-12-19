@@ -1,4 +1,10 @@
 
+3.20.1 / 2017-12-19
+==================
+
+**others**
+  * [[`f160c13`](http://github.com/eggjs/egg-core/commit/f160c139f887ebf9ac9755d5ffa99f07047e6aaf)] - refactor: warning when the plugin disabled by app is enabled implicitly (#144) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.20.0 / 2017-12-13
 ==================
 
