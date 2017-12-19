@@ -6,6 +6,7 @@ const mm = require('mm');
 const assert = require('assert');
 const rimraf = require('rimraf');
 const spy = require('spy');
+const pedding = require('pedding');
 const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
@@ -281,15 +282,18 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should enable dependencies implicitly but not optionalDependencies', done => {
+    done = pedding(done, 2);
     app = utils.createApp('plugin-dep-disable');
     mm(app.console, 'info', msg => {
       if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
         done(new Error('should no run here'));
         return;
       }
-      // Following plugins will be enabled implicitly.
-      //   - b required by [a,d]
-      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]');
+      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]\n  - c required by [a]');
+      done();
+    });
+    mm(app.console, 'warn', msg => {
+      assert(msg === 'Following plugins will be enabled implicitly that is disabled by application.\n  - b required by [a,d]\n  - c required by [a]');
       done();
     });
     const loader = app.loader;
