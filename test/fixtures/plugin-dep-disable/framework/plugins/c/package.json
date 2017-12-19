@@ -1,6 +1,7 @@
 {
   "name": "c",
   "eggPlugin": {
-    "name": "c"
+    "name": "c",
+    "dep": [ "e" ]
   }
 }

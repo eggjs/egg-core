@@ -11,6 +11,7 @@ const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
 
+
 describe('test/load_plugin.test.js', function() {
   let app;
   afterEach(mm.restore);
@@ -281,18 +282,26 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should enable dependencies implicitly but not optionalDependencies', done => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-dep-disable/framework');
+      }
+    }
+
     done = pedding(done, 2);
-    app = utils.createApp('plugin-dep-disable');
+    app = utils.createApp('plugin-dep-disable', {
+      Application,
+    });
     mm(app.console, 'info', msg => {
       if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
         done(new Error('should no run here'));
         return;
       }
-      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]\n  - c required by [a]');
+      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]\n  - e required by [c]\n  - c required by [a]');
       done();
     });
     mm(app.console, 'warn', msg => {
-      assert(msg === 'Following plugins will be enabled implicitly that is disabled by application.\n  - b required by [a,d]\n  - c required by [a]');
+      assert(msg === 'Following plugins will be enabled implicitly that is disabled by application.\n  - e required by [c]');
       done();
     });
     const loader = app.loader;
