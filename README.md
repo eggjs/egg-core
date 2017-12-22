@@ -20,9 +20,9 @@
 [download-image]: https://img.shields.io/npm/dm/egg-core.svg?style=flat-square
 [download-url]: https://npmjs.org/package/egg-core
 
-A core Pluggable framework based on [koa](https://github.com/koajs/koa)
+A core Pluggable framework based on [koa](https://github.com/koajs/koa).
 
-**Don't use it directly, see [egg]**
+**Don't use it directly, see [egg].**
 
 ## Usage
 
@@ -71,7 +71,7 @@ app.ready(() => app.listen(3000));
 
 ## EggLoader
 
-EggLoader can easily load files or directories in your [egg]** project. In addition, you can customize the loader with low level APIs.
+EggLoader can easily load files or directories in your [egg] project. In addition, you can customize the loader with low level APIs.
 
 ### constructor
 
