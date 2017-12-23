@@ -73,7 +73,7 @@ describe('test/egg.test.js', () => {
         });
         throw new Error('should not run');
       } catch (err) {
-        assert(err.message.indexOf(`Directory ${__filename} is not a directory`) >= 0);
+        assert(err.message.includes(`Directory ${__filename} is not a directory`));
       }
     });
 
@@ -213,7 +213,7 @@ describe('test/egg.test.js', () => {
       app.loader.loadAll();
       app.once('ready_timeout', id => {
         const file = path.normalize('test/fixtures/beforestart-with-timeout-env/app.js');
-        assert(id.indexOf(file) >= 0);
+        assert(id.includes(file));
         done();
       });
     });
@@ -243,7 +243,7 @@ describe('test/egg.test.js', () => {
       app.loader.loadAll();
       app.once('ready_timeout', id => {
         const file = path.normalize('test/fixtures/beforestart-timeout/app.js');
-        assert(id.indexOf(file) >= 0);
+        assert(id.includes(file));
         done();
       });
     });
