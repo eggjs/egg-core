@@ -80,7 +80,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
       loader.loadConfig();
       throw new Error('should not run');
     } catch (err) {
-      assert(err.message.indexOf(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`) >= 0);
+      assert(err.message.includes(`Can not define middleware in ${path.join(pluginDir, 'config/config.default.js')}`));
     }
   });
 

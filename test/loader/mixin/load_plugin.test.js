@@ -323,7 +323,7 @@ describe('test/load_plugin.test.js', function() {
     const plugins = loader.orderPlugins.map(function(plugin) {
       return plugin.name;
     });
-    assert(plugins.indexOf('testMe') === -1);
+    assert(!plugins.includes('testMe'));
   });
 
   it('should complement infomation by config/plugin.js from plugin', function() {
@@ -339,7 +339,7 @@ describe('test/load_plugin.test.js', function() {
     const keys1 = loader1.orderPlugins.map(function(plugin) {
       return plugin.name;
     }).join(',');
-    assert(keys1.indexOf('b,c,d1,f,e') > -1);
+    assert(keys1.includes('b,c,d1,f,e'));
     assert(!loader1.plugins.a1);
 
     mm(process.env, 'NODE_ENV', 'development');
@@ -350,7 +350,7 @@ describe('test/load_plugin.test.js', function() {
     const keys2 = loader2.orderPlugins.map(function(plugin) {
       return plugin.name;
     }).join(',');
-    assert(keys2.indexOf('d1,a1,b,c,f,e') > -1);
+    assert(keys2.includes('d1,a1,b,c,f,e'));
     assert.deepEqual(loader2.plugins.a1, {
       enable: true,
       name: 'a1',

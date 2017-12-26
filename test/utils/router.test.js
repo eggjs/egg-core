@@ -205,7 +205,7 @@ describe('test/utils/router.test.js', () => {
 
   describe('router.method', () => {
     it('router method include HEAD', () => {
-      assert(app.router.methods.indexOf('HEAD') > -1);
+      assert(app.router.methods.includes('HEAD'));
     });
   });
 
