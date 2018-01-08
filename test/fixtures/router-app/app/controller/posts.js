@@ -24,6 +24,10 @@ exports.update = function* () {
   this.body = 'update - ' + this.params.id;
 };
 
+exports.updateAll = function* () {
+  this.body = 'updateAll';
+};
+
 exports.destroy = function* () {
   this.body = 'destroy - ' + this.params.id;
 };
