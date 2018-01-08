@@ -50,11 +50,18 @@ describe('test/utils/router.test.js', () => {
           .expect('edit - 123');
       });
 
-      it('should PUT /posts/:id', () => {
+      it('should PATCH /posts/:id', () => {
         return request(app.callback())
-          .put('/posts/123')
+          .patch('/posts/123')
           .expect(200)
           .expect('update - 123');
+      });
+
+      it('should PUT /posts', () => {
+        return request(app.callback())
+          .put('/posts')
+          .expect(200)
+          .expect('updateAll');
       });
 
       it('should DELETE /posts/:id', () => {
