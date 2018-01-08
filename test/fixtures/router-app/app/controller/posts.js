@@ -20,12 +20,12 @@ exports.edit = function* () {
   this.body = 'edit - ' + this.params.id;
 };
 
-exports.update = function* () {
-  this.body = 'update - ' + this.params.id;
+exports.patch = function* () {
+  this.body = 'patch - ' + this.params.id;
 };
 
-exports.updateAll = function* () {
-  this.body = 'updateAll';
+exports.update = function* () {
+  this.body = 'update';
 };
 
 exports.destroy = function* () {
