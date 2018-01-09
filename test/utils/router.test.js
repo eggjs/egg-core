@@ -57,11 +57,11 @@ describe('test/utils/router.test.js', () => {
           .expect('patch - 123');
       });
 
-      it('should PUT /posts', () => {
+      it('should PUT /posts/:id', () => {
         return request(app.callback())
-          .put('/posts')
+          .put('/posts/123')
           .expect(200)
-          .expect('update');
+          .expect('update - 123');
       });
 
       it('should DELETE /posts/:id', () => {

@@ -25,7 +25,7 @@ exports.patch = function* () {
 };
 
 exports.update = function* () {
-  this.body = 'update';
+  this.body = 'update - ' + this.params.id;
 };
 
 exports.destroy = function* () {
