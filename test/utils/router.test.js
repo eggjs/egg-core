@@ -255,6 +255,33 @@ describe('test/utils/router.test.js', () => {
     });
   });
 
+  describe('controller mutli url', () => {
+    it('should GET /url1', () => {
+      return request(app.callback())
+        .get('/url1')
+        .expect(200)
+        .expect('index');
+    });
+    it('should GET /url2', () => {
+      return request(app.callback())
+        .get('/url2')
+        .expect(200)
+        .expect('index');
+    });
+    it('use middlewares /urlm1', () => {
+      return request(app.callback())
+        .get('/urlm1')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+    it('use middlewares /urlm2', () => {
+      return request(app.callback())
+        .get('/urlm2')
+        .expect(200)
+        .expect([ 'generator', 'async', 'common' ]);
+    });
+  });
+
   describe('controller not exist', () => {
     it('should check when app.router.VERB', () => {
       try {
