@@ -1,4 +1,10 @@
 
+4.3.2 / 2018-01-13
+==================
+
+**fixes**
+  * [[`2926058`](git@github.com:eggjs/egg-core/commit/29260580b387ba6657c76a7881f60c4ce44c295c)] - fix: mutli-path register. (#151) (SuperEVO <<zhang740@qq.com>>)
+
 4.3.1 / 2018-01-12
 ==================
 
