@@ -518,6 +518,27 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
+  it('should parse implicitly enable dependencies', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-implicit-enable-dependencies');
+      }
+    }
+    app = utils.createApp('plugin-implicit-enable-dependencies', {
+      // use clean framework
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert.deepEqual(loader.orderPlugins.map(p => p.name), [
+      'zoneclient',
+      'ldc',
+      'rpcServer',
+      'tracelog',
+      'gateway',
+    ]);
+  });
+
   it('should load plugin from scope', () => {
     mm(process.env, 'EGG_SERVER_SCOPE', 'en');
     app = utils.createApp('scope');

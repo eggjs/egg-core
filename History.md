@@ -1,4 +1,22 @@
 
+4.3.2 / 2018-01-13
+==================
+
+**fixes**
+  * [[`2926058`](git@github.com:eggjs/egg-core/commit/29260580b387ba6657c76a7881f60c4ce44c295c)] - fix: mutli-path register. (#151) (SuperEVO <<zhang740@qq.com>>)
+
+4.3.1 / 2018-01-12
+==================
+
+**fixes**
+  * [[`b41891d`](http://github.com/eggjs/egg-core/commit/b41891d160cd8be6e2df58b8540376b4ca6c76b8)] - fix: fix plugin sequence bug (#152) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+  * [[`4f1c19a`](http://github.com/eggjs/egg-core/commit/4f1c19af711e4fe8cf65a2f0f01acdf5f276188b)] - fix: only filter the plugin which is disabled by app (#145) (#146) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**others**
+  * [[`3384a87`](http://github.com/eggjs/egg-core/commit/3384a8796d878536e8144671c42f5872c3d0e3a9)] - refactor: replace `indexOf()` with `includes()` (#148) (m31271n <<m31271n@2players.studio>>)
+  * [[`613f236`](http://github.com/eggjs/egg-core/commit/613f236fba69f55ca27911d29d81a918c8d67c18)] - docs: fix typo (#147) (m31271n <<m31271n@2players.studio>>)
+  * [[`25b728c`](http://github.com/eggjs/egg-core/commit/25b728c41fdf941c97f23a2675b8b82443f28938)] - refactor: warning when the plugin disabled by app is enabled implicitly (#141) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 4.3.0 / 2017-12-13
 ==================
 
