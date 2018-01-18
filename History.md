@@ -1,4 +1,10 @@
 
+4.4.0 / 2018-01-18
+==================
+
+**features**
+  * [[`5323a9e`](git@github.com:eggjs/egg-core/commit/5323a9ec54d60a43aed06cfd67c617d02909715d)] - feat: add patch method for update (egg#1793) (#150) (吴建金 <<mosaic101@foxmail.com>>)
+
 4.3.2 / 2018-01-13
 ==================
 
