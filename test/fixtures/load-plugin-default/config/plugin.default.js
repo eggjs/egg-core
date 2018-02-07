@@ -6,3 +6,5 @@ exports.c = {
   enable: true,
   path: path.join(__dirname, '../plugins/c'),
 }
+
+exports.bcdef = false;

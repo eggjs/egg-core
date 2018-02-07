@@ -9,7 +9,7 @@ module.exports = {
   },
 
   customB: {
-    enable: false,
+    enable: true,
     package: '@ali/b',
   },
 };

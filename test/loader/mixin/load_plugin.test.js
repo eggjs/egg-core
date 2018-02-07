@@ -314,6 +314,23 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.plugins.e);
   });
 
+  it('should throw error when dependency plugin disabled and missing', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-dep-disable-and-missing/framework');
+      }
+    }
+
+    assert.throws(() => {
+      app = utils.createApp('plugin-dep-disable-and-missing', {
+        Application,
+      });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /Can not find plugin e in /);
+  });
+
   it('should enable when not match env', function() {
     app = utils.createApp('dont-load-plugin');
     const loader = app.loader;
