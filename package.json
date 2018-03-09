@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "autod": "autod",
-    "lint": "eslint lib test *.js",
+    "lint": "eslint lib test *.js --fix",
     "test": "npm run lint && egg-bin test",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
