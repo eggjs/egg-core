@@ -1,4 +1,10 @@
 
+4.4.1 / 2018-03-09
+==================
+
+**fixes**
+  * [[`046ffdd`](http://github.com/eggjs/egg-core/commit/046ffdd5d4b918ddfc0e9f7980567374b594ef97)] - fix: should not load optional plugin & their deps (#154) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
 4.4.0 / 2018-01-18
 ==================
 
