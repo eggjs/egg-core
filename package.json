@@ -1,6 +1,6 @@
 {
   "name": "egg-core",
-  "version": "3.20.2",
+  "version": "3.20.3",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
   "scripts": {
