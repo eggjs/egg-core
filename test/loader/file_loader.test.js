@@ -8,7 +8,7 @@ const yaml = require('js-yaml');
 const FileLoader = require('../../lib/loader/file_loader');
 const dirBase = path.join(__dirname, '../fixtures/load_dirs');
 
-describe('test/file_loader.test.js', () => {
+describe('test/loader/file_loader.test.js', () => {
   it('should load files', done => {
     const services = {};
     new FileLoader({
@@ -326,7 +326,7 @@ describe('test/file_loader.test.js', () => {
             return filepath;
           },
         }).load();
-      }, /caseStyle expect an array, but got foo_bar1.js/);
+      }, /caseStyle expect an array, but got/);
     });
 
     it('should be overridden by lowercaseFirst', () => {
