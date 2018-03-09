@@ -570,4 +570,14 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.c.enable === false);
     assert(loader.allPlugins.d.enable === true);
   });
+
+  it('should not load optionalDependencies and their dependencies', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'default');
+    app = utils.createApp('plugin-complex-deps');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.tracelog.enable === true);
+    assert(loader.allPlugins.gw.enable === false);
+    assert(loader.allPlugins.rpcServer.enable === false);
+  });
 });
