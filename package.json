@@ -35,6 +35,7 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "coffee": "^4.1.0",
+    "egg": "^2.5.0",
     "egg-bin": "^4.3.7",
     "egg-ci": "^1.8.0",
     "eslint": "^4.18.2",
@@ -45,7 +46,9 @@
     "pedding": "^1.1.0",
     "rimraf": "^2.6.2",
     "spy": "^1.0.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "ts-node": "^5.0.1",
+    "typescript": "^2.7.2"
   },
   "dependencies": {
     "co": "^4.6.0",
