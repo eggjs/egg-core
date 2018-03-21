@@ -19,12 +19,15 @@ describe('test/egg-ts.test.js', () => {
     });
 
     app = utils.createApp('egg-ts');
+    app.Helper = class Helper {};
     app.loader.loadPlugin();
     app.loader.loadConfig();
-    app.loader.loadContextExtend();
     app.loader.loadApplicationExtend();
+    app.loader.loadAgentExtend();
     app.loader.loadRequestExtend();
     app.loader.loadResponseExtend();
+    app.loader.loadContextExtend();
+    app.loader.loadHelperExtend();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();

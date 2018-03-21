@@ -6,6 +6,7 @@ export default (app: Application) => {
 
 declare module 'egg' {
   interface Application {
+    Helper: any;
     fromCustomApp: string;
   }
 }
