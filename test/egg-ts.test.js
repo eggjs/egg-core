@@ -42,6 +42,8 @@ describe('test/egg-ts.test.js', () => {
         assert(res.text.includes('from extend context'));
         assert(res.text.includes('from extend application'));
         assert(res.text.includes('from extend request'));
+        assert(res.text.includes('from extend agent'));
+        assert(res.text.includes('from extend helper'));
         assert(res.text.includes('from extend response'));
         assert(res.text.includes('from custom app'));
         assert(res.text.includes('from custom agent'));

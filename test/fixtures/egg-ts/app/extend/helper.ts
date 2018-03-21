@@ -1,5 +1,5 @@
 export default {
   helperShow() {
-    return 'from extend show';
+    return 'from extend helper';
   }
 }
