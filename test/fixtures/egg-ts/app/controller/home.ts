@@ -10,6 +10,8 @@ export default class HomeController extends Controller {
       ctx.app.applicationShow(),
       ctx.request.requestShow(),
       ctx.response.responseShow(),
+      app.fromCustomApp,
+      app.fromCustomAgent,
       app.config.test,
       app.config.testFromA,
       ctx.mid,

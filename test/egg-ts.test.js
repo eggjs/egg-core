@@ -30,6 +30,8 @@ describe('test/egg-ts.test.js', () => {
     app.loader.loadRouter();
     app.loader.loadPlugin();
     app.loader.loadMiddleware();
+    app.loader.loadCustomApp();
+    app.loader.loadCustomAgent();
 
     await request(app.callback())
       .get('/')
@@ -38,6 +40,8 @@ describe('test/egg-ts.test.js', () => {
         assert(res.text.includes('from extend application'));
         assert(res.text.includes('from extend request'));
         assert(res.text.includes('from extend response'));
+        assert(res.text.includes('from custom app'));
+        assert(res.text.includes('from custom agent'));
         assert(res.text.includes('from plugins'));
         assert(res.text.includes('from config.default'));
         assert(res.text.includes('from middleware'));
