@@ -262,7 +262,7 @@ describe('test/loader/file_loader.test.js', () => {
         target: mod,
         typescript: true,
       }).load();
-    }, /require.extensions should contains .ts while options.typescript was true/);
+    }, /`require.extensions` should contains `.ts` while `options.typescript` was true/);
   });
 
   describe('caseStyle', () => {
