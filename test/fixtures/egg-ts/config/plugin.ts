@@ -1,6 +1,6 @@
-import * as path from 'path';
+const path = require('path');
 
-export default {
+module.exports = {
   a: {
     path: path.resolve(__dirname, '../plugins/a'),
   }

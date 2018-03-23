@@ -254,6 +254,17 @@ describe('test/loader/file_loader.test.js', () => {
     }, /_private is not match 'a-z0-9_-' in _private.js/);
   });
 
+  it('should throw when typescript was true but no ts extension', () => {
+    const mod = {};
+    assert.throws(() => {
+      new FileLoader({
+        directory: path.join(dirBase, 'error/dotdir'),
+        target: mod,
+        typescript: true,
+      }).load();
+    }, /require.extensions should contains .ts while options.typescript was true/);
+  });
+
   describe('caseStyle', () => {
     it('should load when caseStyle = upper', () => {
       const target = {};

@@ -3,22 +3,20 @@
 const request = require('supertest');
 const assert = require('assert');
 const utils = require('./utils');
-const tsNode = require('ts-node');
 
 describe('test/egg-ts.test.js', () => {
   let app;
 
-  it('should support ts-node', async () => {
-    tsNode.register({
-      typeCheck: true,
-      compilerOptions: {
-        target: 'es2017',
-        module: 'commonjs',
-        moduleResolution: 'node',
-      },
+  afterEach(() => {
+    delete require.extensions['.ts'];
+  });
+
+  it('should support load ts file', async () => {
+    require.extensions['.ts'] = require.extensions['.js'];
+    app = utils.createApp('egg-ts', {
+      typescript: true,
     });
 
-    app = utils.createApp('egg-ts');
     app.Helper = class Helper {};
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -53,5 +51,27 @@ describe('test/egg-ts.test.js', () => {
         assert(res.text.includes('from service'));
       })
       .expect(200);
+  });
+
+  it('should not load d.ts files while typescript was true', async () => {
+    require.extensions['.ts'] = require.extensions['.js'];
+    app = utils.createApp('egg-ts-js', {
+      typescript: true,
+    });
+
+    app.loader.loadController();
+    assert(!app.controller.god);
+    assert(!!app.controller.test);
+  });
+
+  it('should support load ts,js files', async () => {
+    require.extensions['.ts'] = require.extensions['.js'];
+    app = utils.createApp('egg-ts-js', {
+      typescript: true,
+    });
+
+    app.loader.loadService();
+    assert(!!app.serviceClasses.lord);
+    assert(!!app.serviceClasses.test);
   });
 });

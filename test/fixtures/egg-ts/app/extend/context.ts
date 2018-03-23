@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   contextShow() {
     return 'from extend context';
   }

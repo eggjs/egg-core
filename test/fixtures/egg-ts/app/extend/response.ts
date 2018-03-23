@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   responseShow() {
     return 'from extend response';
   }

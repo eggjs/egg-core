@@ -1,6 +1,4 @@
-import { Service } from 'egg';
-
-export default class TestService extends Service {
+module.exports = class TestService {
   getTest() {
     return 'from service';
   }

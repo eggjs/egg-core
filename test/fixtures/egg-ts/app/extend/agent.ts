@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   agentShow() {
     return 'from extend agent';
   }

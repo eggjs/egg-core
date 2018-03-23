@@ -1,7 +1,5 @@
-import { Context } from 'egg';
-
-export default () => {
-  return async (ctx: Context, next) => {
+module.exports = () => {
+  return async (ctx, next) => {
     ctx.mid = 'from middleware';
     await next();
   }

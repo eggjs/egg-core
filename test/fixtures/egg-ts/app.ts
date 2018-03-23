@@ -1,12 +1,3 @@
-import { Application } from 'egg';
-
-export default (app: Application) => {
+module.exports = app => {
   app.fromCustomApp = 'from custom app';
 };
-
-declare module 'egg' {
-  interface Application {
-    Helper: any;
-    fromCustomApp: string;
-  }
-}
