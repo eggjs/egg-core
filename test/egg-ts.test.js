@@ -61,7 +61,7 @@ describe('test/egg-ts.test.js', () => {
 
     app.loader.loadController();
     assert(!app.controller.god);
-    assert(!!app.controller.test);
+    assert(app.controller.test);
   });
 
   it('should support load ts,js files', async () => {
@@ -71,7 +71,16 @@ describe('test/egg-ts.test.js', () => {
     });
 
     app.loader.loadService();
-    assert(!!app.serviceClasses.lord);
-    assert(!!app.serviceClasses.test);
+    assert(app.serviceClasses.lord);
+    assert(app.serviceClasses.test);
+  });
+
+  it('should not load ts files while typescript was false', async () => {
+    require.extensions['.ts'] = require.extensions['.js'];
+    app = utils.createApp('egg-ts-js');
+
+    app.loader.loadService();
+    assert(app.serviceClasses.lord);
+    assert(!app.serviceClasses.test);
   });
 });
