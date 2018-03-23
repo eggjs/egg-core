@@ -79,7 +79,9 @@ describe('test/egg-ts.test.js', () => {
   it('should not load ts files while typescript was false', async () => {
     app = utils.createApp('egg-ts-js');
 
+    app.loader.loadApplicationExtend();
     app.loader.loadService();
+    assert(!app.appExtend);
     assert(app.serviceClasses.lord);
     assert(!app.serviceClasses.test);
   });
