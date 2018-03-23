@@ -7,12 +7,15 @@ const utils = require('./utils');
 describe('test/egg-ts.test.js', () => {
   let app;
 
+  beforeEach(() => {
+    require.extensions['.ts'] = require.extensions['.js'];
+  });
+
   afterEach(() => {
     delete require.extensions['.ts'];
   });
 
   it('should support load ts file', async () => {
-    require.extensions['.ts'] = require.extensions['.js'];
     app = utils.createApp('egg-ts', {
       typescript: true,
     });
@@ -54,7 +57,6 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should not load d.ts files while typescript was true', async () => {
-    require.extensions['.ts'] = require.extensions['.js'];
     app = utils.createApp('egg-ts-js', {
       typescript: true,
     });
@@ -65,7 +67,6 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should support load ts,js files', async () => {
-    require.extensions['.ts'] = require.extensions['.js'];
     app = utils.createApp('egg-ts-js', {
       typescript: true,
     });
@@ -76,7 +77,6 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should not load ts files while typescript was false', async () => {
-    require.extensions['.ts'] = require.extensions['.js'];
     app = utils.createApp('egg-ts-js');
 
     app.loader.loadService();
