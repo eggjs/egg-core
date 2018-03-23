@@ -7,11 +7,11 @@ const utils = require('./utils');
 describe('test/egg-ts.test.js', () => {
   let app;
 
-  beforeEach(() => {
+  before(() => {
     require.extensions['.ts'] = require.extensions['.js'];
   });
 
-  afterEach(() => {
+  after(() => {
     delete require.extensions['.ts'];
   });
 
