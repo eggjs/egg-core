@@ -1,4 +1,10 @@
 
+4.5.0 / 2018-03-25
+==================
+
+**features**
+  * [[`2c6fbbf`](http://github.com/eggjs/egg-core/commit/2c6fbbf10c34420d623282312b555eecaaf3a755)] - feat: loader support custom extension (#156) (Axes <<whxaxes@qq.com>>)
+
 4.4.1 / 2018-03-09
 ==================
 
