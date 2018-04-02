@@ -308,6 +308,25 @@ describe('test/loader/file_loader.test.js', () => {
       assert(target.fooBar4);
     });
 
+    it('should load when caseStyle = camel && leafCaseStyle=upper', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'leaf'),
+        target,
+        caseStyle: 'camel',
+        leafCaseStyle: 'upper',
+      }).load();
+
+      assert(target.FooBar1);
+      assert(target.FooBar2);
+      assert(target.FooBar3);
+      assert(target.FooBar4);
+      assert(target.fooBar.FooBar1);
+      assert(target.fooBar.FooBar2);
+      assert(target.fooBar.FooBar3);
+      assert(target.fooBar.FooBar4);
+    });
+
     it('should load when caseStyle is function', () => {
       const target = {};
       new FileLoader({
