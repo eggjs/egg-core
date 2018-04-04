@@ -7,11 +7,11 @@ const utils = require('./utils');
 describe('test/egg-ts.test.js', () => {
   let app;
 
-  before(() => {
+  beforeEach(() => {
     require.extensions['.ts'] = require.extensions['.js'];
   });
 
-  after(() => {
+  afterEach(() => {
     delete require.extensions['.ts'];
   });
 
@@ -78,6 +78,17 @@ describe('test/egg-ts.test.js', () => {
 
   it('should not load ts files while typescript was false', async () => {
     app = utils.createApp('egg-ts-js');
+
+    app.loader.loadApplicationExtend();
+    app.loader.loadService();
+    assert(!app.appExtend);
+    assert(app.serviceClasses.lord);
+    assert(!app.serviceClasses.test);
+  });
+
+  it('should not load ts files while typescript was true but no extensions', async () => {
+    delete require.extensions['.ts'];
+    app = utils.createApp('egg-ts-js', { typescript: true });
 
     app.loader.loadApplicationExtend();
     app.loader.loadService();
