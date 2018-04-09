@@ -1,4 +1,10 @@
 
+4.6.0 / 2018-04-09
+==================
+
+**features**
+  * [[`7f087e7`](http://github.com/eggjs/egg-core/commit/7f087e7d30bf9b07249b44fb943bcc9d109f26f6)] - feat: change assert to warning (#157) (Axes <<whxaxes@qq.com>>)
+
 4.5.0 / 2018-03-25
 ==================
 
