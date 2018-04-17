@@ -1,5 +1,6 @@
 'use strict';
 
+const mm = require('mm');
 const request = require('supertest');
 const assert = require('assert');
 const utils = require('./utils');
@@ -12,6 +13,7 @@ describe('test/egg-ts.test.js', () => {
   });
 
   afterEach(() => {
+    mm.restore();
     delete require.extensions['.ts'];
   });
 
@@ -54,6 +56,26 @@ describe('test/egg-ts.test.js', () => {
         assert(res.text.includes('from service'));
       })
       .expect(200);
+  });
+
+  it('should support read typescript option from env', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js');
+
+    app.loader.loadService();
+    assert(app.serviceClasses.lord);
+    assert(app.serviceClasses.test);
+  });
+
+  it('should not read typescript option while options.typescript was false', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js', {
+      typescript: false,
+    });
+
+    app.loader.loadService();
+    assert(app.serviceClasses.lord);
+    assert(!app.serviceClasses.test);
   });
 
   it('should not load d.ts files while typescript was true', async () => {
