@@ -18,9 +18,8 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should support load ts file', async () => {
-    app = utils.createApp('egg-ts', {
-      typescript: true,
-    });
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts');
 
     app.Helper = class Helper {};
     app.loader.loadPlugin();
@@ -58,7 +57,16 @@ describe('test/egg-ts.test.js', () => {
       .expect(200);
   });
 
-  it('should support read typescript option from env', async () => {
+  it('should not load d.ts files while typescript was true', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js');
+
+    app.loader.loadController();
+    assert(!app.controller.god);
+    assert(app.controller.test);
+  });
+
+  it('should support load ts,js files', async () => {
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
     app = utils.createApp('egg-ts-js');
 
@@ -67,38 +75,7 @@ describe('test/egg-ts.test.js', () => {
     assert(app.serviceClasses.test);
   });
 
-  it('should not read typescript option while options.typescript was false', async () => {
-    mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    app = utils.createApp('egg-ts-js', {
-      typescript: false,
-    });
-
-    app.loader.loadService();
-    assert(app.serviceClasses.lord);
-    assert(!app.serviceClasses.test);
-  });
-
-  it('should not load d.ts files while typescript was true', async () => {
-    app = utils.createApp('egg-ts-js', {
-      typescript: true,
-    });
-
-    app.loader.loadController();
-    assert(!app.controller.god);
-    assert(app.controller.test);
-  });
-
-  it('should support load ts,js files', async () => {
-    app = utils.createApp('egg-ts-js', {
-      typescript: true,
-    });
-
-    app.loader.loadService();
-    assert(app.serviceClasses.lord);
-    assert(app.serviceClasses.test);
-  });
-
-  it('should not load ts files while typescript was false', async () => {
+  it('should not load ts files while EGG_TYPESCRIPT was not exist', async () => {
     app = utils.createApp('egg-ts-js');
 
     app.loader.loadApplicationExtend();
@@ -108,9 +85,10 @@ describe('test/egg-ts.test.js', () => {
     assert(!app.serviceClasses.test);
   });
 
-  it('should not load ts files while typescript was true but no extensions', async () => {
+  it('should not load ts files while EGG_TYPESCRIPT was true but no extensions', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
     delete require.extensions['.ts'];
-    app = utils.createApp('egg-ts-js', { typescript: true });
+    app = utils.createApp('egg-ts-js');
 
     app.loader.loadApplicationExtend();
     app.loader.loadService();

@@ -227,8 +227,7 @@ Param          | Type           | Description
 -------------- | -------------- | ------------------------
 directory      | `String/Array` | directories to be loaded
 target         | `Object`       | attach the target object from loaded files
-match          | `String/Array` | match the files when load, default to `**/*.js`(if typescript was true, default to `[ '**/*.(js|ts)', '!**/*.d.ts' ]`)
-typescript     | `Boolean`      | whether support typescript
+match          | `String/Array` | match the files when load, default to `**/*.js`(if process.env.EGG_TYPESCRIPT was true, default to `[ '**/*.(js|ts)', '!**/*.d.ts' ]`)
 ignore         | `String/Array` | ignore the files when load
 initializer    | `Function`     | custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path`
 caseStyle      | `String/Function` | set property's case when converting a filepath to property list.
