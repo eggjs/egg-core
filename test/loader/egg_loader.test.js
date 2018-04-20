@@ -39,13 +39,5 @@ describe('test/loader/egg_loader.test.js', () => {
       mm(process.env, 'EGG_HOME', '/path/to/home');
       assert(app.loader.getHomedir() === '/path/to/home');
     });
-
-    it('should warning when typescript was true but no ts extension', done => {
-      mm(process.stdout, 'write', msg => {
-        assert(msg.includes('`require.extensions` should contains `.ts` while `options.typescript` was true'));
-        done();
-      });
-      utils.createApp('nothing', { typescript: true });
-    });
   });
 });

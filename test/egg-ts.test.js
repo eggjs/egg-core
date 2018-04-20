@@ -1,5 +1,6 @@
 'use strict';
 
+const mm = require('mm');
 const request = require('supertest');
 const assert = require('assert');
 const utils = require('./utils');
@@ -12,13 +13,13 @@ describe('test/egg-ts.test.js', () => {
   });
 
   afterEach(() => {
+    mm.restore();
     delete require.extensions['.ts'];
   });
 
   it('should support load ts file', async () => {
-    app = utils.createApp('egg-ts', {
-      typescript: true,
-    });
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts');
 
     app.Helper = class Helper {};
     app.loader.loadPlugin();
@@ -57,9 +58,8 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should not load d.ts files while typescript was true', async () => {
-    app = utils.createApp('egg-ts-js', {
-      typescript: true,
-    });
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js');
 
     app.loader.loadController();
     assert(!app.controller.god);
@@ -67,16 +67,15 @@ describe('test/egg-ts.test.js', () => {
   });
 
   it('should support load ts,js files', async () => {
-    app = utils.createApp('egg-ts-js', {
-      typescript: true,
-    });
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js');
 
     app.loader.loadService();
     assert(app.serviceClasses.lord);
     assert(app.serviceClasses.test);
   });
 
-  it('should not load ts files while typescript was false', async () => {
+  it('should not load ts files while EGG_TYPESCRIPT was not exist', async () => {
     app = utils.createApp('egg-ts-js');
 
     app.loader.loadApplicationExtend();
@@ -86,9 +85,10 @@ describe('test/egg-ts.test.js', () => {
     assert(!app.serviceClasses.test);
   });
 
-  it('should not load ts files while typescript was true but no extensions', async () => {
+  it('should not load ts files while EGG_TYPESCRIPT was true but no extensions', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
     delete require.extensions['.ts'];
-    app = utils.createApp('egg-ts-js', { typescript: true });
+    app = utils.createApp('egg-ts-js');
 
     app.loader.loadApplicationExtend();
     app.loader.loadService();
