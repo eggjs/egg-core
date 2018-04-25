@@ -1,6 +1,7 @@
 'use strict';
 
 const mm = require('mm');
+const is = require('is-type-of');
 const util = require('util');
 const path = require('path');
 const assert = require('assert');
@@ -401,10 +402,12 @@ describe('test/egg.test.js', () => {
 
     it('translate generator function', () => {
       const fn = function* (arg) {
+        assert.deepEqual(this, { foo: 'bar' });
         return arg;
       };
       const wrapped = app.toAsyncFunction(fn);
-      return wrapped(true).then(res => assert(res === true));
+      assert(is.asyncFunction(wrapped));
+      return wrapped.call({ foo: 'bar' }, true).then(res => assert(res === true));
     });
 
     it('not translate common function', () => {
