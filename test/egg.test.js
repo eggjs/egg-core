@@ -1,6 +1,7 @@
 'use strict';
 
 const mm = require('mm');
+const is = require('is-type-of');
 const util = require('util');
 const path = require('path');
 const assert = require('assert');
@@ -404,6 +405,7 @@ describe('test/egg.test.js', () => {
         return arg;
       };
       const wrapped = app.toAsyncFunction(fn);
+      assert(is.asyncFunction(wrapped));
       return wrapped(true).then(res => assert(res === true));
     });
 
