@@ -402,11 +402,12 @@ describe('test/egg.test.js', () => {
 
     it('translate generator function', () => {
       const fn = function* (arg) {
+        assert.deepEqual(this, { foo: 'bar' });
         return arg;
       };
       const wrapped = app.toAsyncFunction(fn);
       assert(is.asyncFunction(wrapped));
-      return wrapped(true).then(res => assert(res === true));
+      return wrapped.call({ foo: 'bar' }, true).then(res => assert(res === true));
     });
 
     it('not translate common function', () => {
