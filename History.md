@@ -1,4 +1,10 @@
 
+4.7.1 / 2018-04-25
+==================
+
+**fixes**
+  * [[`4508c36`](http://github.com/eggjs/egg-core/commit/4508c364346ddf16a752e26bc7966216f9c09c10)] - fix: toAsyncFunction can't pass is.asyncFunction() (#159) (Khaidi Chu <<i@2333.moe>>)
+
 4.7.0 / 2018-04-21
 ==================
 
