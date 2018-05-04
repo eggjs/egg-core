@@ -11,7 +11,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it('should load from application and plugin', function* () {
+  it.only('should load from application and plugin', function* () {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
     app.loader.loadConfig();
