@@ -446,4 +446,21 @@ describe('test/egg.test.js', () => {
       }));
     });
   });
+
+  describe.only('timing', () => {
+    let app;
+    after(() => app && app.close());
+
+    it('should get timing', function* () {
+      app = utils.createApp('timing');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadApplicationExtend();
+      app.loader.loadService();
+      app.loader.loadController();
+      app.loader.loadRouter();
+      yield app.ready();
+    });
+
+  });
 });
