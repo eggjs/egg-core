@@ -456,13 +456,14 @@ describe('test/egg.test.js', () => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadApplicationExtend();
+      app.loader.loadCustomApp();
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
       yield app.ready();
 
       const json = app.timing.toJSON();
-      assert(json.length === 13);
+      assert(json.length === 16);
 
       assert(json[0].name === 'Application Start');
       assert(json[0].end - json[0].start === json[0].duration);
@@ -472,12 +473,15 @@ describe('test/egg.test.js', () => {
       assert(json[2].name === 'Load Config');
       assert(json[3].name === 'Require config/config.default.js');
       assert(json[6].name === 'Load extend/application.js');
-      assert(json[7].name === 'Load Service');
-      assert(json[8].name === 'Load "service" to Context');
-      assert(json[9].name === 'Load Controller');
-      assert(json[10].name === 'Load "controller" to Application');
-      assert(json[11].name === 'Load Router');
-      assert(json[12].name === 'Require app/router.js');
+      assert(json[7].name === 'Load app.js');
+      assert(json[8].name === 'Require app.js');
+      assert(json[9].name === 'Before Start in app.js:5:9');
+      assert(json[10].name === 'Load Service');
+      assert(json[11].name === 'Load "service" to Context');
+      assert(json[12].name === 'Load Controller');
+      assert(json[13].name === 'Load "controller" to Application');
+      assert(json[14].name === 'Load Router');
+      assert(json[15].name === 'Require app/router.js');
     });
 
   });
