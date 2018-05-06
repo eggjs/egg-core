@@ -471,11 +471,11 @@ describe('test/egg.test.js', () => {
 
       assert(json[1].name === 'Load Plugin');
       assert(json[2].name === 'Load Config');
-      assert(json[3].name === 'Require config/config.default.js');
+      assert(json[3].name === 'Require /config/config.default.js');
       assert(json[6].name === 'Load extend/application.js');
       assert(json[7].name === 'Load app.js');
-      assert(json[8].name === 'Require app.js');
-      assert(json[9].name === 'Before Start in app.js:5:9');
+      assert(json[8].name === 'Require /app.js');
+      assert(json[9].name === 'Before Start in /app.js:5:9');
       assert(json[10].name === 'Load Service');
       assert(json[11].name === 'Load "service" to Context');
       assert(json[12].name === 'Load Controller');
