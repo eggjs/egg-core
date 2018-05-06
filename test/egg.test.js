@@ -481,7 +481,7 @@ describe('test/egg.test.js', () => {
       assert(json[12].name === 'Load Controller');
       assert(json[13].name === 'Load "controller" to Application');
       assert(json[14].name === 'Load Router');
-      assert(json[15].name === 'Require app/router.js');
+      assert(json[15].name === 'Require /app/router.js');
     });
 
   });
