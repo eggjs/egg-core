@@ -447,7 +447,7 @@ describe('test/egg.test.js', () => {
     });
   });
 
-  describe.only('timing', () => {
+  describe('timing', () => {
     let app;
     after(() => app && app.close());
 
@@ -460,6 +460,24 @@ describe('test/egg.test.js', () => {
       app.loader.loadController();
       app.loader.loadRouter();
       yield app.ready();
+
+      const json = app.timing.toJSON();
+      assert(json.length === 13);
+
+      assert(json[0].name === 'Application Start');
+      assert(json[0].end - json[0].start === json[0].duration);
+      assert(json[0].pid === process.pid);
+
+      assert(json[1].name === 'Load Plugin');
+      assert(json[2].name === 'Load Config');
+      assert(json[3].name === 'Require config/config.default.js');
+      assert(json[6].name === 'Load extend/application.js');
+      assert(json[7].name === 'Load Service');
+      assert(json[8].name === 'Load "service" to Context');
+      assert(json[9].name === 'Load Controller');
+      assert(json[10].name === 'Load "controller" to Application');
+      assert(json[11].name === 'Load Router');
+      assert(json[12].name === 'Require app/router.js');
     });
 
   });
