@@ -29,7 +29,8 @@ describe('test/utils/timing.test.js', () => {
 
     const json = timing.toJSON();
     assert(json[0].name === 'a');
-    assert(json[0].end === json[0].start);
+    assert(json[0].start);
+    assert(json[0].end === undefined);
     assert(json[0].duration === undefined);
   });
 
