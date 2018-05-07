@@ -30,14 +30,14 @@
     "node": ">= 8.0.0"
   },
   "ci": {
-    "version": "8, 9"
+    "version": "8, 10"
   },
   "devDependencies": {
     "autod": "^3.0.1",
     "coffee": "^4.1.0",
-    "egg-bin": "^4.3.7",
+    "egg-bin": "^4.7.0",
     "egg-ci": "^1.8.0",
-    "eslint": "^4.18.2",
+    "eslint": "^4.19.1",
     "eslint-config-egg": "^7.0.0",
     "js-yaml": "^3.11.0",
     "mm": "^2.2.0",
@@ -51,7 +51,7 @@
     "co": "^4.6.0",
     "debug": "^3.1.0",
     "depd": "^1.1.2",
-    "egg-logger": "^1.6.1",
+    "egg-logger": "^1.6.2",
     "egg-path-matching": "^1.0.1",
     "extend2": "^1.0.0",
     "globby": "^8.0.1",
