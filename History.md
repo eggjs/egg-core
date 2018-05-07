@@ -1,4 +1,10 @@
 
+3.21.0 / 2018-05-07
+==================
+
+**features**
+  * [[`5609d12`](http://github.com/eggjs/egg-core/commit/5609d123edd4bb7b51fc3f2de3a4af775d93398b)] - feat: add timing data for loader (#160) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.20.3 / 2018-03-09
 ==================
 
