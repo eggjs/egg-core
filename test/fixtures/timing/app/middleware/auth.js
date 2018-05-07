@@ -1,5 +1,5 @@
 'use strict';
 
 module.exports = () => {
-  return async () => {};
+  return function* () {};
 };
