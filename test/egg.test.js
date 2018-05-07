@@ -447,7 +447,7 @@ describe('test/egg.test.js', () => {
     });
   });
 
-  describe.only('timing', () => {
+  describe('timing', () => {
     let app;
     after(() => app && app.close());
 
@@ -465,7 +465,6 @@ describe('test/egg.test.js', () => {
       yield app.ready();
 
       const json = app.timing.toJSON();
-      console.log(json);
       assert(json.length === 23);
 
       assert(json[0].name === 'Application Start');
