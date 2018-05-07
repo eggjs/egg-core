@@ -3,7 +3,11 @@
 const assert = require('assert');
 const os = require('os');
 const mm = require('mm');
+const path = require('path');
 const utils = require('../utils');
+const EggLoader = require('../../lib/loader/egg_loader');
+const getPlugins = require('egg-utils').getPlugins;
+
 
 describe('test/loader/egg_loader.test.js', () => {
 
@@ -42,4 +46,21 @@ describe('test/loader/egg_loader.test.js', () => {
     });
   });
 
+  describe('new Loader()', () => {
+    it('should pass', () => {
+      const loader = new EggLoader({
+        baseDir: path.join(__dirname, '../fixtures/nothing'),
+        app: {},
+        logger: console,
+      });
+      loader.loadPlugin();
+    });
+
+    it('should get plugin with egg-utils', () => {
+      getPlugins({
+        baseDir: path.join(__dirname, '../fixtures/nothing'),
+        framework: path.join(__dirname, '../fixtures/egg'),
+      });
+    });
+  });
 });
