@@ -33,7 +33,7 @@ describe('test/utils/timing.test.js', () => {
     assert(json[0].duration === undefined);
   });
 
-  it('should not set item when name is empty', () => {
+  it('should ignore start when name is empty', () => {
     const timing = new Timing();
     timing.start();
 
@@ -41,15 +41,13 @@ describe('test/utils/timing.test.js', () => {
     assert(json.length === 0);
   });
 
-  it('should not set item when the item of name exists', () => {
+  it('should throw when name exists', () => {
     const timing = new Timing();
     timing.start('a');
-    const json = timing.toJSON();
-    assert(json[0].name === 'a');
-    const start = json[0].start;
 
-    timing.start('a');
-    assert(timing.toJSON()[0].start === start);
+    assert.throws(() => {
+      timing.start('a');
+    }, /a has been registered/);
   });
 
   it('should ignore end when name dont exist', () => {
@@ -57,7 +55,22 @@ describe('test/utils/timing.test.js', () => {
     timing.end();
     assert(timing.toJSON().length === 0);
 
-    timing.end('a');
-    assert(timing.toJSON().length === 0);
+  });
+
+  it('should throw when start and name exists', () => {
+    const timing = new Timing();
+    timing.start('a');
+
+    assert.throws(() => {
+      timing.start('a');
+    }, /a has been registered/);
+  });
+
+  it('should throw when end and name dont exists', () => {
+    const timing = new Timing();
+
+    assert.throws(() => {
+      timing.end('a');
+    }, /should run timing.start\('a'\) first/);
   });
 });
