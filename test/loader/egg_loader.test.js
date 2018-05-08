@@ -63,4 +63,32 @@ describe('test/loader/egg_loader.test.js', () => {
       });
     });
   });
+
+  it('should be loaded by loadToApp', () => {
+    const baseDir = path.join(__dirname, '../fixtures/load_to_app');
+    const directory = path.join(baseDir, 'app/model');
+    const prop = Symbol();
+    const app = {};
+    const loader = new EggLoader({
+      baseDir,
+      app,
+      logger: console,
+    });
+    loader.loadToApp(directory, prop);
+    assert(app[prop].user);
+  });
+
+  it('should be loaded by loadToContext', () => {
+    const baseDir = path.join(__dirname, '../fixtures/load_to_app');
+    const directory = path.join(baseDir, 'app/service');
+    const prop = Symbol();
+    const app = { context: {} };
+    const loader = new EggLoader({
+      baseDir,
+      app,
+      logger: console,
+    });
+    loader.loadToContext(directory, prop);
+    assert(app.context[prop].user);
+  });
 });
