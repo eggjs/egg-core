@@ -1,6 +1,6 @@
 'use strict';
 
-const EggApplication = require('../egg');
+const EggApplication = require('../egg').Application;
 const utils = require('../../utils');
 
 class Application extends EggApplication {

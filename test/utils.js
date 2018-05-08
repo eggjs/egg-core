@@ -1,7 +1,7 @@
 'use strict';
 
 const path = require('path');
-const EggApplication = require('./fixtures/egg');
+const EggApplication = require('./fixtures/egg').Application;
 
 module.exports = {
 
