@@ -1,4 +1,13 @@
 
+3.21.1 / 2018-05-08
+==================
+
+**fixes**
+  * [[`f58a142`](http://github.com/eggjs/egg-core/commit/f58a142379ea612e15449bd79b848ccebe143607)] - fix: Loader can be instantiated without timing (#161) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**others**
+  * [[`72702d8`](http://github.com/eggjs/egg-core/commit/72702d8ba4dedb39a56185fff6dfaa39b8a96f9b)] - refactor: add timing to extend (#162) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.21.0 / 2018-05-07
 ==================
 
