@@ -1,4 +1,10 @@
 
+3.21.2 / 2018-05-08
+==================
+
+**fixes**
+  * [[`a671196`](http://github.com/eggjs/egg-core/commit/a671196d24d679dc3c15dc7d296657332667ead7)] - fix: convert symbol to string (#163) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.21.1 / 2018-05-08
 ==================
 
