@@ -468,7 +468,7 @@ describe('test/egg.test.js', () => {
       yield app.ready();
 
       const json = app.timing.toJSON();
-      assert(json.length === 25);
+      assert(json.length === 27);
 
       assert(json[0].name === 'Application Start');
       assert(json[0].end - json[0].start === json[0].duration);
@@ -491,27 +491,29 @@ describe('test/egg.test.js', () => {
       assert(json[11].name === 'Require(6) app.js');
       assert(json[12].name === 'Before Start in app.js:6:9');
       assert(json[13].name === 'Load "proxy" to Context');
+      assert(json[14].name === 'Load Controller');
+      assert(json[15].name === 'Load "controller" to Application');
 
       // loadCustomAgent
-      assert(json[14].name === 'Load agent.js');
-      assert(json[15].name === 'Require(7) agent.js');
-      assert(json[16].name === 'Before Start in agent.js:5:11');
+      assert(json[16].name === 'Load agent.js');
+      assert(json[17].name === 'Require(7) agent.js');
+      assert(json[18].name === 'Before Start in agent.js:5:11');
 
       // loadService
-      assert(json[17].name === 'Load Service');
-      assert(json[18].name === 'Load "service" to Context');
+      assert(json[19].name === 'Load Service');
+      assert(json[20].name === 'Load "service" to Context');
 
       // loadMiddleware
-      assert(json[19].name === 'Load Middleware');
-      assert(json[20].name === 'Load "middlewares" to Application');
+      assert(json[21].name === 'Load Middleware');
+      assert(json[22].name === 'Load "middlewares" to Application');
 
       // loadController
-      assert(json[21].name === 'Load Controller');
-      assert(json[22].name === 'Load "controller" to Application');
+      assert(json[23].name === 'Load Controller');
+      assert(json[24].name === 'Load "controller" to Application');
 
       // loadRouter
-      assert(json[23].name === 'Load Router');
-      assert(json[24].name === 'Require(8) app/router.js');
+      assert(json[25].name === 'Load Router');
+      assert(json[26].name === 'Require(8) app/router.js');
     });
 
   });

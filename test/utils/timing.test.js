@@ -45,10 +45,10 @@ describe('test/utils/timing.test.js', () => {
   it('should throw when name exists', () => {
     const timing = new Timing();
     timing.start('a');
+    assert(timing.toJSON().length === 1);
 
-    assert.throws(() => {
-      timing.start('a');
-    }, /a has been registered/);
+    timing.start('a');
+    assert(timing.toJSON().length === 2);
   });
 
   it('should ignore end when name dont exist', () => {
@@ -56,15 +56,6 @@ describe('test/utils/timing.test.js', () => {
     timing.end();
     assert(timing.toJSON().length === 0);
 
-  });
-
-  it('should throw when start and name exists', () => {
-    const timing = new Timing();
-    timing.start('a');
-
-    assert.throws(() => {
-      timing.start('a');
-    }, /a has been registered/);
   });
 
   it('should throw when end and name dont exists', () => {

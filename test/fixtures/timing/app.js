@@ -12,4 +12,6 @@ module.exports = app => {
 
   const directory = path.join(app.baseDir, 'app/proxy');
   app.loader.loadToContext(directory, 'proxy');
+
+  app.loader.loadController();
 };
