@@ -3,3 +3,4 @@ coverage
 .logs
 npm-debug.log
 .vscode
+test/fixtures/egg/node_modules/egg-core
