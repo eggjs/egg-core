@@ -1,4 +1,10 @@
 
+3.21.3 / 2018-05-08
+==================
+
+**fixes**
+  * [[`898b6fd`](http://github.com/eggjs/egg-core/commit/898b6fd20c0f4c04b078ed365a74d9e853f49d1d)] - fix: timing can be started multiple times (#164) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 3.21.2 / 2018-05-08
 ==================
 
