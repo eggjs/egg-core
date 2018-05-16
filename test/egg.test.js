@@ -11,6 +11,7 @@ const request = require('supertest');
 const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
+const pedding = require('pedding');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -143,12 +144,13 @@ describe('test/egg.test.js', () => {
     afterEach(() => app.close());
 
     it('should log info when plugin is not ready', done => {
+      done = pedding(2, done);
       app = utils.createApp('notready');
       app.loader.loadAll();
       mm(app.console, 'warn', (message, b, a) => {
         assert(message === '[egg:core:ready_timeout] %s seconds later %s was still unable to finish.');
         assert(b === 10);
-        assert(a === 'a');
+        assert(a === 'a' || a === 'READY_HOOK_CALLBACK');
         done();
       });
       app.ready(() => {
@@ -164,8 +166,8 @@ describe('test/egg.test.js', () => {
         message += util.format.apply(null, [ a, b, c ]);
       });
       app.ready(() => {
-        assert(/\[egg:core:ready_stat] end ready task a, remain \["b"]/.test(message));
-        assert(/\[egg:core:ready_stat] end ready task b, remain \[]/.test(message));
+        assert(/\[egg:core:ready_stat] end ready task a, remain \["READY_HOOK_CALLBACK","b"]/.test(message));
+        assert(/\[egg:core:ready_stat] end ready task b, remain \["READY_HOOK_CALLBACK"]/.test(message));
         done();
       });
     });
@@ -209,12 +211,13 @@ describe('test/egg.test.js', () => {
     });
 
     it('should beforeStart excute timeout without EGG_READY_TIMEOUT_ENV too short', function(done) {
+      done = pedding(2, done);
       mm(process.env, 'EGG_READY_TIMEOUT_ENV', '1000');
       app = utils.createApp('beforestart-with-timeout-env');
       app.loader.loadAll();
-      app.once('ready_timeout', id => {
+      app.on('ready_timeout', id => {
         const file = path.normalize('test/fixtures/beforestart-with-timeout-env/app.js');
-        assert(id.includes(file));
+        assert(id === 'READY_HOOK_CALLBACK' || id.includes(file));
         done();
       });
     });
@@ -240,11 +243,12 @@ describe('test/egg.test.js', () => {
     });
 
     it('should beforeStart excute timeout', done => {
+      done = pedding(2, done);
       app = utils.createApp('beforestart-timeout');
       app.loader.loadAll();
-      app.once('ready_timeout', id => {
+      app.on('ready_timeout', id => {
         const file = path.normalize('test/fixtures/beforestart-timeout/app.js');
-        assert(id.includes(file));
+        assert(id === 'READY_HOOK_CALLBACK' || id.includes(file));
         done();
       });
     });

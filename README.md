@@ -36,6 +36,8 @@ Directory structure
 |   ├── router.js
 │   ├── controller
 │   │   └── home.js
+│   ├── checker (optional)
+│   │   └── health_checker.js (optional)
 |   ├── extend (optional)
 │   |   ├── helper.js (optional)
 │   |   ├── filter.js (optional)
@@ -130,6 +132,10 @@ Load agent.js
 #### loadService
 
 Load app/service
+
+#### loadChecker
+
+Load app/checker
 
 ### Low Level APIs
 
