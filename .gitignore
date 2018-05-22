@@ -5,3 +5,4 @@ npm-debug.log
 .vscode
 .DS_Store
 yarn.lock
+test/fixtures/egg/node_modules/egg-core

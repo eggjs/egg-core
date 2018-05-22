@@ -3,7 +3,11 @@
 const assert = require('assert');
 const os = require('os');
 const mm = require('mm');
+const path = require('path');
 const utils = require('../utils');
+const EggLoader = require('../../lib/loader/egg_loader');
+const getPlugins = require('egg-utils').getPlugins;
+
 
 describe('test/loader/egg_loader.test.js', () => {
   let app;
@@ -39,5 +43,51 @@ describe('test/loader/egg_loader.test.js', () => {
       mm(process.env, 'EGG_HOME', '/path/to/home');
       assert(app.loader.getHomedir() === '/path/to/home');
     });
+  });
+
+  describe('new Loader()', () => {
+    it('should pass', () => {
+      const loader = new EggLoader({
+        baseDir: path.join(__dirname, '../fixtures/nothing'),
+        app: {},
+        logger: console,
+      });
+      loader.loadPlugin();
+    });
+
+    it('should get plugin with egg-utils', () => {
+      getPlugins({
+        baseDir: path.join(__dirname, '../fixtures/nothing'),
+        framework: path.join(__dirname, '../fixtures/egg'),
+      });
+    });
+  });
+
+  it('should be loaded by loadToApp', () => {
+    const baseDir = path.join(__dirname, '../fixtures/load_to_app');
+    const directory = path.join(baseDir, 'app/model');
+    const prop = Symbol();
+    const app = {};
+    const loader = new EggLoader({
+      baseDir,
+      app,
+      logger: console,
+    });
+    loader.loadToApp(directory, prop);
+    assert(app[prop].user);
+  });
+
+  it('should be loaded by loadToContext', () => {
+    const baseDir = path.join(__dirname, '../fixtures/load_to_app');
+    const directory = path.join(baseDir, 'app/service');
+    const prop = Symbol();
+    const app = { context: {} };
+    const loader = new EggLoader({
+      baseDir,
+      app,
+      logger: console,
+    });
+    loader.loadToContext(directory, prop);
+    assert(app.context[prop].user);
   });
 });

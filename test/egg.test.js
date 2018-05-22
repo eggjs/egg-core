@@ -449,4 +449,72 @@ describe('test/egg.test.js', () => {
       }));
     });
   });
+
+  describe('timing', () => {
+    let app;
+    after(() => app && app.close());
+
+    it('should get timing', function* () {
+      app = utils.createApp('timing');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadApplicationExtend();
+      app.loader.loadCustomApp();
+      app.loader.loadCustomAgent();
+      app.loader.loadService();
+      app.loader.loadMiddleware();
+      app.loader.loadController();
+      app.loader.loadRouter();
+      yield app.ready();
+
+      const json = app.timing.toJSON();
+      assert(json.length === 27);
+
+      assert(json[0].name === 'Application Start');
+      assert(json[0].end - json[0].start === json[0].duration);
+      assert(json[0].pid === process.pid);
+
+      // loadPlugin
+      assert(json[1].name === 'Load Plugin');
+
+      // loadConfig
+      assert(json[2].name === 'Load Config');
+      assert(json[3].name === 'Require(0) config/config.default.js');
+      assert(json[5].name === 'Require(2) config/config.default.js');
+
+      // loadExtend
+      assert(json[7].name === 'Load extend/application.js');
+      assert(json[9].name === 'Require(5) app/extend/application.js');
+
+      // loadCustomApp
+      assert(json[10].name === 'Load app.js');
+      assert(json[11].name === 'Require(6) app.js');
+      assert(json[12].name === 'Before Start in app.js:6:9');
+      assert(json[13].name === 'Load "proxy" to Context');
+      assert(json[14].name === 'Load Controller');
+      assert(json[15].name === 'Load "controller" to Application');
+
+      // loadCustomAgent
+      assert(json[16].name === 'Load agent.js');
+      assert(json[17].name === 'Require(7) agent.js');
+      assert(json[18].name === 'Before Start in agent.js:5:11');
+
+      // loadService
+      assert(json[19].name === 'Load Service');
+      assert(json[20].name === 'Load "service" to Context');
+
+      // loadMiddleware
+      assert(json[21].name === 'Load Middleware');
+      assert(json[22].name === 'Load "middlewares" to Application');
+
+      // loadController
+      assert(json[23].name === 'Load Controller');
+      assert(json[24].name === 'Load "controller" to Application');
+
+      // loadRouter
+      assert(json[25].name === 'Load Router');
+      assert(json[26].name === 'Require(8) app/router.js');
+    });
+
+  });
 });
