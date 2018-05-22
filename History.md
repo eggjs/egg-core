@@ -1,4 +1,13 @@
 
+4.8.0 / 2018-05-22
+==================
+
+**features**
+  * [[`bb24396`](http://github.com/eggjs/egg-core/commit/bb243964c98a633c6ccdfb5b0dc1f55a4d1ea301)] - feat: pick commit from 3.x (#166) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**others**
+  * [[`72d33ae`](http://github.com/eggjs/egg-core/commit/72d33ae10cf8ff9e8e640bf3aba028da5ca7b90a)] - test: add testcase for loadExtend with function call (#167) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 4.7.1 / 2018-04-25
 ==================
 
