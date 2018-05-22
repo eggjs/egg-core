@@ -111,6 +111,12 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert(app.b === 'b1');
   });
 
+  it('should not load extend that returned function', function() {
+    const proto = {};
+    app.loader.loadExtend('call', proto);
+    assert(proto.call === undefined);
+  });
+
   describe('load unittest extend', () => {
     let app;
     after(() => app.close());
@@ -133,4 +139,5 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       assert(app.local === true);
     });
   });
+
 });
