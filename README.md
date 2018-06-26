@@ -78,7 +78,6 @@ EggLoader can easily load files or directories in your [egg] project. In additio
 - {String} baseDir - current directory of application
 - {Object} app - instance of egg application
 - {Object} plugins - merge plugins for test
-- {Boolean} typescript - whether support typescript
 - {Logger} logger - logger instance，default is console
 
 ### High Level APIs
