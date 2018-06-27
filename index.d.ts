@@ -1,4 +1,5 @@
 import * as KoaApplication from 'koa';
+import { Logger } from 'egg-logger';
 
 
 export interface EggCoreOptions {
@@ -12,13 +13,6 @@ export interface EggLoaderOptions {
   baseDir: string;
   logger: Logger;
   plugins?: any;
-}
-
-export interface Logger {
-  info(msg: any, ...args: any[]): void;
-  warn(msg: any, ...args: any[]): void;
-  debug(msg: any, ...args: any[]): void;
-  error(msg: any, ...args: any[]): void;
 }
 
 export class EggCore extends KoaApplication {
