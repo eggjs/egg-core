@@ -4,7 +4,6 @@ import * as KoaApplication from 'koa';
 export interface EggCoreOptions {
   baseDir: string;
   type: 'application' | 'agent';
-  typescript?: boolean;
   plugins?: any;
 }
 
