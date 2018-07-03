@@ -11,10 +11,10 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app = utils.createApp('middleware-override');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
   });
   after(() => app.close());
 
@@ -63,8 +63,8 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
-      app[Symbol.for('EggCore#startBoot')]();
     }, /Middleware session must be a function, but actual is {}/);
   });
 
@@ -73,8 +73,8 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
-      app[Symbol.for('EggCore#startBoot')]();
     }, /Middleware a not found/);
   });
 
@@ -83,8 +83,8 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
-      app[Symbol.for('EggCore#startBoot')]();
     }, /Middleware status redefined/);
   });
 
@@ -92,10 +92,10 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/status')
@@ -107,10 +107,10 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-match');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/status')
@@ -126,10 +126,10 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-ignore');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .post('/status')
@@ -145,10 +145,10 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-app-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/static')
@@ -166,7 +166,6 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       app.loader.loadMiddleware();
       app.loader.loadController();
       app.loader.loadRouter();
-      app[Symbol.for('EggCore#startBoot')]();
     });
 
     after(() => app.close());
@@ -213,13 +212,12 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       app = utils.createApp('other-directory');
       app.loader.loadPlugin();
       app.loader.loadConfig();
-
+      app.loader.loadCustomApp();
       const directory = app.loader.getLoadUnits().map(unit => path.join(unit.path, 'app/middleware'));
       directory.push(path.join(baseDir, 'app/other-middleware'));
       app.loader.loadMiddleware({
         directory,
       });
-      app[Symbol.for('EggCore#startBoot')]();
       return app.ready();
     });
     after(() => app.close());

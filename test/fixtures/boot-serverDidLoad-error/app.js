@@ -4,8 +4,8 @@ const sleep = require('mz-modules/sleep');
 
 module.exports = class {
   constructor(app) {
-    app.bootLog = [];
     this.app = app;
+    app.bootLog = [];
   }
 
   configDidLoad() {
@@ -34,6 +34,6 @@ module.exports = class {
 
   async serverDidReady() {
     await sleep(1);
-    this.app.bootLog.push('serverDidReady');
+    throw new Error('serverDidReady failed');
   }
 };

@@ -23,12 +23,12 @@ class AppLoader extends EggLoader {
     this.loadContextExtend();
     this.loadRequestExtend();
     this.loadResponseExtend();
+    this.loadBootHook();
     this.loadCustomApp();
     this.loadMiddleware();
     this.loadService();
     this.loadController();
     this.loadRouter();
-    this.app[Symbol.for('EggCore#startBoot')]();
   }
 }
 

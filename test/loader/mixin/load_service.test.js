@@ -16,10 +16,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
     assert(app.serviceClasses.foo);
     assert(app.serviceClasses.foo2);
     assert(!app.serviceClasses.bar1);
@@ -65,10 +65,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/same?t=1')
@@ -86,10 +86,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
-    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/user')
@@ -106,10 +106,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadApplicationExtend();
+      app.loader.loadCustomApp();
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
-      app[Symbol.for('EggCore#startBoot')]();
 
       await request(app.callback())
         .get('/')
@@ -155,10 +155,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
     before(() => {
       const baseDir = utils.getFilepath('other-directory');
       app = utils.createApp('other-directory');
+      app.loader.loadCustomApp();
       app.loader.loadService({
         directory: path.join(baseDir, 'app/other-service'),
       });
-      app[Symbol.for('EggCore#startBoot')]();
       return app.ready();
     });
 

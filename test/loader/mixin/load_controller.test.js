@@ -343,10 +343,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     before(() => {
       const baseDir = utils.getFilepath('other-directory');
       app = utils.createApp('other-directory');
+      app.loader.loadCustomApp();
       app.loader.loadController({
         directory: path.join(baseDir, 'app/other-controller'),
       });
-      app[Symbol.for('EggCore#startBoot')]();
       return app.ready();
     });
     after(() => app.close());

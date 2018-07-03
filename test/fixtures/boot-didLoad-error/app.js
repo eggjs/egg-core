@@ -2,35 +2,33 @@
 
 const sleep = require('mz-modules/sleep');
 
-module.exports = app => {
-  return class extends app.Boot {
-    constructor() {
-      super();
-      app.bootLog = [];
-    }
+module.exports = class {
+  constructor(app) {
+    this.app = app;
+    this.app.bootLog = [];
+  }
 
-    configDidLoad() {
-      app.bootLog.push('configDidLoad');
-    }
+  configDidLoad() {
+    this.app.bootLog.push('configDidLoad');
+  }
 
-    async didLoad() {
-      await sleep(1);
-      throw new Error('didLoad error');
-    }
+  async didLoad() {
+    await sleep(1);
+    throw new Error('didLoad error');
+  }
 
-    async willReady() {
-      await sleep(1);
-      app.bootLog.push('willReady');
-    }
+  async willReady() {
+    await sleep(1);
+    this.app.bootLog.push('willReady');
+  }
 
-    async didReady() {
-      await sleep(1);
-      app.bootLog.push('didReady');
-    }
+  async didReady() {
+    await sleep(1);
+    this.app.bootLog.push('didReady');
+  }
 
-    async beforeClose() {
-      await sleep(1);
-      app.bootLog.push('beforeClose');
-    }
+  async beforeClose() {
+    await sleep(1);
+    this.app.bootLog.push('beforeClose');
   }
 };

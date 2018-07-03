@@ -14,8 +14,12 @@ const EggLoader = require('../../..').EggLoader;
 
 describe('test/load_plugin.test.js', function() {
   let app;
-  afterEach(mm.restore);
-  afterEach(() => app.close());
+
+  afterEach(() => {
+    mm.restore();
+    app && app.close();
+    app = null;
+  });
 
   it('should exports allPlugins, appPlugins, customPlugins, eggPlugins', () => {
     app = utils.createApp('plugin');

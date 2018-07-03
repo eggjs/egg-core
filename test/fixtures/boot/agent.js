@@ -4,8 +4,8 @@ const sleep = require('mz-modules/sleep');
 
 module.exports = class {
   constructor(app) {
-    app.bootLog = [];
     this.app = app;
+    app.bootLog = [];
   }
 
   configDidLoad() {

@@ -17,44 +17,90 @@ describe('test/egg-ts.test.js', () => {
     delete require.extensions['.ts'];
   });
 
+  describe('load ts file', () => {
+    describe('load app', () => {
+      it('should success', async () => {
+        mm(process.env, 'EGG_TYPESCRIPT', 'true');
+        app = utils.createApp('egg-ts');
+
+        app.Helper = class Helper {};
+        app.loader.loadPlugin();
+        app.loader.loadConfig();
+        app.loader.loadApplicationExtend();
+        app.loader.loadAgentExtend();
+        app.loader.loadRequestExtend();
+        app.loader.loadResponseExtend();
+        app.loader.loadContextExtend();
+        app.loader.loadHelperExtend();
+        app.loader.loadCustomApp();
+        app.loader.loadService();
+        app.loader.loadController();
+        app.loader.loadRouter();
+        app.loader.loadPlugin();
+        app.loader.loadMiddleware();
+
+        await request(app.callback())
+          .get('/')
+          .expect(res => {
+            assert(res.text.includes('from extend context'));
+            assert(res.text.includes('from extend application'));
+            assert(res.text.includes('from extend request'));
+            assert(res.text.includes('from extend agent'));
+            assert(res.text.includes('from extend helper'));
+            assert(res.text.includes('from extend response'));
+            assert(res.text.includes('from custom app'));
+            assert(res.text.includes('from plugins'));
+            assert(res.text.includes('from config.default'));
+            assert(res.text.includes('from middleware'));
+            assert(res.text.includes('from service'));
+          })
+          .expect(200);
+      });
+    });
+
+    describe('load agent', () => {
+      it('should success', async () => {
+        mm(process.env, 'EGG_TYPESCRIPT', 'true');
+        app = utils.createApp('egg-ts');
+
+        app.Helper = class Helper {};
+        app.loader.loadPlugin();
+        app.loader.loadConfig();
+        app.loader.loadApplicationExtend();
+        app.loader.loadAgentExtend();
+        app.loader.loadRequestExtend();
+        app.loader.loadResponseExtend();
+        app.loader.loadContextExtend();
+        app.loader.loadHelperExtend();
+        app.loader.loadCustomAgent();
+        app.loader.loadService();
+        app.loader.loadController();
+        app.loader.loadRouter();
+        app.loader.loadPlugin();
+        app.loader.loadMiddleware();
+
+        await request(app.callback())
+          .get('/')
+          .expect(res => {
+            assert(res.text.includes('from extend context'));
+            assert(res.text.includes('from extend application'));
+            assert(res.text.includes('from extend request'));
+            assert(res.text.includes('from extend agent'));
+            assert(res.text.includes('from extend helper'));
+            assert(res.text.includes('from extend response'));
+            assert(res.text.includes('from custom agent'));
+            assert(res.text.includes('from plugins'));
+            assert(res.text.includes('from config.default'));
+            assert(res.text.includes('from middleware'));
+            assert(res.text.includes('from service'));
+          })
+          .expect(200);
+      });
+    });
+  });
+
   it('should support load ts file', async () => {
-    mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    app = utils.createApp('egg-ts');
 
-    app.Helper = class Helper {};
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
-    app.loader.loadAgentExtend();
-    app.loader.loadRequestExtend();
-    app.loader.loadResponseExtend();
-    app.loader.loadContextExtend();
-    app.loader.loadHelperExtend();
-    app.loader.loadService();
-    app.loader.loadController();
-    app.loader.loadRouter();
-    app.loader.loadPlugin();
-    app.loader.loadMiddleware();
-    app.loader.loadCustomApp();
-    app.loader.loadCustomAgent();
-
-    await request(app.callback())
-      .get('/')
-      .expect(res => {
-        assert(res.text.includes('from extend context'));
-        assert(res.text.includes('from extend application'));
-        assert(res.text.includes('from extend request'));
-        assert(res.text.includes('from extend agent'));
-        assert(res.text.includes('from extend helper'));
-        assert(res.text.includes('from extend response'));
-        assert(res.text.includes('from custom app'));
-        assert(res.text.includes('from custom agent'));
-        assert(res.text.includes('from plugins'));
-        assert(res.text.includes('from config.default'));
-        assert(res.text.includes('from middleware'));
-        assert(res.text.includes('from service'));
-      })
-      .expect(200);
   });
 
   it('should not load d.ts files while typescript was true', async () => {
