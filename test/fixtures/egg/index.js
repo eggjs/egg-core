@@ -28,6 +28,7 @@ class AppLoader extends EggLoader {
     this.loadService();
     this.loadController();
     this.loadRouter();
+    this.app[Symbol.for('EggCore#startBoot')]();
   }
 }
 

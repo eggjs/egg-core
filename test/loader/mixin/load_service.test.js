@@ -19,6 +19,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
+    app[Symbol.for('EggCore#startBoot')]();
     assert(app.serviceClasses.foo);
     assert(app.serviceClasses.foo2);
     assert(!app.serviceClasses.bar1);
@@ -67,6 +68,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
+    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/same?t=1')
@@ -87,6 +89,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
+    app[Symbol.for('EggCore#startBoot')]();
 
     await request(app.callback())
       .get('/user')
@@ -106,6 +109,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
+      app[Symbol.for('EggCore#startBoot')]();
 
       await request(app.callback())
         .get('/')
@@ -154,6 +158,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadService({
         directory: path.join(baseDir, 'app/other-service'),
       });
+      app[Symbol.for('EggCore#startBoot')]();
       return app.ready();
     });
 

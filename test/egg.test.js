@@ -11,6 +11,7 @@ const request = require('supertest');
 const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
+const awaitEvent = require('await-event');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -92,6 +93,7 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('app-getter');
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app[Symbol.for('EggCore#startBoot')]();
       return app.ready();
     });
     after(() => app.close());
@@ -180,7 +182,7 @@ describe('test/egg.test.js', () => {
         app = utils.createApp('beforestart-params-error');
         app.loader.loadAll();
       } catch (err) {
-        assert(err.message === 'beforeStart only support function');
+        assert(err.message === 'boot only support function');
         done();
       }
     });
@@ -471,6 +473,7 @@ describe('test/egg.test.js', () => {
       app.loader.loadMiddleware();
       app.loader.loadController();
       app.loader.loadRouter();
+      app[Symbol.for('EggCore#startBoot')]();
       yield app.ready();
 
       const json = app.timing.toJSON();
@@ -522,5 +525,146 @@ describe('test/egg.test.js', () => {
       assert(json[26].name === 'Require(8) app/router.js');
     });
 
+  });
+
+  describe('boot', () => {
+
+    describe('boot success', () => {
+      it('should success', async () => {
+        const app = utils.createApp('boot');
+        app.loader.loadAll();
+        await app.ready();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+          ]);
+        await sleep(10);
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+            'didReady',
+          ]);
+        await app[Symbol.for('EggCore#triggerServerDidReady')]();
+        await sleep(10);
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+            'didReady',
+            'serverDidReady',
+          ]);
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+            'didReady',
+            'serverDidReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('configDidLoad failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-configDidLoad-error');
+        let error;
+        try {
+          app.loader.loadAll();
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'configDidLoad error');
+        assert.deepStrictEqual(app.bootLog, []);
+      });
+    });
+
+    describe('didLoad failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-didLoad-error');
+        app.loader.loadAll();
+        let error;
+        try {
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'didLoad error');
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad' ]);
+        await sleep(10);
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didReady' ]);
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('willReady failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-willReady-error');
+        app.loader.loadAll();
+        let error;
+        try {
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad' ]);
+        assert.strictEqual(error.message, 'willReady error');
+        await sleep(10);
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'didReady' ]);
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'didReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('didReady failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-didReady-error');
+        app.loader.loadAll();
+        await app.ready();
+
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'willReady' ]);
+        let error;
+        try {
+          await awaitEvent(app, 'error');
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'didReady error');
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+            'beforeClose',
+          ]);
+      });
+    });
   });
 });
