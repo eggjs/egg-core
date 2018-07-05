@@ -17,15 +17,12 @@ describe('test/get_load_units.test.js', function() {
     const units = app.loader.getLoadUnits();
     assert(units.length === 12);
     assert(units[2].type === 'plugin');
-    assert(units[2].package === 'package');
     assert(units[2].name === 'package');
     assert(units[10].type === 'framework');
     assert(units[10].path === utils.getFilepath('egg'));
-    assert(units[10].package === 'egg');
     assert(units[10].name === 'egg');
     assert(units[11].type === 'app');
     assert(units[11].path === utils.getFilepath('plugin'));
-    assert(units[11].package === 'plugin');
     assert(units[11].name === 'plugin');
   });
 
