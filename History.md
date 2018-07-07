@@ -1,4 +1,172 @@
 
+4.8.0 / 2018-05-22
+==================
+
+**features**
+  * [[`bb24396`](http://github.com/eggjs/egg-core/commit/bb243964c98a633c6ccdfb5b0dc1f55a4d1ea301)] - feat: pick commit from 3.x (#166) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**others**
+  * [[`72d33ae`](http://github.com/eggjs/egg-core/commit/72d33ae10cf8ff9e8e640bf3aba028da5ca7b90a)] - test: add testcase for loadExtend with function call (#167) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+4.7.1 / 2018-04-25
+==================
+
+**fixes**
+  * [[`4508c36`](http://github.com/eggjs/egg-core/commit/4508c364346ddf16a752e26bc7966216f9c09c10)] - fix: toAsyncFunction can't pass is.asyncFunction() (#159) (Khaidi Chu <<i@2333.moe>>)
+
+4.7.0 / 2018-04-21
+==================
+
+  * feat: support ts by env (#158)
+
+4.6.0 / 2018-04-09
+==================
+
+**features**
+  * [[`7f087e7`](http://github.com/eggjs/egg-core/commit/7f087e7d30bf9b07249b44fb943bcc9d109f26f6)] - feat: change assert to warning (#157) (Axes <<whxaxes@qq.com>>)
+
+4.5.0 / 2018-03-25
+==================
+
+**features**
+  * [[`2c6fbbf`](http://github.com/eggjs/egg-core/commit/2c6fbbf10c34420d623282312b555eecaaf3a755)] - feat: loader support custom extension (#156) (Axes <<whxaxes@qq.com>>)
+
+4.4.1 / 2018-03-09
+==================
+
+**fixes**
+  * [[`046ffdd`](http://github.com/eggjs/egg-core/commit/046ffdd5d4b918ddfc0e9f7980567374b594ef97)] - fix: should not load optional plugin & their deps (#154) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
+4.4.0 / 2018-01-18
+==================
+
+**features**
+  * [[`5323a9e`](git@github.com:eggjs/egg-core/commit/5323a9ec54d60a43aed06cfd67c617d02909715d)] - feat: add patch method for update (egg#1793) (#150) (吴建金 <<mosaic101@foxmail.com>>)
+
+4.3.2 / 2018-01-13
+==================
+
+**fixes**
+  * [[`2926058`](git@github.com:eggjs/egg-core/commit/29260580b387ba6657c76a7881f60c4ce44c295c)] - fix: mutli-path register. (#151) (SuperEVO <<zhang740@qq.com>>)
+
+4.3.1 / 2018-01-12
+==================
+
+**fixes**
+  * [[`b41891d`](http://github.com/eggjs/egg-core/commit/b41891d160cd8be6e2df58b8540376b4ca6c76b8)] - fix: fix plugin sequence bug (#152) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+  * [[`4f1c19a`](http://github.com/eggjs/egg-core/commit/4f1c19af711e4fe8cf65a2f0f01acdf5f276188b)] - fix: only filter the plugin which is disabled by app (#145) (#146) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**others**
+  * [[`3384a87`](http://github.com/eggjs/egg-core/commit/3384a8796d878536e8144671c42f5872c3d0e3a9)] - refactor: replace `indexOf()` with `includes()` (#148) (m31271n <<m31271n@2players.studio>>)
+  * [[`613f236`](http://github.com/eggjs/egg-core/commit/613f236fba69f55ca27911d29d81a918c8d67c18)] - docs: fix typo (#147) (m31271n <<m31271n@2players.studio>>)
+  * [[`25b728c`](http://github.com/eggjs/egg-core/commit/25b728c41fdf941c97f23a2675b8b82443f28938)] - refactor: warning when the plugin disabled by app is enabled implicitly (#141) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+4.3.0 / 2017-12-13
+==================
+
+**features**
+  * [[`cbcf402`](http://github.com/eggjs/egg-core/commit/cbcf4028055a570c81b26dd39cadcfc548ffefd4)] - feat: support options.serverScope for egg-mock (#143) (Yiyu He <<dead_horse@qq.com>>)
+
+4.2.2 / 2017-12-12
+==================
+
+**fixes**
+  * [[`b327145`](git@github.com:eggjs/egg-core/commit/b327145d2c6f1328a5d0117186fef218c4b673a7)] - fix: should load router middleware in beforeStart (#139) (Yiyu He <<dead_horse@qq.com>>)
+  * [[`187fdec`](git@github.com:eggjs/egg-core/commit/187fdec6c63c22c73716741934771eefb54320a8)] - fix: check whether controller exists (#138) (TZ | 天猪 <<atian25@qq.com>>)
+
+4.2.1 / 2017-12-01
+==================
+
+**fixes**
+  * [[`035098c`](http://github.com/eggjs/egg-core/commit/035098cfca5b20c05a8dde719f0e3995037b9a04)] - fix: adjust implicitly enable logic (#135) (zōng yǔ <<gxcsoccer@users.noreply.github.com>>)
+
+4.2.0 / 2017-11-29
+==================
+
+**features**
+  * [[`4979b98`](http://github.com/eggjs/egg-core/commit/4979b984e12cd39516ed1c6df5f1284c8faede2f)] - feat: export controller function's FULLPATH (#131) (#132) (fengmk2 <<fengmk2@gmail.com>>)
+
+4.1.0 / 2017-11-20
+==================
+
+**features**
+  * [[`4bb7472`](git@github.com:eggjs/egg-core/commit/4bb7472b1c2365e5b44d5f7c7f7050cb5915aa75)] - feat: export egg utils (#130) (Yiyu He <<dead_horse@qq.com>>)
+
+**others**
+  * [[`a02df89`](git@github.com:eggjs/egg-core/commit/a02df8958f040dc1796dffb0094f535c5c3936e9)] - test: use async function instead of generator function (#128) (Yiyu He <<dead_horse@qq.com>>)
+
+4.0.0 / 2017-11-08
+==================
+
+**others**
+  * [[`ba0c9b9`](git@github.com:eggjs/egg-core/commit/ba0c9b9e44c57333485e5424b81f047249232232)] - refactor: upgrade to koa@2 and koa-router@7 [BREAKING_CHANGE] (#125) (Yiyu He <<dead_horse@qq.com>>)
+
+3.18.0 / 2017-11-08
+==================
+
+**features**
+  * [[`c944f79`](git@github.com:eggjs/egg-core/commit/c944f79cf9c4ec160bb56d97b41fc7d7e2c8d27c)] - feat: export app.options (#127) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+3.17.0 / 2017-11-07
+==================
+
+**features**
+  * [[`08b498f`](git@github.com:eggjs/egg-core/commit/08b498f76ff259ee049c20eb1933c5a294179cc8)] - feat: toAsyncFunction compact with async function (#126) (Yiyu He <<dead_horse@qq.com>>)
+
+3.16.0 / 2017-11-06
+==================
+
+**features**
+  * [[`f9b4ae8`](git@github.com:eggjs/egg-core/commit/f9b4ae89b9d0b51a042fe7f80ab0cee184f30445)] - feat: add toPromise and toAsyncFunction (#124) (Yiyu He <<dead_horse@qq.com>>)
+
+3.15.1 / 2017-10-29
+==================
+
+**others**
+  * [[`1eaa0c6`](http://github.com/eggjs/egg-core/commit/1eaa0c689aabd650955d0150228d3bd2a3dd8aa9)] - refactor: use utility to read json (#122) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+3.15.0 / 2017-10-20
+==================
+
+**features**
+  * [[`eedfd3d`](http://github.com/eggjs/egg-core/commit/eedfd3d4517f1931f541d0201c3f7d1c2fbf85a3)] - feat: support serverScope (#120) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+3.14.0 / 2017-10-17
+==================
+
+**features**
+  * [[`c2dec90`](http://github.com/eggjs/egg-core/commit/c2dec90b0f942384f62c432d61f4917c55652fd4)] - feat(core): adding support to register inherited methods when loading controllers (#119) (lkspc <<lkspc@qq.com>>)
+
+3.13.1 / 2017-09-01
+===================
+
+  * fix: TypeError when DEBUG=* (#112)
+
+3.13.0 / 2017-07-24
+===================
+
+  * feat: controller support params by config (#110)
+  * style: spelling mistakes，orginal -> original (#109)
+
+3.12.2 / 2017-07-11
+===================
+
+  * fix: check loader existing before retrieve properties (#108)
+
+3.12.1 / 2017-07-05
+==================
+
+  * fix: should ignore Object.getPrototypeOf check on null/undefined (#107)
+
+3.12.0 / 2017-07-05
+===================
+
+  * feat: generate configMeta (#106)
+  * deps: upgrade eslint (#104)
+  * docs: fix typo (#103)
+  * deps: upgrade dependencies (#102)
+  * refactor(plugin): ignore loop when push plugin.default.js (#101)
+
 3.11.0 / 2017-06-21
 ==================
 

@@ -52,8 +52,8 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       .expect(200);
   });
 
-  it('should load application overriding framework', function* () {
-    yield request(app.callback())
+  it('should load application overriding framework', async () => {
+    await request(app.callback())
       .get('/merge/app_override_chair')
       .expect({
         value: 'app ajax patch',
@@ -61,8 +61,8 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       .expect(200);
   });
 
-  it('should load plugin overriding framework', function* () {
-    yield request(app.callback())
+  it('should load plugin overriding framework', async () => {
+    await request(app.callback())
       .get('/merge/plugin_override_chair')
       .expect({
         value: '0.0.0.0',
@@ -70,8 +70,8 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       .expect(200);
   });
 
-  it('should load application overriding plugin', function* () {
-    yield request(app.callback())
+  it('should load application overriding plugin', async () => {
+    await request(app.callback())
       .get('/merge/app_override_plugin')
       .expect({
         value: 'will override plugin',
@@ -111,11 +111,17 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert(app.b === 'b1');
   });
 
+  it('should not load extend that returned function', function() {
+    const proto = {};
+    app.loader.loadExtend('call', proto);
+    assert(proto.call === undefined);
+  });
+
   describe('load unittest extend', () => {
     let app;
     after(() => app.close());
 
-    it('should load unittext.js when unittest', function* () {
+    it('should load unittext.js when unittest', async () => {
       app = utils.createApp('load-plugin-unittest');
       app.loader.loadPlugin();
       app.loader.loadApplicationExtend();
@@ -123,7 +129,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       assert(app.local !== true);
     });
 
-    it('should load unittext.js when mm.env(default)', function* () {
+    it('should load unittext.js when mm.env(default)', async () => {
       mm(process.env, 'EGG_SERVER_ENV', 'local');
       mm(process.env, 'EGG_MOCK_SERVER_ENV', 'local');
       app = utils.createApp('load-plugin-unittest');
@@ -133,4 +139,5 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       assert(app.local === true);
     });
   });
+
 });

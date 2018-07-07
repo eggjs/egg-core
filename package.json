@@ -1,6 +1,6 @@
 {
   "name": "egg-core",
-  "version": "3.11.0",
+  "version": "4.8.0",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
   "scripts": {
@@ -27,40 +27,43 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 6.0.0"
+    "node": ">= 8.0.0"
   },
   "ci": {
-    "version": "6, 7, 8"
+    "version": "8, 10"
   },
   "devDependencies": {
-    "autod": "^2.8.0",
-    "egg-bin": "^4.0.4",
+    "autod": "^3.0.1",
+    "coffee": "^4.1.0",
+    "egg-bin": "^4.7.0",
     "egg-ci": "^1.8.0",
-    "eslint": "^4.1.1",
-    "eslint-config-egg": "^5.0.0",
-    "js-yaml": "^3.8.4",
-    "mm": "^2.1.0",
-    "mz-modules": "^1.0.0",
+    "egg-utils": "^2.4.0",
+    "eslint": "^4.19.1",
+    "eslint-config-egg": "^7.0.0",
+    "js-yaml": "^3.11.0",
+    "mm": "^2.2.0",
+    "mz-modules": "^2.1.0",
     "pedding": "^1.1.0",
-    "rimraf": "^2.6.1",
+    "rimraf": "^2.6.2",
     "spy": "^1.0.0",
     "supertest": "^3.0.0"
   },
   "dependencies": {
     "co": "^4.6.0",
-    "debug": "^2.6.8",
-    "depd": "^1.1.0",
-    "egg-logger": "^1.6.0",
-    "egg-path-matching": "^1.0.0",
+    "debug": "^3.1.0",
+    "depd": "^1.1.2",
+    "egg-logger": "^1.6.2",
+    "egg-path-matching": "^1.0.1",
     "extend2": "^1.0.0",
-    "globby": "^6.1.0",
+    "globby": "^8.0.1",
     "inflection": "^1.12.0",
-    "is-type-of": "^1.0.0",
-    "koa": "^1.4.0",
-    "koa-router": "^5.4.2",
-    "node-homedir": "^1.0.0",
+    "is-type-of": "^1.2.0",
+    "koa": "^2.5.0",
+    "koa-convert": "^1.2.0",
+    "koa-router": "^7.4.0",
+    "node-homedir": "^1.1.0",
     "ready-callback": "^2.0.1",
-    "utility": "^1.12.0"
+    "utility": "^1.13.1"
   },
   "files": [
     "index.js",

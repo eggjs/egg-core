@@ -6,12 +6,13 @@ const mm = require('mm');
 const assert = require('assert');
 const rimraf = require('rimraf');
 const spy = require('spy');
+const pedding = require('pedding');
 const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
 
-describe('test/load_plugin.test.js', function() {
 
+describe('test/load_plugin.test.js', function() {
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -280,13 +281,37 @@ describe('test/load_plugin.test.js', function() {
     }
   });
 
-  it('should not override the plugin.js of app implicitly', () => {
-    assert.throws(() => {
-      app = utils.createApp('plugin-dep-disable');
-      const loader = app.loader;
-      loader.loadPlugin();
-      loader.loadConfig();
-    }, /sequencify plugins has problem, missing: \[b,c], recursive: \[]\n\t>> Plugin \[b] is disabled or missed, but is required by \[a,d]\n\t>> Plugin \[c] is disabled or missed, but is required by \[a]/);
+  it('should enable dependencies implicitly but not optionalDependencies', done => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-dep-disable/framework');
+      }
+    }
+
+    done = pedding(done, 2);
+    app = utils.createApp('plugin-dep-disable', {
+      Application,
+    });
+    mm(app.console, 'info', msg => {
+      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
+        done(new Error('should no run here'));
+        return;
+      }
+      assert(msg === 'Following plugins will be enabled implicitly.\n  - b required by [a,d]\n  - e required by [c]\n  - c required by [a]');
+      done();
+    });
+    mm(app.console, 'warn', msg => {
+      assert(msg === 'Following plugins will be enabled implicitly that is disabled by application.\n  - e required by [c]');
+      done();
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    assert(loader.plugins.a && loader.plugins.a.enable);
+    assert(loader.plugins.b && loader.plugins.b.enable);
+    assert(loader.plugins.d && loader.plugins.d.enable);
+    assert(!loader.plugins.c);
+    assert(!loader.plugins.e);
   });
 
   it('should enable when not match env', function() {
@@ -298,7 +323,7 @@ describe('test/load_plugin.test.js', function() {
     const plugins = loader.orderPlugins.map(function(plugin) {
       return plugin.name;
     });
-    assert(plugins.indexOf('testMe') === -1);
+    assert(!plugins.includes('testMe'));
   });
 
   it('should complement infomation by config/plugin.js from plugin', function() {
@@ -314,7 +339,7 @@ describe('test/load_plugin.test.js', function() {
     const keys1 = loader1.orderPlugins.map(function(plugin) {
       return plugin.name;
     }).join(',');
-    assert(keys1.indexOf('b,c,d1,f,e') > -1);
+    assert(keys1.includes('b,c,d1,f,e'));
     assert(!loader1.plugins.a1);
 
     mm(process.env, 'NODE_ENV', 'development');
@@ -325,7 +350,7 @@ describe('test/load_plugin.test.js', function() {
     const keys2 = loader2.orderPlugins.map(function(plugin) {
       return plugin.name;
     }).join(',');
-    assert(keys2.indexOf('d1,a1,b,c,f,e') > -1);
+    assert(keys2.includes('d1,a1,b,c,f,e'));
     assert.deepEqual(loader2.plugins.a1, {
       enable: true,
       name: 'a1',
@@ -500,14 +525,72 @@ describe('test/load_plugin.test.js', function() {
       }
     }
     app = utils.createApp('plugin-optional-dependencies-case2/app', {
+      'b', 'a', 'c',
+    ]);
+  });
+
+  it('should parse implicitly enable dependencies', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-implicit-enable-dependencies');
+      }
+    }
+    app = utils.createApp('plugin-implicit-enable-dependencies', {
+
       // use clean framework
       Application,
     });
     const loader = app.loader;
     loader.loadPlugin();
     assert.deepEqual(loader.orderPlugins.map(p => p.name), [
-      'b', 'a', 'c',
+      'zoneclient',
+      'ldc',
+      'rpcServer',
+      'tracelog',
+      'gateway',
     ]);
+  });
+
+  it('should load plugin from scope', () => {
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+  });
+
+  it('should load plugin from scope and default env', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'default');
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+    assert(loader.allPlugins.b.enable === true);
+    assert(!loader.allPlugins.c);
+    assert(!loader.allPlugins.d);
+  });
+
+  it('should load plugin from scope and prod env', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'prod');
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('scope-env');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.a.enable === false);
+    assert(loader.allPlugins.b.enable === false);
+    assert(loader.allPlugins.c.enable === false);
+    assert(loader.allPlugins.d.enable === true);
+  });
+
+  it('should not load optionalDependencies and their dependencies', () => {
+    mm(process.env, 'EGG_SERVER_ENV', 'default');
+    app = utils.createApp('plugin-complex-deps');
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(loader.allPlugins.tracelog.enable === true);
+    assert(loader.allPlugins.gw.enable === false);
+    assert(loader.allPlugins.rpcServer.enable === false);
   });
 
 });

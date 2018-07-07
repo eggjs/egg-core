@@ -20,7 +20,6 @@ class Application {
 }
 
 describe('test/loader/get_framework_paths.test.js', function() {
-
   let app;
   afterEach(mm.restore);
   afterEach(() => app && app.close());

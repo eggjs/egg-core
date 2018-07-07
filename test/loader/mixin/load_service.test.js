@@ -11,9 +11,10 @@ describe('test/loader/mixin/load_service.test.js', function() {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it('should load from application and plugin', function* () {
+  it('should load from application and plugin', async () => {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
@@ -24,7 +25,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert(app.serviceClasses.bar2);
     assert(app.serviceClasses.foo4);
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/')
       .expect({
         foo2: 'foo2',
@@ -41,6 +42,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert.throws(() => {
       app = utils.createApp('service-override');
       app.loader.loadPlugin();
+      app.loader.loadConfig();
       app.loader.loadService();
     }, /can't overwrite property 'foo'/);
   });
@@ -48,6 +50,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
   it('should check es6', function() {
     app = utils.createApp('services_loader_verify');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     assert('foo' in app.serviceClasses);
@@ -56,34 +59,36 @@ describe('test/loader/mixin/load_service.test.js', function() {
     assert('aa' in app.serviceClasses.foo);
   });
 
-  it('should each request has unique ctx', function* () {
+  it('should each request has unique ctx', async () => {
     app = utils.createApp('service-unique');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/same?t=1')
       .expect('true')
       .expect(200);
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/same?t=2')
       .expect('true')
       .expect(200);
   });
 
-  it('should extend app.Service', function* () {
+  it('should extend app.Service', async () => {
     app = utils.createApp('extends-app-service');
     app.loader.loadPlugin();
+    app.loader.loadConfig();
     app.loader.loadApplicationExtend();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
 
-    yield request(app.callback())
+    await request(app.callback())
       .get('/user')
       .expect(function(res) {
         assert(res.body.user === '123mock');
@@ -92,17 +97,17 @@ describe('test/loader/mixin/load_service.test.js', function() {
   });
 
   describe('subdir', function() {
-
-    it('should load 2 level dir', function* () {
+    it('should load 2 level dir', async () => {
       mm(process.env, 'NO_DEPRECATION', '*');
       app = utils.createApp('subdir-services');
       app.loader.loadPlugin();
+      app.loader.loadConfig();
       app.loader.loadApplicationExtend();
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
 
-      yield request(app.callback())
+      await request(app.callback())
         .get('/')
         .expect({
           user: {

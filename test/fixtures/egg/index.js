@@ -1,8 +1,19 @@
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
-const EggCore = require('../../..').EggCore;
-const EggLoader = require('../../..').EggLoader;
+const rimraf = require('mz-modules/rimraf');
+
+const eggPath = path.join(__dirname, 'node_modules/egg-core');
+rimraf.sync(eggPath);
+fs.symlinkSync(
+  path.join(__dirname, '../../..'),
+  eggPath,
+  'dir'
+);
+
+const EggCore = require('egg-core').EggCore;
+const EggLoader = require('egg-core').EggLoader;
 
 class AppLoader extends EggLoader {
   loadAll() {
@@ -37,4 +48,4 @@ class EggApplication extends EggCore {
   }
 }
 
-module.exports = EggApplication;
+module.exports.Application = EggApplication;

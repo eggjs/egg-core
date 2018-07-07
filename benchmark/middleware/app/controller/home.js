@@ -1,5 +1,11 @@
 'use strict';
 
-module.exports = function*() {
-  this.body = [];
+module.exports = {
+  * generator() {
+    this.body = [];
+  },
+
+  async async() {
+    this.body = [];
+  },
 };
