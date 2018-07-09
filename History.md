@@ -1,4 +1,12 @@
 
+4.9.0 / 2018-07-09
+==================
+
+  * chore(typings): add index.d.ts (#169)
+  * feat: loadUnit should exports name (#172)
+  * fix: remove useless code (#170)
+  * docs: fix a typo (#168)
+
 4.8.0 / 2018-05-22
 ==================
 
