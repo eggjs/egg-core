@@ -67,6 +67,7 @@
   },
   "files": [
     "index.js",
-    "lib"
+    "lib",
+    "index.d.ts"
   ]
 }
