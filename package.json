@@ -3,6 +3,7 @@
   "version": "4.9.0",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "autod": "autod",
     "lint": "eslint lib test *.js",
@@ -67,6 +68,7 @@
   },
   "files": [
     "index.js",
+    "index.d.ts",
     "lib"
   ]
 }
