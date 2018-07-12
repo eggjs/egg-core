@@ -1,4 +1,10 @@
 
+4.9.1 / 2018-07-12
+==================
+
+  * revert: #172 loadUnit.name (#175)
+  * chore(typings): add pkg.types and pkg.files entry for index.d.ts (#176)
+
 4.9.0 / 2018-07-09
 ==================
 
