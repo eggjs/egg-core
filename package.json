@@ -6,8 +6,8 @@
   "types": "index.d.ts",
   "scripts": {
     "autod": "autod",
-    "lint": "eslint lib test *.js",
-    "test": "npm run lint && egg-bin test",
+    "lint": "eslint .",
+    "test": "npm run lint -- --fix && egg-bin test",
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "pkgfiles": "egg-bin pkgfiles",
