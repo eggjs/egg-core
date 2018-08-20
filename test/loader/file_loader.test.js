@@ -225,7 +225,7 @@ describe('test/loader/file_loader.test.js', () => {
         directory: path.join(dirBase, 'error/dotdir'),
         target: mod,
       }).load();
-    }, 'dot.dir is not match \'^[a-z][a-z0-9_-]*$\' in dot.dir\/a.js');
+    }, /dot.dir is not match '\^\[a-z]\[a-z0-9_-]\*\$' in dot.dir\/a.js/);
   });
 
   it('should throw when directory contains underscore', () => {
@@ -241,7 +241,7 @@ describe('test/loader/file_loader.test.js', () => {
         directory: path.join(dirBase, 'error/underscore-file-in-dir'),
         target: mod,
       }).load();
-    }, '_a is not match \'^[a-z][a-z0-9_-]*$\' in dir\/_a.js');
+    }, /_a is not match '\^\[a-z]\[a-z0-9_-]\*\$' in dir\/_a.js/);
   });
 
   it('should throw when file starts with underscore', () => {
@@ -251,7 +251,7 @@ describe('test/loader/file_loader.test.js', () => {
         directory: path.join(dirBase, 'error/underscore-file'),
         target: mod,
       }).load();
-    }, '_private is not match \'^[a-z][a-z0-9_-]*$\' in _private.js');
+    }, /_private is not match '\^\[a-z]\[a-z0-9_-]\*\$' in _private.js/);
   });
 
   describe('caseStyle', () => {
