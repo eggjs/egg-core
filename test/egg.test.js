@@ -415,6 +415,12 @@ describe('test/egg.test.js', () => {
       const wrapped = app.toAsyncFunction(fn);
       return wrapped(true).then(res => assert(res === true));
     });
+
+    it('not translate common values', () => {
+      const primitiveValues = [ 1, 2, 3, 4, 5, 6 ];
+      const wrapped = app.toAsyncFunction(primitiveValues);
+      return assert(wrapped === primitiveValues);
+    });
   });
 
   describe('toPromise', () => {
