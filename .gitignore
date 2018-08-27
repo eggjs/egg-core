@@ -6,3 +6,4 @@ npm-debug.log
 .DS_Store
 yarn.lock
 test/fixtures/egg/node_modules/egg-core
+.idea
