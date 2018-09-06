@@ -11,6 +11,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     app = utils.createApp('middleware-override');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -62,6 +63,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
     }, /Middleware session must be a function, but actual is {}/);
   });
@@ -71,6 +73,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
     }, /Middleware a not found/);
   });
@@ -80,6 +83,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert.throws(() => {
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       app.loader.loadMiddleware();
     }, /Middleware status redefined/);
   });
@@ -88,6 +92,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -102,6 +107,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-match');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -120,6 +126,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-ignore');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -138,6 +145,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     const app = utils.createApp('middleware-app-disable');
     app.loader.loadPlugin();
     app.loader.loadConfig();
+    app.loader.loadCustomApp();
     app.loader.loadMiddleware();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -204,7 +212,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       app = utils.createApp('other-directory');
       app.loader.loadPlugin();
       app.loader.loadConfig();
-
+      app.loader.loadCustomApp();
       const directory = app.loader.getLoadUnits().map(unit => path.join(unit.path, 'app/middleware'));
       directory.push(path.join(baseDir, 'app/other-middleware'));
       app.loader.loadMiddleware({

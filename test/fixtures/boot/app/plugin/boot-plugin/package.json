@@ -1,0 +1,6 @@
+{
+  "name": "bootPlugin",
+  "eggPlugin": {
+    "name": "bootPlugin"
+  }
+}
