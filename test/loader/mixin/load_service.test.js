@@ -16,6 +16,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -64,6 +65,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -84,6 +86,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     app.loader.loadPlugin();
     app.loader.loadConfig();
     app.loader.loadApplicationExtend();
+    app.loader.loadCustomApp();
     app.loader.loadService();
     app.loader.loadController();
     app.loader.loadRouter();
@@ -103,6 +106,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       app.loader.loadPlugin();
       app.loader.loadConfig();
       app.loader.loadApplicationExtend();
+      app.loader.loadCustomApp();
       app.loader.loadService();
       app.loader.loadController();
       app.loader.loadRouter();
@@ -151,6 +155,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     before(() => {
       const baseDir = utils.getFilepath('other-directory');
       app = utils.createApp('other-directory');
+      app.loader.loadCustomApp();
       app.loader.loadService({
         directory: path.join(baseDir, 'app/other-service'),
       });

@@ -11,6 +11,7 @@ const request = require('supertest');
 const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
+const awaitEvent = require('await-event');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -92,6 +93,7 @@ describe('test/egg.test.js', () => {
       app = utils.createApp('app-getter');
       app.loader.loadPlugin();
       app.loader.loadConfig();
+      app.loader.loadCustomApp();
       return app.ready();
     });
     after(() => app.close());
@@ -180,7 +182,7 @@ describe('test/egg.test.js', () => {
         app = utils.createApp('beforestart-params-error');
         app.loader.loadAll();
       } catch (err) {
-        assert(err.message === 'beforeStart only support function');
+        assert(err.message === 'boot only support function');
         done();
       }
     });
@@ -255,6 +257,7 @@ describe('test/egg.test.js', () => {
 
     it('should emit close event before exit', () => {
       app = utils.createApp('close');
+      app.loader.loadAll();
       let called = false;
       app.on('close', () => {
         called = true;
@@ -272,6 +275,7 @@ describe('test/egg.test.js', () => {
 
     it('should throw when close error', done => {
       app = utils.createApp('close');
+      app.loader.loadAll();
       mm(app, 'removeAllListeners', () => {
         throw new Error('removeAllListeners error');
       });
@@ -460,67 +464,385 @@ describe('test/egg.test.js', () => {
     let app;
     after(() => app && app.close());
 
-    it('should get timing', function* () {
-      app = utils.createApp('timing');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadApplicationExtend();
-      app.loader.loadCustomApp();
-      app.loader.loadCustomAgent();
-      app.loader.loadService();
-      app.loader.loadMiddleware();
-      app.loader.loadController();
-      app.loader.loadRouter();
-      yield app.ready();
+    describe('app', () => {
+      it('should get timing', function* () {
+        app = utils.createApp('timing');
+        app.loader.loadPlugin();
+        app.loader.loadConfig();
+        app.loader.loadApplicationExtend();
+        app.loader.loadCustomApp();
+        // app.loader.loadCustomAgent();
+        app.loader.loadService();
+        app.loader.loadMiddleware();
+        app.loader.loadController();
+        app.loader.loadRouter();
+        yield app.ready();
 
-      const json = app.timing.toJSON();
-      assert(json.length === 27);
+        const json = app.timing.toJSON();
+        assert(json.length === 24);
 
-      assert(json[0].name === 'Application Start');
-      assert(json[0].end - json[0].start === json[0].duration);
-      assert(json[0].pid === process.pid);
+        assert(json[0].name === 'Application Start');
+        assert(json[0].end - json[0].start === json[0].duration);
+        assert(json[0].pid === process.pid);
 
-      // loadPlugin
-      assert(json[1].name === 'Load Plugin');
+        // loadPlugin
+        assert(json[1].name === 'Load Plugin');
 
-      // loadConfig
-      assert(json[2].name === 'Load Config');
-      assert(json[3].name === 'Require(0) config/config.default.js');
-      assert(json[5].name === 'Require(2) config/config.default.js');
+        // loadConfig
+        assert(json[2].name === 'Load Config');
+        assert(json[3].name === 'Require(0) config/config.default.js');
+        assert(json[5].name === 'Require(2) config/config.default.js');
 
-      // loadExtend
-      assert(json[7].name === 'Load extend/application.js');
-      assert(json[9].name === 'Require(5) app/extend/application.js');
+        // loadExtend
+        assert(json[7].name === 'Load extend/application.js');
+        assert(json[9].name === 'Require(5) app/extend/application.js');
 
-      // loadCustomApp
-      assert(json[10].name === 'Load app.js');
-      assert(json[11].name === 'Require(6) app.js');
-      assert(json[12].name === 'Before Start in app.js:6:9');
-      assert(json[13].name === 'Load "proxy" to Context');
-      assert(json[14].name === 'Load Controller');
-      assert(json[15].name === 'Load "controller" to Application');
+        // loadCustomApp
+        assert(json[10].name === 'Load app.js');
+        assert(json[11].name === 'Require(6) app.js');
+        assert(json[12].name === 'Before Start in app.js:6:9');
+        assert(json[13].name === 'Load "proxy" to Context');
+        assert(json[14].name === 'Load Controller');
+        assert(json[15].name === 'Load "controller" to Application');
 
-      // loadCustomAgent
-      assert(json[16].name === 'Load agent.js');
-      assert(json[17].name === 'Require(7) agent.js');
-      assert(json[18].name === 'Before Start in agent.js:5:11');
+        // loadService
+        assert(json[16].name === 'Load Service');
+        assert(json[17].name === 'Load "service" to Context');
 
-      // loadService
-      assert(json[19].name === 'Load Service');
-      assert(json[20].name === 'Load "service" to Context');
+        // loadMiddleware
+        assert(json[18].name === 'Load Middleware');
+        assert(json[19].name === 'Load "middlewares" to Application');
 
-      // loadMiddleware
-      assert(json[21].name === 'Load Middleware');
-      assert(json[22].name === 'Load "middlewares" to Application');
+        // loadController
+        assert(json[20].name === 'Load Controller');
+        assert(json[21].name === 'Load "controller" to Application');
 
-      // loadController
-      assert(json[23].name === 'Load Controller');
-      assert(json[24].name === 'Load "controller" to Application');
-
-      // loadRouter
-      assert(json[25].name === 'Load Router');
-      assert(json[26].name === 'Require(8) app/router.js');
+        // loadRouter
+        assert(json[22].name === 'Load Router');
+        assert(json[23].name === 'Require(7) app/router.js');
+      });
     });
 
+    describe('agent', () => {
+      it('should get timing', function* () {
+        app = utils.createApp('timing');
+        app.loader.loadPlugin();
+        app.loader.loadConfig();
+        app.loader.loadApplicationExtend();
+        app.loader.loadCustomAgent();
+        yield app.ready();
+
+        const json = app.timing.toJSON();
+        assert(json.length === 13);
+
+        assert(json[0].name === 'Application Start');
+        assert(json[0].end - json[0].start === json[0].duration);
+        assert(json[0].pid === process.pid);
+
+        // loadPlugin
+        assert(json[1].name === 'Load Plugin');
+
+        // loadConfig
+        assert(json[2].name === 'Load Config');
+        assert(json[3].name === 'Require(0) config/config.default.js');
+        assert(json[5].name === 'Require(2) config/config.default.js');
+
+        // loadExtend
+        assert(json[7].name === 'Load extend/application.js');
+        assert(json[9].name === 'Require(5) app/extend/application.js');
+
+        // loadCustomAgent
+        assert(json[10].name === 'Load agent.js');
+        assert(json[11].name === 'Require(6) agent.js');
+        assert(json[12].name === 'Before Start in agent.js:5:11');
+      });
+    });
+
+  });
+
+  describe('boot', () => {
+    describe('boot success', () => {
+      describe('app worker', () => {
+        it('should success', async () => {
+          const app = utils.createApp('boot');
+          app.loader.loadAll();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+            ]);
+          await app.ready();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+            ]);
+          await sleep(10);
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+            ]);
+          await app.lifecycle.triggerServerDidReady();
+          await sleep(10);
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+              'serverDidReady',
+            ]);
+          await app.close();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+              'serverDidReady',
+              'beforeClose',
+            ]);
+        });
+      });
+
+      describe('agent worker', () => {
+        it('should success', async () => {
+          const app = utils.createApp('boot', { type: 'agent' });
+          app.loader.loadPlugin();
+          app.loader.loadConfig();
+          app.loader.loadAgentExtend();
+          app.loader.loadBootHook();
+          app.loader.loadCustomAgent();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+            ]);
+          await app.ready();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+            ]);
+          await sleep(10);
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+            ]);
+          await app.lifecycle.triggerServerDidReady();
+          await sleep(10);
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+              'serverDidReady',
+            ]);
+          await app.close();
+          assert.deepStrictEqual(
+            app.bootLog,
+            [
+              'configDidLoad',
+              'app.js',
+              'didLoad',
+              'beforeStart',
+              'willReady',
+              'ready',
+              'didReady',
+              'serverDidReady',
+              'beforeClose',
+            ]);
+        });
+      });
+    });
+
+    describe('configDidLoad failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-configDidLoad-error');
+        let error;
+        try {
+          app.loader.loadAll();
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'configDidLoad error');
+        assert.deepStrictEqual(app.bootLog, []);
+      });
+    });
+
+    describe('didLoad failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-didLoad-error');
+        app.loader.loadAll();
+        let error;
+        try {
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'didLoad error');
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad' ]);
+        await sleep(10);
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didReady' ]);
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('willReady failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-willReady-error');
+        app.loader.loadAll();
+        let error;
+        try {
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad' ]);
+        assert.strictEqual(error.message, 'willReady error');
+        await sleep(10);
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'didReady' ]);
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'didReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('didReady failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-didReady-error');
+        app.loader.loadAll();
+        await app.ready();
+
+        assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'willReady' ]);
+        let error;
+        try {
+          await awaitEvent(app, 'error');
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'didReady error');
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'didLoad',
+            'willReady',
+            'beforeClose',
+          ]);
+      });
+    });
+
+    describe('serverDidLoad failed', () => {
+      it('should throw error', async () => {
+        const app = utils.createApp('boot-serverDidLoad-error');
+        app.loader.loadAll();
+        await app.ready();
+        await sleep(10);
+        assert.deepStrictEqual(app.bootLog, [
+          'configDidLoad',
+          'didLoad',
+          'willReady',
+          'didReady',
+        ]);
+        await app.lifecycle.triggerServerDidReady();
+        let error;
+        try {
+          await awaitEvent(app, 'error');
+        } catch (e) {
+          error = e;
+        }
+        assert.strictEqual(error.message, 'serverDidReady failed');
+      });
+    });
+
+    describe('use ready(func)', () => {
+      it('should success', async () => {
+        const app = utils.createApp('boot');
+        app.loader.loadAll();
+        await app.ready();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'app.js',
+            'didLoad',
+            'beforeStart',
+            'willReady',
+            'ready',
+          ]);
+        app.ready(() => {
+          app.bootLog.push('readyFunction');
+        });
+        await sleep(10);
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'configDidLoad',
+            'app.js',
+            'didLoad',
+            'beforeStart',
+            'willReady',
+            'ready',
+            'readyFunction',
+            'didReady',
+          ]);
+        app.close();
+      });
+    });
   });
 });
