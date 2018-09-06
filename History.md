@@ -1,4 +1,15 @@
 
+4.10.0 / 2018-09-06
+==================
+
+**features**
+  * [[`9d2f2fc`](http://github.com/eggjs/egg-core/commit/9d2f2fc3655e29aca52ac06a574bf69c1ba4d239)] - feat: impl boot methods (#171) (killa <<killa123@126.com>>)
+
+**others**
+  * [[`b71074d`](http://github.com/eggjs/egg-core/commit/b71074d7c0d5e5353ab8d3bbf279023184557809)] - fix(config) removes whitespace from both ends of serverEnv (#180) (supperchong <<2267805901@qq.com>>)
+  * [[`ae38fa4`](http://github.com/eggjs/egg-core/commit/ae38fa4c47c35c32d9ca73e0311f64305573acd4)] - chroe: add more comments for toAsyncFunction and toPromise (Maledong <<maledong_github@outlook.com>>)
+  * [[`4d4113c`](http://github.com/eggjs/egg-core/commit/4d4113cfd27d1e8ce4ce65d2d19b0035b5291dcc)] - style(core): beautify reg and add .idea to ignore (#179) (Army <<army8735@qq.com>>)
+
 4.9.1 / 2018-07-12
 ==================
 
