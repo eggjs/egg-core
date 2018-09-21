@@ -1,4 +1,10 @@
 
+4.10.1 / 2018-09-21
+==================
+
+**fixes**
+  * [[`33c07db`](http://github.com/eggjs/egg-core/commit/33c07db023ebc1a120d5ce1fa37da9e42b18e8f1)] - fix: ensure treat function app.js as configDidLoad (#181) (Yiyu He <<dead_horse@qq.com>>)
+
 4.10.0 / 2018-09-06
 ==================
 
