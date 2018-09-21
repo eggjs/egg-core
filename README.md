@@ -120,11 +120,11 @@ Load app/extend/helper.js
 
 #### loadCustomApp
 
-Load app.js
+Load app.js, if app.js export boot class, then trigger configDidLoad
 
 #### loadCustomAgent
 
-Load agent.js
+Load agent.js, if agent.js export boot class, then trigger configDidLoad
 
 #### loadService
 

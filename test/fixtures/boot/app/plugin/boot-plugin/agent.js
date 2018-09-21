@@ -1,14 +1,14 @@
 'use strict';
 const sleep = require('mz-modules/sleep');
 
-module.exports = app => {
-  app.bootLog.push('app.js');
-  app.beforeStart(async () => {
+module.exports = agent => {
+  agent.bootLog.push('agent.js');
+  agent.beforeStart(async () => {
     await sleep(5);
-    app.bootLog.push('beforeStart');
+    agent.bootLog.push('beforeStart');
   });
 
-  app.ready(()=> {
-    app.bootLog.push('ready');
+  agent.ready(()=> {
+    agent.bootLog.push('ready');
   });
 };

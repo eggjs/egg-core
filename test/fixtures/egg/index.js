@@ -23,7 +23,6 @@ class AppLoader extends EggLoader {
     this.loadContextExtend();
     this.loadRequestExtend();
     this.loadResponseExtend();
-    this.loadBootHook();
     this.loadCustomApp();
     this.loadMiddleware();
     this.loadService();
