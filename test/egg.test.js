@@ -560,7 +560,7 @@ describe('test/egg.test.js', () => {
 
   });
 
-  describe('boot', () => {
+  describe.only('boot', () => {
     describe('boot success', () => {
       describe('app worker', () => {
         it('should success', async () => {
