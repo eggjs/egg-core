@@ -1,4 +1,10 @@
 
+4.10.2 / 2018-09-21
+==================
+
+**fixes**
+  * [[`0b0c23f`](http://github.com/eggjs/egg-core/commit/0b0c23f502fc0c2641fa7c1740a9777236e8f4db)] - fix: app.js export can be non-function (#182) (Yiyu He <<dead_horse@qq.com>>)
+
 4.10.1 / 2018-09-21
 ==================
 
