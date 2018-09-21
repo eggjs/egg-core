@@ -1,6 +1,9 @@
 {
   "name": "bootPlugin",
   "eggPlugin": {
-    "name": "bootPlugin"
+    "name": "bootPlugin",
+    "dependencies": [
+      "bootPluginDep"
+    ]
   }
 }
