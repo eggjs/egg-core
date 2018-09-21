@@ -569,15 +569,17 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'app.js', // app.js in plugin
-              'configDidLoad', // configDidLoad in
+              'configDidLoad in plugin',
+              'app.js in plugin',
+              'configDidLoad in app',
             ]);
           await app.ready();
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'app.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'app.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -587,8 +589,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'app.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'app.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -600,8 +603,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'app.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'app.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -613,8 +617,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'app.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'app.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -636,15 +641,17 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'agent.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'agent.js in plugin',
+              'configDidLoad in app',
             ]);
           await app.ready();
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'agent.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'agent.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -654,8 +661,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'agent.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'agent.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -667,8 +675,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'agent.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'agent.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -680,8 +689,9 @@ describe('test/egg.test.js', () => {
           assert.deepStrictEqual(
             app.bootLog,
             [
-              'agent.js',
-              'configDidLoad',
+              'configDidLoad in plugin',
+              'agent.js in plugin',
+              'configDidLoad in app',
               'didLoad',
               'beforeStart',
               'willReady',
@@ -817,8 +827,9 @@ describe('test/egg.test.js', () => {
         assert.deepStrictEqual(
           app.bootLog,
           [
-            'app.js',
-            'configDidLoad',
+            'configDidLoad in plugin',
+            'app.js in plugin',
+            'configDidLoad in app',
             'didLoad',
             'beforeStart',
             'willReady',
@@ -831,8 +842,9 @@ describe('test/egg.test.js', () => {
         assert.deepStrictEqual(
           app.bootLog,
           [
-            'app.js',
-            'configDidLoad',
+            'configDidLoad in plugin',
+            'app.js in plugin',
+            'configDidLoad in app',
             'didLoad',
             'beforeStart',
             'willReady',

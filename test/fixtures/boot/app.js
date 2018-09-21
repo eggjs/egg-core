@@ -9,7 +9,7 @@ module.exports = class {
   }
 
   configDidLoad() {
-    this.app.bootLog.push('configDidLoad');
+    this.app.bootLog.push('configDidLoad in app');
   }
 
   async didLoad() {

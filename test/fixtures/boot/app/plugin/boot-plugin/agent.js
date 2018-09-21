@@ -2,7 +2,7 @@
 const sleep = require('mz-modules/sleep');
 
 module.exports = agent => {
-  agent.bootLog.push('agent.js');
+  agent.bootLog.push('agent.js in plugin');
   agent.beforeStart(async () => {
     await sleep(5);
     agent.bootLog.push('beforeStart');
