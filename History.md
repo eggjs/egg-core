@@ -1,4 +1,13 @@
 
+4.10.3 / 2018-09-29
+===================
+
+**fixes**
+  * [[`58a49e4`](https://github.com/eggjs/egg-core/pull/184/commits/58a49e46684bf6adceada18abb1fe1b7086a764e)] - fix(lifecycle): forbid adding hook after initialization (#184) (initialwu)
+
+**others**
+  * [[`9c16f2e`](https://github.com/eggjs/egg-core/pull/184/commits/9c16f2e8919384b65ba36e2a7050db524d18c3a5)] - chore(eslint): set root=true to stop looking in parent folders (#183) (initialwu)
+
 4.10.2 / 2018-09-21
 ==================
 
