@@ -11,7 +11,7 @@
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "pkgfiles": "egg-bin pkgfiles",
-    "ci": "egg-bin pkgfiles --check && npm run lint && npm run cov"
+    "ci": "egg-bin pkgfiles --check && npm run lint -- --fix && npm run cov"
   },
   "repository": {
     "type": "git",
