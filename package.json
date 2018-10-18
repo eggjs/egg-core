@@ -36,6 +36,7 @@
       "travis": "linux, osx, windows"
     },
     "version": "8, 10",
+    "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov",
     "license": {
       "year": 2016
     }

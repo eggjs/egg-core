@@ -12,4 +12,4 @@ install:
 script:
   - npm run ci
 after_success:
-  - npminstall codecov && codecov -f .nyc_output/*.json
+  - npminstall codecov && codecov --disable=gcov
