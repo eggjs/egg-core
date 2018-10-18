@@ -11,5 +11,5 @@ install:
   - npm i npminstall && npminstall
 script:
   - npm run ci
-after_script:
-  - npminstall codecov && codecov
+after_success:
+  - npminstall codecov && codecov -f .nyc_output/*.json
