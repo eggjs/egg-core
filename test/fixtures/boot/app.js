@@ -8,6 +8,10 @@ module.exports = class {
     this.app = app;
   }
 
+  configWillLoad() {
+    this.app.config.appSet = true;
+  }
+
   configDidLoad() {
     this.app.bootLog.push('configDidLoad in app');
   }
