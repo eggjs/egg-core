@@ -24,14 +24,22 @@
   "author": "gxcsoccer <gxcsoccer@126.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/eggjs/egg-core/issues"
+    "url": "https://github.com/eggjs/egg/issues"
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
     "node": ">= 8.0.0"
   },
   "ci": {
-    "version": "8, 10"
+    "type": "travis",
+    "os": {
+      "travis": "linux, osx, windows"
+    },
+    "version": "8, 10",
+    "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov -f .nyc_output/*.json",
+    "license": {
+      "year": 2016
+    }
   },
   "devDependencies": {
     "autod": "^3.0.1",
