@@ -1,4 +1,10 @@
 
+4.11.0 / 2018-10-19
+==================
+
+**features**
+  * [[`fdc1ee5`](http://github.com/eggjs/egg-core/commit/fdc1ee546bc504dbf85d78f33ff61eaa266c0d02)] - feat: add 'configWillLoad' hook to lifecycle (#187) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.10.3 / 2018-09-29
 ===================
 
