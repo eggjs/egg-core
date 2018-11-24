@@ -30,6 +30,7 @@ describe('test/jest.test.js', () => {
 
     let infoMsg = '';
     proc.stderr.on('data', chunk => (infoMsg += chunk.toString()));
+    proc.stdout.on('data', chunk => (infoMsg += chunk.toString()));
     proc.on('exit', () => {
       assert(infoMsg.includes('Test Suites: 1 passed, 1 total'));
       done();
