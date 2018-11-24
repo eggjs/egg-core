@@ -19,10 +19,14 @@ describe('test/jest.test.js', () => {
   });
 
   it('should works without error with jest', done => {
-    const proc = fork(path.resolve(__dirname, '../node_modules/.bin/jest'), [ path.resolve(__dirname, './fixtures/egg-jest/test/index.test.js') ], {
-      cwd: path.resolve(__dirname, './fixtures/egg-jest'),
-      stdio: 'pipe',
-    });
+    const proc = fork(
+      require.resolve('jest/bin/jest'),
+      [ path.resolve(__dirname, './fixtures/egg-jest/test/index.test.js') ],
+      {
+        cwd: path.resolve(__dirname, './fixtures/egg-jest'),
+        stdio: 'pipe',
+      }
+    );
 
     let infoMsg = '';
     proc.stderr.on('data', chunk => (infoMsg += chunk.toString()));
