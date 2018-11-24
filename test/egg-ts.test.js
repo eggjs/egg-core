@@ -130,16 +130,4 @@ describe('test/egg-ts.test.js', () => {
     assert(app.serviceClasses.lord);
     assert(!app.serviceClasses.test);
   });
-
-  it('should not load ts files while EGG_TYPESCRIPT was true but no extensions', async () => {
-    mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    delete require.extensions['.ts'];
-    app = utils.createApp('egg-ts-js');
-
-    app.loader.loadApplicationExtend();
-    app.loader.loadService();
-    assert(!app.appExtend);
-    assert(app.serviceClasses.lord);
-    assert(!app.serviceClasses.test);
-  });
 });
