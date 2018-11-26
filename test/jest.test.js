@@ -10,10 +10,17 @@ describe('test/jest.test.js', () => {
   afterEach(mm.restore);
 
   it('should has default extensions if require.extension is empty', () => {
-    mm(Object, 'keys', () => []);
+    const extensions = {};
+    Object.keys(require.extensions).forEach(ext => {
+      extensions[ext] = require.extensions[ext];
+      delete require.extensions[ext];
+    });
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
     assert(utils.extensions.length > 0);
     assert(utils.extensions.includes('.ts'));
+    Object.keys(extensions).forEach(ext => {
+      require.extensions[ext] = extensions[ext];
+    });
   });
 
   it('should works without error with jest', done => {
