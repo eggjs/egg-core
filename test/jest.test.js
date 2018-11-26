@@ -5,7 +5,6 @@ const path = require('path');
 const assert = require('assert');
 const utils = require('../lib/utils');
 const { fork } = require('child_process');
-const UTILS_EXTENSION = Symbol('utils#extensions');
 
 describe('test/jest.test.js', () => {
   afterEach(mm.restore);
@@ -13,7 +12,6 @@ describe('test/jest.test.js', () => {
   it('should has default extensions if require.extension is empty', () => {
     mm(Object, 'keys', () => []);
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    delete utils[UTILS_EXTENSION];
     assert(utils.extensions.length > 0);
     assert(utils.extensions.includes('.ts'));
   });
