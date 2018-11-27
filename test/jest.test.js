@@ -1,58 +1,47 @@
 'use strict';
 
-const mm = require('mm');
 const path = require('path');
 const assert = require('assert');
-const utils = require('../lib/utils');
-const { fork } = require('child_process');
+const coffee = require('coffee');
 
 describe('test/jest.test.js', () => {
-  let extensions;
+  it('should works without error with empty extensions', async () => {
+    const { stderr } = await coffee
+      .fork(require.resolve('./fixtures/egg-jest/index_empty_extension.js'), [], {
+        cwd: path.resolve(__dirname, './fixtures/egg-jest'),
+      })
+      // .debug()
+      .end();
 
-  beforeEach(() => {
-    extensions = {};
-    Object.keys(require.extensions).forEach(ext => {
-      extensions[ext] = require.extensions[ext];
-    });
-    delete utils._extensions;
+    assert(!stderr);
   });
 
-  afterEach(() => {
-    Object.keys(extensions).forEach(ext => {
-      require.extensions[ext] = extensions[ext];
-    });
+  it('should works without error with empty extensions with ts env', async () => {
+    const { stderr } = await coffee
+      .fork(
+        require.resolve('ts-node/dist/bin'),
+        [ require.resolve('./fixtures/egg-jest/index_empty_extension.js') ],
+        {
+          cwd: path.resolve(__dirname, './fixtures/egg-jest'),
+          env: Object.assign({}, process.env, {
+            EGG_TYPESCRIPT: 'true',
+          }),
+        }
+      )
+      .debug()
+      .end();
 
-    mm.restore();
+    assert(!stderr);
   });
 
-  it('should has default extensions if require.extension is empty', () => {
-    Object.keys(require.extensions).forEach(ext => {
-      delete require.extensions[ext];
-    });
-    assert(utils.extensions.length > 0);
-  });
+  it('should works without error with jest', async () => {
+    const { stdout, stderr } = await coffee
+      .fork(require.resolve('jest/bin/jest'), [], {
+        cwd: path.resolve(__dirname, './fixtures/egg-jest'),
+      })
+      // .debug()
+      .end();
 
-  it('should has ts extensions if require.extension is empty and env.EGG_TYPESCRIPT is true', () => {
-    Object.keys(require.extensions).forEach(ext => {
-      delete require.extensions[ext];
-    });
-    mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    assert(utils.extensions.length > 0);
-    assert(utils.extensions.includes('.ts'));
-  });
-
-  it('should works without error with jest', done => {
-    const proc = fork(require.resolve('jest/bin/jest'), [], {
-      cwd: path.resolve(__dirname, './fixtures/egg-jest'),
-      stdio: 'pipe',
-    });
-
-    let infoMsg = '';
-    proc.stderr.on('data', chunk => (infoMsg += chunk.toString()));
-    proc.stdout.on('data', chunk => (infoMsg += chunk.toString()));
-    proc.on('exit', () => {
-      assert(infoMsg.includes('Test Suites: 1 passed, 1 total'));
-      done();
-    });
+    assert((stdout + stderr).includes('Test Suites: 1 passed, 1 total'));
   });
 });
