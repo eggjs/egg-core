@@ -20,7 +20,7 @@ describe('test/jest.test.js', () => {
     const { stderr } = await coffee
       .fork(
         require.resolve('ts-node/dist/bin'),
-        [ require.resolve('./fixtures/egg-jest/index_empty_extension.js') ],
+        [ ],
         {
           cwd: path.resolve(__dirname, './fixtures/egg-jest'),
           env: Object.assign({}, process.env, {
@@ -28,7 +28,7 @@ describe('test/jest.test.js', () => {
           }),
         }
       )
-      .debug()
+      // .debug()
       .end();
 
     assert(!stderr);
