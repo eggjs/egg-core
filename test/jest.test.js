@@ -20,7 +20,7 @@ describe('test/jest.test.js', () => {
   it('should works without error with empty extensions with ts env', async () => {
     mm(process.env, 'EGG_TYPESCRIPT', true);
     const { stderr } = await coffee
-      .fork(require.resolve('./fixtures/egg-jest/index_empty_extension.js'), [], {
+      .fork(require.resolve('./fixtures/egg-jest/index_empty_extension_ts.js'), [], {
         cwd: path.resolve(__dirname, './fixtures/egg-jest'),
       })
       // .debug()

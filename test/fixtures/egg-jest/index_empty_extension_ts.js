@@ -7,4 +7,4 @@ Object.keys(require.extensions).forEach(ext => {
   delete require.extensions[ext];
 });
 
-assert(!!util.supportExtension('.js'), 'should support js ext');
+assert(!!util.supportExtension('.ts'), 'should support ts ext');
