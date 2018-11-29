@@ -4,16 +4,19 @@ const mm = require('mm');
 const request = require('supertest');
 const assert = require('assert');
 const utils = require('./utils');
+const loaderUtil = require('../lib/utils');
 
 describe('test/egg-ts.test.js', () => {
   let app;
 
   beforeEach(() => {
     require.extensions['.ts'] = require.extensions['.js'];
+    loaderUtil.extensions.push('.ts');
   });
 
   afterEach(() => {
     mm.restore();
+    loaderUtil.extensions.splice(loaderUtil.extensions.indexOf('.ts'), 1);
     delete require.extensions['.ts'];
   });
 
@@ -99,10 +102,6 @@ describe('test/egg-ts.test.js', () => {
     });
   });
 
-  it('should support load ts file', async () => {
-
-  });
-
   it('should not load d.ts files while typescript was true', async () => {
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
     app = utils.createApp('egg-ts-js');
@@ -133,12 +132,9 @@ describe('test/egg-ts.test.js', () => {
 
   it('should not load ts files while EGG_TYPESCRIPT was true but no extensions', async () => {
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
-    delete require.extensions['.ts'];
+    mm(loaderUtil, 'extensions', [ '.js', '.json' ]);
     app = utils.createApp('egg-ts-js');
-
-    app.loader.loadApplicationExtend();
     app.loader.loadService();
-    assert(!app.appExtend);
     assert(app.serviceClasses.lord);
     assert(!app.serviceClasses.test);
   });
