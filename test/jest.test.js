@@ -1,34 +1,10 @@
 'use strict';
 
-const mm = require('mm');
 const path = require('path');
 const assert = require('assert');
 const coffee = require('coffee');
 
 describe('test/jest.test.js', () => {
-  it('should works without error with empty extensions', async () => {
-    const { stderr } = await coffee
-      .fork(require.resolve('./fixtures/egg-jest/index_empty_extension.js'), [], {
-        cwd: path.resolve(__dirname, './fixtures/egg-jest'),
-      })
-      // .debug()
-      .end();
-
-    assert(!stderr);
-  });
-
-  it('should works without error with empty extensions with ts env', async () => {
-    mm(process.env, 'EGG_TYPESCRIPT', true);
-    const { stderr } = await coffee
-      .fork(require.resolve('./fixtures/egg-jest/index_empty_extension_ts.js'), [], {
-        cwd: path.resolve(__dirname, './fixtures/egg-jest'),
-      })
-      // .debug()
-      .end();
-
-    assert(!stderr);
-  });
-
   it('should works without error with jest', async () => {
     const { stdout, stderr } = await coffee
       .fork(require.resolve('jest/bin/jest'), [], {
