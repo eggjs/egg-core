@@ -133,8 +133,11 @@ describe('test/egg-ts.test.js', () => {
   it('should not load ts files while EGG_TYPESCRIPT was true but no extensions', async () => {
     mm(process.env, 'EGG_TYPESCRIPT', 'true');
     mm(loaderUtil, 'extensions', [ '.js', '.json' ]);
+
+    app.loader.loadApplicationExtend();
     app = utils.createApp('egg-ts-js');
     app.loader.loadService();
+    assert(!app.appExtend);
     assert(app.serviceClasses.lord);
     assert(!app.serviceClasses.test);
   });
