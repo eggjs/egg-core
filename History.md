@@ -1,4 +1,56 @@
 
+4.11.0 / 2018-10-19
+==================
+
+**features**
+  * [[`fdc1ee5`](http://github.com/eggjs/egg-core/commit/fdc1ee546bc504dbf85d78f33ff61eaa266c0d02)] - feat: add 'configWillLoad' hook to lifecycle (#187) (fengmk2 <<fengmk2@gmail.com>>)
+
+4.10.3 / 2018-09-29
+===================
+
+**fixes**
+  * [[`58a49e4`](https://github.com/eggjs/egg-core/pull/184/commits/58a49e46684bf6adceada18abb1fe1b7086a764e)] - fix(lifecycle): forbid adding hook after initialization (#184) (initialwu)
+
+**others**
+  * [[`9c16f2e`](https://github.com/eggjs/egg-core/pull/184/commits/9c16f2e8919384b65ba36e2a7050db524d18c3a5)] - chore(eslint): set root=true to stop looking in parent folders (#183) (initialwu)
+
+4.10.2 / 2018-09-21
+==================
+
+**fixes**
+  * [[`0b0c23f`](http://github.com/eggjs/egg-core/commit/0b0c23f502fc0c2641fa7c1740a9777236e8f4db)] - fix: app.js export can be non-function (#182) (Yiyu He <<dead_horse@qq.com>>)
+
+4.10.1 / 2018-09-21
+==================
+
+**fixes**
+  * [[`33c07db`](http://github.com/eggjs/egg-core/commit/33c07db023ebc1a120d5ce1fa37da9e42b18e8f1)] - fix: ensure treat function app.js as configDidLoad (#181) (Yiyu He <<dead_horse@qq.com>>)
+
+4.10.0 / 2018-09-06
+==================
+
+**features**
+  * [[`9d2f2fc`](http://github.com/eggjs/egg-core/commit/9d2f2fc3655e29aca52ac06a574bf69c1ba4d239)] - feat: impl boot methods (#171) (killa <<killa123@126.com>>)
+
+**others**
+  * [[`b71074d`](http://github.com/eggjs/egg-core/commit/b71074d7c0d5e5353ab8d3bbf279023184557809)] - fix(config) removes whitespace from both ends of serverEnv (#180) (supperchong <<2267805901@qq.com>>)
+  * [[`ae38fa4`](http://github.com/eggjs/egg-core/commit/ae38fa4c47c35c32d9ca73e0311f64305573acd4)] - chroe: add more comments for toAsyncFunction and toPromise (Maledong <<maledong_github@outlook.com>>)
+  * [[`4d4113c`](http://github.com/eggjs/egg-core/commit/4d4113cfd27d1e8ce4ce65d2d19b0035b5291dcc)] - style(core): beautify reg and add .idea to ignore (#179) (Army <<army8735@qq.com>>)
+
+4.9.1 / 2018-07-12
+==================
+
+  * revert: #172 loadUnit.name (#175)
+  * chore(typings): add pkg.types and pkg.files entry for index.d.ts (#176)
+
+4.9.0 / 2018-07-09
+==================
+
+  * chore(typings): add index.d.ts (#169)
+  * feat: loadUnit should exports name (#172)
+  * fix: remove useless code (#170)
+  * docs: fix a typo (#168)
+
 4.8.0 / 2018-05-22
 ==================
 

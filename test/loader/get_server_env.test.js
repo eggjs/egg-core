@@ -14,7 +14,11 @@ describe('test/loader/get_server_env.test.js', function() {
     app = utils.createApp('serverenv');
     assert(app.loader.serverEnv === 'prod');
   });
-
+  it('should use test when EGG_SERVER_ENV = "test "', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'test ');
+    app = utils.createApp('serverenv');
+    assert(app.loader.serverEnv === 'test');
+  });
   it('should use unittest when NODE_ENV = test', function() {
     mm(process.env, 'NODE_ENV', 'test');
     app = utils.createApp('serverenv');

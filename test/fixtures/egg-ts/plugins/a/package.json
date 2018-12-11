@@ -1,3 +1,6 @@
 {
-  "name": "a"
+  "name": "a",
+  "eggPlugin": {
+    "name": "a"
+  }
 }
