@@ -1,4 +1,13 @@
 
+4.12.0 / 2018-12-11
+==================
+
+**features**
+  * [[`df1cc5b`](http://github.com/eggjs/egg-core/commit/df1cc5bd5b0764491e15a31932b357115371cf00)] - feat: support jest (#188) (吖猩 <<whxaxes@qq.com>>)
+
+**others**
+  * [[`b123b61`](http://github.com/eggjs/egg-core/commit/b123b618171fd7f2d10134bcb7e8f9f28ff5a033)] - chore: resolve EggApplication is not a Class (#186) (zhangdianpeng <<hzzhangdianpeng@corp.netease.com>>)
+
 4.11.0 / 2018-10-19
 ==================
 
