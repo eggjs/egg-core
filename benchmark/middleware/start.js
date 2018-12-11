@@ -1,6 +1,6 @@
 'use strict';
 
-const EggApplication = require('../../test/fixtures/egg');
+const EggApplication = require('../../test/fixtures/egg').Application;
 
 const app = new EggApplication({
   baseDir: __dirname,
