@@ -61,6 +61,22 @@ describe('test/loader/egg_loader.test.js', () => {
         framework: path.join(__dirname, '../fixtures/egg'),
       });
     });
+
+    it('should loadFile auto resolve file', () => {
+      const loader = new EggLoader({
+        baseDir: path.join(__dirname, '../fixtures/nothing'),
+        app: {},
+        logger: console,
+      });
+
+      let ret = loader.loadFile(path.join(__dirname, '../fixtures/load_file/function.js'), 1, 2);
+      assert(ret[0] === 1);
+      assert(ret[1] === 2);
+
+      ret = loader.loadFile(path.join(__dirname, '../fixtures/load_file/function'), 1, 2);
+      assert(ret[0] === 1);
+      assert(ret[1] === 2);
+    });
   });
 
   it('should be loaded by loadToApp', () => {
