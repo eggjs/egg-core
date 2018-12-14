@@ -1,4 +1,10 @@
 
+4.13.0 / 2018-12-14
+==================
+
+**features**
+  * [[`90cafae`](http://github.com/eggjs/egg-core/commit/90cafaea21f99a7dc97c50b591bbe3eae4eb039c)] - feat: loader support load file without extname (#194) (吖猩 <<whxaxes@qq.com>>)
+
 4.12.0 / 2018-12-11
 ==================
 
