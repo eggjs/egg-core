@@ -11,13 +11,13 @@ describe('test/egg-ts.test.js', () => {
 
   beforeEach(() => {
     require.extensions['.ts'] = require.extensions['.js'];
-    loaderUtil.extensions.push('.ts');
+    loaderUtil.extensions['.ts'] = require.extensions['.js'];
   });
 
   afterEach(() => {
     mm.restore();
-    loaderUtil.extensions.splice(loaderUtil.extensions.indexOf('.ts'), 1);
     delete require.extensions['.ts'];
+    delete loaderUtil.extensions['.ts'];
   });
 
   describe('load ts file', () => {
