@@ -1,4 +1,10 @@
 
+4.13.1 / 2019-01-11
+==================
+
+**others**
+  * [[`35ed3fa`](http://github.com/eggjs/egg-core/commit/35ed3fa2baf4cbcfee9f9e307e9f9f56fb93349d)] - refactor(jest-support): Replace require.extensions with Module._extensions (#196) (Gray <<njugray@gmail.com>>)
+
 4.13.0 / 2018-12-14
 ==================
 
