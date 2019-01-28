@@ -118,7 +118,7 @@ describe('test/loader/file_loader.test.js', () => {
     assert.deepEqual(instance.getUser(), { name: 'xiaochen.gaoxc' });
   });
 
-  it.skip('should only load property match the filers', () => {
+  it('should only load property match the filers', () => {
     const app = { middlewares: {} };
     new FileLoader({
       directory: [
