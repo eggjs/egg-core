@@ -1,4 +1,10 @@
 
+4.13.3 / 2019-01-30
+==================
+
+**others**
+  * [[`8bfbbea`](http://github.com/eggjs/egg-core/commit/8bfbbea160a819a7c63a2581bd7538d20ff5d7a0)] - chore: upgrade egg-router (#198) (Yiyu He <<dead_horse@qq.com>>)
+
 4.13.2 / 2019-01-30
 ==================
 
