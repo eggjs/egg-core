@@ -1,4 +1,11 @@
 
+4.13.2 / 2019-01-30
+==================
+
+**others**
+  * [[`fcdf663`](http://github.com/eggjs/egg-core/commit/fcdf663b823f0b6203a8b7eb0013838a0f48e650)] - chore: use @eggjs/router instead of koa-router (#197) (Yiyu He <<dead_horse@qq.com>>)
+  * [[`29118e5`](http://github.com/eggjs/egg-core/commit/29118e5fe266b6598f9d3fdb4fabd96dca4569e8)] - Chore (gitignore, file_loader.test.js): Update files (#195) (Maledong <<maledong_github@outlook.com>>)
+
 4.13.1 / 2019-01-11
 ==================
 
