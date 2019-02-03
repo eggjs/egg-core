@@ -43,4 +43,15 @@ describe('test/loader/get_server_env.test.js', function() {
     app = utils.createApp('serverenv-file');
     assert(app.loader.serverEnv === 'prod');
   });
+
+  it('should get from options.env', function() {
+    app = utils.createApp('serverenv', { env: 'prod' });
+    assert(app.loader.serverEnv === 'prod');
+  });
+
+  it('should use options.env first', function() {
+    mm(process.env, 'EGG_SERVER_ENV', 'test');
+    app = utils.createApp('serverenv-file', { env: 'development' });
+    assert(app.loader.serverEnv === 'development');
+  });
 });
