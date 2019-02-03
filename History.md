@@ -1,4 +1,10 @@
 
+4.14.0 / 2019-02-03
+==================
+
+**features**
+  * [[`2eb0076`](http://github.com/eggjs/egg-core/commit/2eb007695e9509eb41d8e86032c7739d085d3d2c)] - feat: support options.env to specific server env (#199) (Yiyu He <<dead_horse@qq.com>>)
+
 4.13.3 / 2019-01-30
 ==================
 
