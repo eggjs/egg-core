@@ -1,4 +1,10 @@
 
+4.14.1 / 2019-02-15
+==================
+
+**others**
+  * [[`6d34013`](http://github.com/eggjs/egg-core/commit/6d34013a6551f4862b5836441c642c9abde77f18)] - deps: use egg router 2.0.0 (#200) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.14.0 / 2019-02-03
 ==================
 
