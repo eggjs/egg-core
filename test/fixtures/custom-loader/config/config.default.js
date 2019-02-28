@@ -10,5 +10,10 @@ module.exports = {
       directory: 'app/repository',
       inject: 'ctx',
     },
+    plugin: {
+      directory: 'app/plugin',
+      inject: 'app',
+      loadunit: true,
+    },
   },
 };

@@ -35,8 +35,16 @@ describe('test/loader/mixin/load_custom_loader.test.js', function() {
       .expect(200);
   });
 
-  it('sss', () => {
-    app = utils.createApp('custom-loader');
+  it('should support loadunit', async () => {
+    let name = app.plugin.a.getName();
+    assert(name === 'plugina');
+    name = app.plugin.b.getName();
+    assert(name === 'pluginb');
+  });
+
+
+  it('should loadConfig first', () => {
+    const app = utils.createApp('custom-loader');
     try {
       app.loader.loadCustomLoader();
       throw new Error('should not run');
