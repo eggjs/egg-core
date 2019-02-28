@@ -9,3 +9,4 @@ test/fixtures/egg/node_modules/egg-core
 .idea
 .nyc_output
 package-lock.json
+run
