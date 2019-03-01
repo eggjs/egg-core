@@ -55,4 +55,41 @@ describe('test/loader/mixin/load_custom_loader.test.js', function() {
     }
   });
 
+  it('support set directory', () => {
+    const app = utils.createApp('custom-loader');
+    try {
+      app.loader.config = {
+        customLoader: {
+          custom: {
+          },
+        },
+      };
+      app.loader.loadCustomLoader();
+      throw new Error('should not run');
+    } catch (err) {
+      assert(err.message === 'directory is required for config.customLoader.custom');
+    } finally {
+      app.close();
+    }
+  });
+
+  it('inject support app/ctx', () => {
+    const app = utils.createApp('custom-loader');
+    try {
+      app.loader.config = {
+        customLoader: {
+          custom: {
+            directory: 'a',
+            inject: 'unknown',
+          },
+        },
+      };
+      app.loader.loadCustomLoader();
+      throw new Error('should not run');
+    } catch (err) {
+      assert(err.message === 'inject only support app or ctx');
+    } finally {
+      app.close();
+    }
+  });
 });
