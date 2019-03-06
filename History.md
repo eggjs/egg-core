@@ -1,4 +1,13 @@
 
+4.15.0 / 2019-03-06
+==================
+
+**features**
+  * [[`3299be4`](http://github.com/eggjs/egg-core/commit/3299be492761f0082a37827c102d0d32204a03cd)] - feat: add new mixin loadCustomLoader in Loader (#202) (Haoliang Gao <<sakura9515@gmail.com>>)
+
+**fixes**
+  * [[`d7c2c9a`](http://github.com/eggjs/egg-core/commit/d7c2c9a2d3ed0361cb2fb43c657bae57a06ec32d)] - fix: don't print when plugins that disabled by app is empty (#201) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 4.14.1 / 2019-02-15
 ==================
 
