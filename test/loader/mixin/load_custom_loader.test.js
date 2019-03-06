@@ -92,4 +92,42 @@ describe('test/loader/mixin/load_custom_loader.test.js', function() {
       app.close();
     }
   });
+
+  it('should not overwrite the existing property', () => {
+    const app = utils.createApp('custom-loader');
+    try {
+      app.loader.config = {
+        customLoader: {
+          config: {
+            directory: 'app/config',
+            inject: 'app',
+          },
+        },
+      };
+      app.loader.loadCustomLoader();
+      throw new Error('should not run');
+    } catch (err) {
+      assert(err.message === 'customLoader should not override app.config');
+    } finally {
+      app.close();
+    }
+
+    try {
+      app.loader.config = {
+        customLoader: {
+          cookies: {
+            directory: 'app/cookies',
+            inject: 'ctx',
+          },
+        },
+      };
+      app.loader.loadCustomLoader();
+      throw new Error('should not run');
+    } catch (err) {
+      assert(err.message === 'customLoader should not override ctx.cookies');
+    } finally {
+      app.close();
+    }
+  });
+
 });
