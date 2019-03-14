@@ -19,4 +19,4 @@ app.loader.loadService();
 app.loader.loadController();
 app.loader.loadRouter();
 app.loader.loadMiddleware();
-new BaseContextClass({}).ctx;
+new BaseContextClass({ app: {} }).ctx;

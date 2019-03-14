@@ -16,7 +16,7 @@ assert(app.loader.eggPaths.length === 0);
 assert(app.type);
 
 // base class
-new BaseContextClass({});
+new BaseContextClass({ app: {} });
 
 // ready & close
 (async function test() {
