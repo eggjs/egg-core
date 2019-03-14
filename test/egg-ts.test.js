@@ -148,7 +148,7 @@ describe('test/egg-ts.test.js', () => {
           TS_NODE_PROJECT: path.resolve(__dirname, './fixtures/app-ts/tsconfig.json'),
         }),
       })
-      .debug()
+      // .debug()
       .expect('code', 0)
       .end();
   });
