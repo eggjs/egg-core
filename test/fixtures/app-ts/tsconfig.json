@@ -2,11 +2,6 @@
   "compilerOptions": {
     "target": "es2017",
     "baseUrl": ".",
-    "paths": {
-      "egg-core": [
-        "../../../"
-      ]
-    },
     "module": "commonjs",
     "strict": true
   }

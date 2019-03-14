@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 const EGG_LOADER = Symbol.for('egg#loader');
 const EGG_PATH = Symbol.for('egg#eggPath');
-import { BaseContextClass, EggCore, EggLoader, EggLoaderOptions } from 'egg-core';
+import { BaseContextClass, EggCore, EggLoader, EggLoaderOptions } from '../../..';
 
 // normal
 const app = new EggCore<{ env: string }>();
