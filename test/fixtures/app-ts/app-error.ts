@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import { BaseContextClass, EggCore, EggLoader, EggLoaderOptions } from 'egg-core';
 
 // normal
