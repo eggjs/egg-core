@@ -26,17 +26,20 @@ new BaseContextClass({ app: {} });
   assert(app2.plugins === app.loader.plugins);
   app2.beforeClose(() => {});
   app2.beforeStart(() => {});
-  await app2.toAsyncFunction(function*() { yield {} });
+  const result = await app2.toAsyncFunction<{ env: number; }>(function*() { return yield { env: 1 } })();
+  assert(result.env === 1);
   await app2.toPromise([
     function*() { yield {} },
     function*() { yield {} }
   ]);
   await app2.ready();
   await app2.close();
-})();
+})().catch(e => {
+  console.error(e);
+  process.exit(1);
+});
 
 // load methods
-
 class MyEgg extends EggCore {
   get [EGG_LOADER]() {
     return MyLoader;
