@@ -9,29 +9,46 @@ interface PlainObject<T = any> {
 }
 
 export interface EggCoreOptions {
-  type?: EggType; // egg type, application or agent
-  baseDir?: string; // the directory of application
-  serverScope?: string; // server scope
-  plugins?: Plugins; // custom plugins
+  /** egg type, application or agent */
+  type?: EggType;
+  /** the directory of application */
+  baseDir?: string;
+  /** server scope */
+  serverScope?: string;
+  /** custom plugins */
+  plugins?: Plugins;
 }
 
 export interface EggLoaderOptions {
-  app: EggCore; // Application instance
-  baseDir: string; // the directory of application
-  logger: Logger; // egg logger
-  serverScope?: string; // server scope
-  plugins?: Plugins;// custom plugins
+  /** Application instance */
+  app: EggCore;
+  /** the directory of application */
+  baseDir: string;
+  /** egg logger */
+  logger: Logger;
+  /** server scope */
+  serverScope?: string;
+  /** custom plugins */
+  plugins?: Plugins;
 }
 
 export interface PluginInfo {
-  name: string; // the plugin name, it can be used in `dep`
-  package: string; // the package name of plugin
-  enable: boolean; // whether enabled
-  path: string; // the directory of the plugin package
-  dependencies: string[]; // the dependent plugins, you can use the plugin name
-  optionalDependencies: string[]; // the optional dependent plugins.
-  env: string[]; // specify the serverEnv that only enable the plugin in it
-  from: string; // the file plugin config in.
+  /** the plugin name, it can be used in `dep` */
+  name: string;
+  /** the package name of plugin */
+  package: string;
+  /** whether enabled */
+  enable: boolean;
+  /** the directory of the plugin package */
+  path: string;
+  /** the dependent plugins, you can use the plugin name */
+  dependencies: string[];
+  /** the optional dependent plugins. */
+  optionalDependencies: string[];
+  /** specify the serverEnv that only enable the plugin in it */
+  env: string[];
+  /** the file plugin config in. */
+  from: string;
 }
 
 export interface Plugins {
@@ -212,12 +229,18 @@ export class EggCore<Config = PlainObject> extends KoaApplication {
  * ```
  */
 export interface EggAppInfo {
-  pkg: any; // package.json
-  name: string; // the application name from package.json
-  baseDir: string; // current directory of application
-  env: string; // equals to serverEnv
-  HOME: string; // home directory of the OS
-  root: string; // baseDir when local and unittest, HOME when other environment
+  /** package.json */
+  pkg: any;
+  /** the application name from package.json */
+  name: string;
+  /** current directory of application */
+  baseDir: string;
+  /** equals to serverEnv */
+  env: string;
+  /** home directory of the OS */
+  HOME: string;
+  /** baseDir when local and unittest, HOME when other environment */
+  root: string;
 }
 
 /**
@@ -233,47 +256,51 @@ export class BaseContextClass<
 > {
   constructor(ctx: Context);
 
-  /**
-   * request context
-   */
+  /** request context */
   protected ctx: Context;
 
-  /**
-   * Application
-   */
+  /** Application */
   protected app: Application;
 
-  /**
-   * Application config object
-   */
+  /** Application config object */
   protected config: EggAppConfig;
 
-  /**
-   * service
-   */
+  /** service */
   protected service: Service;
-
-  constructor(ctx: Context);
 }
 
 export interface FileLoaderOption {
-  directory: string | string[]; // directories to be loaded
-  target: object; // attach the target object from loaded files
-  match?: string | string[]; // match the files when load, support glob, default to all js files
-  ignore?: string | string[]; // ignore the files when load, support glob
-  initializer?(obj: object, options: { path: string; pathName: string; }): any; // custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path`
-  call?: boolean; // determine whether invoke when exports is function
-  override?: boolean; // determine whether override the property when get the same name
-  inject?: object; // an object that be the argument when invoke the function
-  filter?(obj: object): boolean; // a function that filter the exports which can be loaded
-  caseStyle?: string | ((str: string) => string);// set property's case when converting a filepath to property list.
+  /** directories to be loaded */
+  directory: string | string[];
+  /** attach the target object from loaded files */
+  target: object;
+  /** match the files when load, support glob, default to all js files */
+  match?: string | string[];
+  /** ignore the files when load, support glob */
+  ignore?: string | string[]; 
+  /** custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path` */
+  initializer?(obj: object, options: { path: string; pathName: string; }): any;
+  /** determine whether invoke when exports is function */
+  call?: boolean;
+  /** determine whether override the property when get the same name */
+  override?: boolean; 
+  /** an object that be the argument when invoke the function */
+  inject?: object;
+  /** a function that filter the exports which can be loaded */
+  filter?(obj: object): boolean;
+  /** set property's case when converting a filepath to property list. */
+  caseStyle?: string | ((str: string) => string);
 }
 
 export interface ContextLoaderOption extends Partial<FileLoaderOption> {
-  directory: string | string[]; // directories to be loaded
-  inject: object; // required inject
-  property: string; // property name defined to target
-  fieldClass?: string; // determine the field name of inject object.
+  /** directories to be loaded */
+  directory: string | string[];
+  /** required inject */
+  inject: object;
+  /** property name defined to target */
+  property: string;
+  /** determine the field name of inject object. */
+  fieldClass?: string;
 }
 
 declare class FileLoader {
