@@ -59,9 +59,9 @@ class MyLoader extends EggLoader {
     this.loadHelperExtend();
     this.loadCustomAgent();
     this.loadService();
-    this.loadController();
+    this.loadController({ ignore: [ '**/node_module' ] });
     this.loadRouter();
-    this.loadMiddleware();
+    this.loadMiddleware({ ignore: [ '**/node_module' ] });
   }
 }
 const app3 = new MyEgg({ baseDir: path.resolve(__dirname, '../app-getter/') });

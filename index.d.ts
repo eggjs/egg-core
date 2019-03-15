@@ -9,18 +9,18 @@ interface PlainObject<T = any> {
 }
 
 export interface EggCoreOptions {
-  type?: EggType;
-  baseDir?: string;
-  serverScope?: string;
-  plugins?: Plugins;
+  type?: EggType; // egg type, application or agent
+  baseDir?: string; // the directory of application
+  serverScope?: string; // server scope
+  plugins?: Plugins; // custom plugins
 }
 
 export interface EggLoaderOptions {
-  app: EggCore;
-  baseDir: string;
-  logger: Logger;
-  serverScope?: string;
-  plugins?: Plugins;
+  app: EggCore; // Application instance
+  baseDir: string; // the directory of application
+  logger: Logger; // egg logger
+  serverScope?: string; // server scope
+  plugins?: Plugins;// custom plugins
 }
 
 export interface PluginInfo {
@@ -28,15 +28,17 @@ export interface PluginInfo {
   package: string; // the package name of plugin
   enable: boolean; // whether enabled
   path: string; // the directory of the plugin package
-  dep: string[]; // the dependent plugins, you can use the plugin name
+  dependencies: string[]; // the dependent plugins, you can use the plugin name
+  optionalDependencies: string[]; // the optional dependent plugins.
   env: string[]; // specify the serverEnv that only enable the plugin in it
+  from: string; // the file plugin config in.
 }
 
 export interface Plugins {
   [key: string]: PluginInfo;
 }
 
-export class EggCore<Config = any> extends KoaApplication {
+export class EggCore<Config = PlainObject> extends KoaApplication {
   /**
    * Whether `application` or `agent`
    * @member {String}
@@ -420,7 +422,7 @@ export class EggLoader<T = EggCore, Config = any> {
 
   // load methods
   protected loadConfig(): void;
-  protected loadController(opt?: FileLoader): void;
+  protected loadController(opt?: Partial<FileLoaderOption>): void;
   protected loadCustomLoader(): void;
   protected loadCustomApp(): void;
   protected loadCustomAgent(): void;
@@ -430,8 +432,8 @@ export class EggLoader<T = EggCore, Config = any> {
   protected loadResponseExtend(): void;
   protected loadContextExtend(): void;
   protected loadHelperExtend(): void;
-  protected loadMiddleware(opt?: FileLoader): void;
+  protected loadMiddleware(opt?: Partial<FileLoaderOption>): void;
   protected loadPlugin(): void;
   protected loadRouter(): void;
-  protected loadService(opt?: ContextLoader): void;
+  protected loadService(opt?: Partial<ContextLoaderOption>): void;
 }
