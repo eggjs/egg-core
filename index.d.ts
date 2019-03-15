@@ -12,7 +12,7 @@ export interface EggCoreOptions {
   /** egg type, application or agent */
   type?: EggType;
   /** the directory of application */
-  baseDir?: string;
+  baseDir?: EggAppInfo['baseDir'];
   /** server scope */
   serverScope?: string;
   /** custom plugins */
@@ -23,7 +23,7 @@ export interface EggLoaderOptions {
   /** Application instance */
   app: EggCore;
   /** the directory of application */
-  baseDir: string;
+  baseDir: EggAppInfo['baseDir'];
   /** egg logger */
   logger: Logger;
   /** server scope */
@@ -51,9 +51,7 @@ export interface PluginInfo {
   from: string;
 }
 
-export interface Plugins {
-  [key: string]: PluginInfo;
-}
+export interface Plugins extends PlainObject<PluginInfo> { }
 
 export class EggCore<Config = PlainObject> extends KoaApplication {
   /**
@@ -66,18 +64,18 @@ export class EggCore<Config = PlainObject> extends KoaApplication {
   /**
    * The current directory of application
    * @member {String}
-   * @see {@link AppInfo#baseDir}
+   * @see {@link EggAppInfo#baseDir}
    * @since 1.0.0
    */
-  baseDir: string;
+  baseDir: EggAppInfo['baseDir'];
 
   /**
    * The name of application
    * @member {String}
-   * @see {@link AppInfo#name}
+   * @see {@link EggAppInfo#name}
    * @since 1.0.0
    */
-  name: string;
+  name: EggAppInfo['name'];
 
   /**
    * @constructor
@@ -230,7 +228,7 @@ export class EggCore<Config = PlainObject> extends KoaApplication {
  */
 export interface EggAppInfo {
   /** package.json */
-  pkg: any;
+  pkg: PlainObject;
   /** the application name from package.json */
   name: string;
   /** current directory of application */
@@ -385,7 +383,7 @@ export class EggLoader<T = EggCore, Config = any> {
 
   /**
    * Get app info
-   * @return {AppInfo} appInfo
+   * @return {EggAppInfo} appInfo
    * @since 1.0.0
    */
   getAppInfo(): EggAppInfo;
@@ -404,7 +402,7 @@ export class EggLoader<T = EggCore, Config = any> {
    * ```
    * @since 1.0.0
    */
-  loadFile<T = any>(filepath: string, ...inject: any[]): any;
+  loadFile<T = any>(filepath: string, ...inject: any[]): T;
 
   /**
    * Get all loadUnit
