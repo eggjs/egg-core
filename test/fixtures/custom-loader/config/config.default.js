@@ -1,9 +1,14 @@
 'use strict';
 
 module.exports = {
+  pkgName: 'custom_loader',
   customLoader: {
     adapter: {
       directory: 'app/adapter',
+      inject: 'app',
+    },
+    util: {
+      directory: 'app/util',
       inject: 'app',
     },
     repository: {
