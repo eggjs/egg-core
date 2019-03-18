@@ -321,7 +321,7 @@ declare class FileLoader {
    *
    * For example, parse `app/controller/group/repository.js`
    *
-   * ```
+   * ```js
    * module.exports = app => {
    *   return class RepositoryController extends app.Controller {};
    * }
@@ -329,7 +329,7 @@ declare class FileLoader {
    *
    * It returns a item
    *
-   * ```
+   * ```js
    * {
    *   properties: [ 'group', 'repository' ],
    *   exports: app => { ... },
