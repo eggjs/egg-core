@@ -4,6 +4,8 @@ const mm = require('mm');
 const request = require('supertest');
 const assert = require('assert');
 const utils = require('./utils');
+const path = require('path');
+const coffee = require('coffee');
 const loaderUtil = require('../lib/utils');
 
 describe('test/egg-ts.test.js', () => {
@@ -137,5 +139,43 @@ describe('test/egg-ts.test.js', () => {
     app.loader.loadService();
     assert(app.serviceClasses.lord);
     assert(!app.serviceClasses.test);
+  });
+
+  it('should compile app-ts without error', async () => {
+    await coffee
+      .spawn('node', [ '--require', 'ts-node/register/type-check', path.resolve(__dirname, './fixtures/app-ts/app.ts') ], {
+        env: Object.assign({}, process.env, {
+          TS_NODE_PROJECT: path.resolve(__dirname, './fixtures/app-ts/tsconfig.json'),
+        }),
+      })
+      .debug()
+      .expect('code', 0)
+      .end();
+  });
+
+  it('should compile error with app-ts/error', async () => {
+    await coffee
+      .spawn('node', [ '--require', 'ts-node/register/type-check', path.resolve(__dirname, './fixtures/app-ts/app-error.ts') ], {
+        env: Object.assign({}, process.env, {
+          TS_NODE_PROJECT: path.resolve(__dirname, './fixtures/app-ts/tsconfig.json'),
+        }),
+      })
+      .debug()
+      .expect('stderr', /Property 'abb' does not exist on type 'EggCore<{ env: string; }>'/)
+      .expect('stderr', /Property 'abc' does not exist on type 'typeof BaseContextClass'/)
+      .expect('stderr', /'loadPlugin' is protected/)
+      .expect('stderr', /'loadConfig' is protected/)
+      .expect('stderr', /'loadApplicationExtend' is protected/)
+      .expect('stderr', /'loadAgentExtend' is protected/)
+      .expect('stderr', /'loadRequestExtend' is protected/)
+      .expect('stderr', /'loadResponseExtend' is protected/)
+      .expect('stderr', /'loadContextExtend' is protected/)
+      .expect('stderr', /'loadHelperExtend' is protected/)
+      .expect('stderr', /'loadCustomAgent' is protected/)
+      .expect('stderr', /'loadService' is protected/)
+      .expect('stderr', /'loadController' is protected/)
+      .expect('stderr', /'ctx' is protected/)
+      .expect('code', 1)
+      .end();
   });
 });
