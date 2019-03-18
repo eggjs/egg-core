@@ -22,6 +22,11 @@ describe('test/loader/mixin/load_custom_loader.test.js', function() {
     assert(res.inject === 'app');
   });
 
+  it('should support exports load to app', () => {
+    assert(app.util.test.sayHi('egg') === 'hi, egg');
+    assert(app.util.sub.fn.echo() === 'echo custom_loader');
+  });
+
   it('should load to ctx', async () => {
     await request(app.callback())
       .get('/users/popomore')
