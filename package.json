@@ -44,7 +44,7 @@
   "devDependencies": {
     "autod": "^3.0.1",
     "await-event": "^2.1.0",
-    "coffee": "^4.2.0",
+    "coffee": "^5.2.1",
     "egg-bin": "^4.8.1",
     "egg-ci": "^1.8.0",
     "egg-utils": "^2.4.1",
@@ -57,9 +57,14 @@
     "pedding": "^1.1.0",
     "rimraf": "^2.6.2",
     "spy": "^1.0.0",
-    "supertest": "^3.0.0"
+    "supertest": "^3.0.0",
+    "ts-node": "^8.0.3",
+    "typescript": "^3.3.3333"
   },
   "dependencies": {
+    "@eggjs/router": "^2.0.0",
+    "@types/depd": "^1.1.32",
+    "@types/koa": "^2.0.48",
     "co": "^4.6.0",
     "debug": "^3.1.0",
     "depd": "^1.1.2",
@@ -72,7 +77,6 @@
     "is-type-of": "^1.2.0",
     "koa": "^2.5.2",
     "koa-convert": "^1.2.0",
-    "@eggjs/router": "^2.0.0",
     "node-homedir": "^1.1.1",
     "ready-callback": "^2.1.0",
     "utility": "^1.14.0"
