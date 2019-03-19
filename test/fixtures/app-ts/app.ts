@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import * as path from 'path';
 const EGG_LOADER = Symbol.for('egg#loader');
 const EGG_PATH = Symbol.for('egg#eggPath');
-import { BaseContextClass, EggCore, EggLoader, EggLoaderOptions } from '../../..';
+import { BaseContextClass, EggCore, EggCoreOptions, EggLoader, EggLoaderOptions } from '../../..';
 
 // normal
 const app = new EggCore<{ env: string }>();
@@ -14,6 +14,22 @@ assert(app.loader.FileLoader);
 assert(app.loader.app === app);
 assert(app.loader.eggPaths.length === 0);
 assert(app.type);
+
+// custom egg core
+class CustomEggCore extends EggCore {
+  constructor(options: EggCoreOptions) {
+    super(options);
+  }
+
+  customFn() {
+    console.info(this.config);
+  }
+}
+const customApp = new CustomEggCore({ baseDir: undefined });
+assert(customApp.Controller);
+assert(customApp.Service);
+assert(customApp.loader.ContextLoader);
+assert(customApp.loader.FileLoader);
 
 // base class
 new BaseContextClass({ app: {} });
@@ -121,6 +137,25 @@ new FileLoader({
 assert(app6.Dao.TestClass);
 assert(app6.Dao.TestFunction);
 
+// custom file loader
+class CustomFileLoader extends FileLoader {
+  test() {
+    this.load();
+  }
+}
+new CustomFileLoader({
+  directory: path.join(__dirname, '../load_dirs'),
+  target: app6,
+  match: [ 'dao/*' ],
+  caseStyle: 'upper',
+  filter(obj) { return !!obj; },
+  initializer(obj, options) {
+    assert(options.path);
+    assert(options.pathName);
+    return obj;
+  },
+}).test();
+
 // context loader
 const ContextLoader = loader.ContextLoader;
 const app7 = { context: {} } as any;
@@ -142,3 +177,25 @@ assert(app7.ass.Dao.TestClass);
 assert(app7.ass.Dao.TestFunction);
 assert(app7.context.kick.Dao.TestClass);
 assert(app7.context.kick.Dao.TestFunction);
+
+
+// custom context loader
+class CustomContextLoader extends ContextLoader {
+  test() {
+    this.load();
+  }
+}
+new CustomContextLoader({
+  directory: path.join(__dirname, '../load_dirs'),
+  property: 'kick',
+  fieldClass: 'ass',
+  inject: app7,
+  match: [ 'dao/*' ],
+  caseStyle: 'upper',
+  filter(obj) { return !!obj; },
+  initializer(obj, options) {
+    assert(options.path);
+    assert(options.pathName);
+    return obj;
+  },
+}).test();
