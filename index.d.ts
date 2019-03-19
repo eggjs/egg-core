@@ -345,7 +345,7 @@ declare interface FileLoaderBase {
   parse(): Array<{ fullpath: string; properties: string[]; exports: any; }>;
 }
 
-export interface FileLoaderConstructor {
+export interface FileLoader {
   /**
    * Load files from directory to target object.
    * @since 1.0.0
@@ -353,7 +353,7 @@ export interface FileLoaderConstructor {
   new (options: FileLoaderOption): FileLoaderBase;
 }
 
-export interface ContextLoaderConstructor {
+export interface ContextLoader {
   /**
    * Same as {@link FileLoader}, but it will attach file to `inject[fieldClass]`. The exports will be lazy loaded, such as `ctx.group.repository`.
    * @extends FileLoader
@@ -450,8 +450,8 @@ export class EggLoader<T = EggCore, Config = any> {
   getTypeFiles(filename: string): string[];
   resolveModule(filepath: string): string | undefined;
 
-  FileLoader: FileLoaderConstructor;
-  ContextLoader: ContextLoaderConstructor;
+  FileLoader: FileLoader;
+  ContextLoader: ContextLoader;
 
   // load methods
   protected loadConfig(): void;
