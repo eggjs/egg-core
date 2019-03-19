@@ -1,4 +1,14 @@
 
+4.16.0 / 2019-03-19
+==================
+
+**features**
+  * [[`0b7b6e6`](http://github.com/eggjs/egg-core/commit/0b7b6e66d7dd3027c7f4b161b5e6601b8feed4c9)] - feat: custom loader support exports (#205) (TZ | 天猪 <<atian25@qq.com>>)
+  * [[`01201c3`](http://github.com/eggjs/egg-core/commit/01201c3e65383d90b3b33ddf7a20a17ce6b7e97c)] - feat: improve d.ts (#204) (吖猩 <<whxaxes@qq.com>>)
+
+**fixes**
+  * [[`ab3ffcf`](http://github.com/eggjs/egg-core/commit/ab3ffcf6e808a426178fe776604e500770e35e97)] - fix: customLoader should not overwrite the existing property (#203) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 4.15.0 / 2019-03-06
 ==================
 
