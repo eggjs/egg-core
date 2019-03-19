@@ -21,11 +21,16 @@ class CustomEggCore extends EggCore {
     super(options);
   }
 
+  get [EGG_PATH]() {
+    return __dirname;
+  }
+
   customFn() {
     console.info(this.config);
   }
 }
 const customApp = new CustomEggCore({ baseDir: undefined });
+customApp.customFn();
 assert(customApp.Controller);
 assert(customApp.Service);
 assert(customApp.loader.ContextLoader);
@@ -138,14 +143,16 @@ assert(app6.Dao.TestClass);
 assert(app6.Dao.TestFunction);
 
 // custom file loader
+const app9 = {} as any;
 class CustomFileLoader extends FileLoader {
   test() {
-    this.load();
+    assert(this.load);
+    assert(this.parse);
   }
 }
 new CustomFileLoader({
   directory: path.join(__dirname, '../load_dirs'),
-  target: app6,
+  target: app9,
   match: [ 'dao/*' ],
   caseStyle: 'upper',
   filter(obj) { return !!obj; },
@@ -180,16 +187,18 @@ assert(app7.context.kick.Dao.TestFunction);
 
 
 // custom context loader
+const app8 = { context: {} } as any;
 class CustomContextLoader extends ContextLoader {
   test() {
     this.load();
+    assert(this.parse);
   }
 }
 new CustomContextLoader({
   directory: path.join(__dirname, '../load_dirs'),
   property: 'kick',
   fieldClass: 'ass',
-  inject: app7,
+  inject: app8,
   match: [ 'dao/*' ],
   caseStyle: 'upper',
   filter(obj) { return !!obj; },
