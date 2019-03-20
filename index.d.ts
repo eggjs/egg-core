@@ -54,8 +54,6 @@ export interface PluginInfo {
 export interface Plugins extends PlainObject<PluginInfo> { }
 
 export interface EggCoreBase<Config> extends KoaApplication {
-  new (options?: EggCoreOptions): this;
-
   /**
    * Whether `application` or `agent`
    * @member {String}
