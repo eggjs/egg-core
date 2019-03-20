@@ -343,6 +343,8 @@ declare interface FileLoaderBase {
   parse(): Array<{ fullpath: string; properties: string[]; exports: any; }>;
 }
 
+declare interface ContextLoaderBase extends FileLoaderBase {}
+
 export interface FileLoader {
   /**
    * Load files from directory to target object.
@@ -357,7 +359,7 @@ export interface ContextLoader {
    * @extends FileLoader
    * @since 1.0.0
    */
-  new (options: ContextLoaderOption): FileLoaderBase;
+  new (options: ContextLoaderOption): ContextLoaderBase;
 }
 
 export class EggLoader<T = EggCore, Config = any> {
