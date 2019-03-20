@@ -53,7 +53,7 @@ export interface PluginInfo {
 
 export interface Plugins extends PlainObject<PluginInfo> { }
 
-export class EggCore<Config = PlainObject> extends KoaApplication {
+export interface EggCoreBase<Config> extends KoaApplication {
   /**
    * Whether `application` or `agent`
    * @member {String}
@@ -76,16 +76,6 @@ export class EggCore<Config = PlainObject> extends KoaApplication {
    * @since 1.0.0
    */
   name: EggAppInfo['name'];
-
-  /**
-   * @constructor
-   * @param {Object} options - options
-   * @param {String} [options.baseDir=process.cwd()] - the directory of application
-   * @param {String} [options.type=application|agent] - whether it's running in app worker or agent worker
-   * @param {Object} [options.plugins] - custom plugins
-   * @since 1.0.0
-   */
-  constructor(options?: EggCoreOptions);
 
   /**
    * Convert a generator function to a promisable one.
@@ -207,9 +197,23 @@ export class EggCore<Config = PlainObject> extends KoaApplication {
    * @since 1.0.0
    */
   deprecate: depd.Deprecate;
+}
 
+export interface EggCore<Config = PlainObject> extends EggCoreBase<Config> {
   Controller: typeof BaseContextClass;
   Service: typeof BaseContextClass;
+}
+
+export class EggCore {
+   /**
+   * @constructor
+   * @param {Object} options - options
+   * @param {String} [options.baseDir=process.cwd()] - the directory of application
+   * @param {String} [options.type=application|agent] - whether it's running in app worker or agent worker
+   * @param {Object} [options.plugins] - custom plugins
+   * @since 1.0.0
+   */
+  constructor(options?: EggCoreOptions);
 }
 
 /**
@@ -301,13 +305,7 @@ export interface ContextLoaderOption extends Partial<FileLoaderOption> {
   fieldClass?: string;
 }
 
-declare class FileLoader {
-  /**
-   * Load files from directory to target object.
-   * @since 1.0.0
-   */
-  constructor(options: FileLoaderOption);
-
+declare interface FileLoaderBase {
   /**
    * attach items to target object. Mapping the directory to properties.
    * `app/controller/group/repository.js` => `target.group.repository`
@@ -345,13 +343,23 @@ declare class FileLoader {
   parse(): Array<{ fullpath: string; properties: string[]; exports: any; }>;
 }
 
-declare class ContextLoader extends FileLoader {
+declare interface ContextLoaderBase extends FileLoaderBase {}
+
+export interface FileLoader {
+  /**
+   * Load files from directory to target object.
+   * @since 1.0.0
+   */
+  new (options: FileLoaderOption): FileLoaderBase;
+}
+
+export interface ContextLoader {
   /**
    * Same as {@link FileLoader}, but it will attach file to `inject[fieldClass]`. The exports will be lazy loaded, such as `ctx.group.repository`.
    * @extends FileLoader
    * @since 1.0.0
    */
-  constructor(options: ContextLoaderOption);
+  new (options: ContextLoaderOption): ContextLoaderBase;
 }
 
 export class EggLoader<T = EggCore, Config = any> {
@@ -442,8 +450,8 @@ export class EggLoader<T = EggCore, Config = any> {
   getTypeFiles(filename: string): string[];
   resolveModule(filepath: string): string | undefined;
 
-  FileLoader: typeof FileLoader;
-  ContextLoader: typeof ContextLoader;
+  FileLoader: FileLoader;
+  ContextLoader: ContextLoader;
 
   // load methods
   protected loadConfig(): void;

@@ -148,7 +148,7 @@ describe('test/egg-ts.test.js', () => {
           TS_NODE_PROJECT: path.resolve(__dirname, './fixtures/app-ts/tsconfig.json'),
         }),
       })
-      .debug()
+      // .debug()
       .expect('code', 0)
       .end();
   });
@@ -160,7 +160,7 @@ describe('test/egg-ts.test.js', () => {
           TS_NODE_PROJECT: path.resolve(__dirname, './fixtures/app-ts/tsconfig.json'),
         }),
       })
-      .debug()
+      // .debug()
       .expect('stderr', /Property 'abb' does not exist on type 'EggCore<{ env: string; }>'/)
       .expect('stderr', /Property 'abc' does not exist on type 'typeof BaseContextClass'/)
       .expect('stderr', /'loadPlugin' is protected/)
@@ -174,6 +174,7 @@ describe('test/egg-ts.test.js', () => {
       .expect('stderr', /'loadCustomAgent' is protected/)
       .expect('stderr', /'loadService' is protected/)
       .expect('stderr', /'loadController' is protected/)
+      .expect('stderr', /Property 'checkEnvType' does not exist on type 'string'/)
       .expect('stderr', /'ctx' is protected/)
       .expect('code', 1)
       .end();
