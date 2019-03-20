@@ -174,6 +174,7 @@ describe('test/egg-ts.test.js', () => {
       .expect('stderr', /'loadCustomAgent' is protected/)
       .expect('stderr', /'loadService' is protected/)
       .expect('stderr', /'loadController' is protected/)
+      .expect('stderr', /Property 'checkEnvType' does not exist on type 'string'/)
       .expect('stderr', /'ctx' is protected/)
       .expect('code', 1)
       .end();
