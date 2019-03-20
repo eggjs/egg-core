@@ -1,4 +1,10 @@
 
+4.16.1 / 2019-03-20
+==================
+
+**fixes**
+  * [[`6bbbca2`](http://github.com/eggjs/egg-core/commit/6bbbca275f6573f125979fa215fea62285be201d)] - fix: change non-exports type to interface (#206) (吖猩 <<whxaxes@qq.com>>)
+
 4.16.0 / 2019-03-19
 ==================
 
