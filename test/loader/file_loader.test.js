@@ -345,6 +345,32 @@ describe('test/loader/file_loader.test.js', () => {
     });
   });
 
+  describe('mount', () => {
+    it('should load when mount is function', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'camel',
+        mount({ target, property, obj, isLast }) {
+          if (isLast) {
+            const alias = property[0].toLowerCase() + property.substring(1);
+            Object.defineProperty(target, property, { value: obj, enumerable: false });
+            if (alias !== property) target[alias] = obj;
+          } else {
+            target[property] = obj;
+          }
+        },
+      }).load();
+
+      assert(target.fooBar1);
+      assert(target.fooBar2);
+      assert(target.FooBar3);
+      assert(target.FooBar3 === target.fooBar3);
+      assert(target.fooBar4);
+    });
+  });
+
   it('should load files with inject', () => {
     const inject = {};
     const target = {};

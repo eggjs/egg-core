@@ -279,19 +279,21 @@ export interface FileLoaderOption {
   /** match the files when load, support glob, default to all js files */
   match?: string | string[];
   /** ignore the files when load, support glob */
-  ignore?: string | string[]; 
+  ignore?: string | string[];
   /** custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path` */
   initializer?(obj: object, options: { path: string; pathName: string; }): any;
   /** determine whether invoke when exports is function */
   call?: boolean;
   /** determine whether override the property when get the same name */
-  override?: boolean; 
+  override?: boolean;
   /** an object that be the argument when invoke the function */
   inject?: object;
   /** a function that filter the exports which can be loaded */
   filter?(obj: object): boolean;
   /** set property's case when converting a filepath to property list. */
   caseStyle?: string | ((str: string) => string);
+  /** custom mount property to loader target */
+  mount?(obj: { target: object; property: string; obj: any; isLast: boolean; }): void;
 }
 
 export interface ContextLoaderOption extends Partial<FileLoaderOption> {

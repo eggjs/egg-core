@@ -234,6 +234,7 @@ override       | `Boolean`      | determine whether override the property when g
 call           | `Boolean`      | determine whether invoke when exports is function
 inject         | `Object`       | an object that be the argument when invoke the function
 filter         | `Function`     | a function that filter the exports which can be loaded
+mount          | `Function`     | a function that how to mount property to loader target
 
 ## Questions & Suggestions
 

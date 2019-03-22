@@ -226,4 +226,33 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       assert(app.middlewares.user);
     });
   });
+
+  describe('middleware alias', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('camel-alias');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadCustomApp();
+      app.loader.loadMiddleware({
+        caseStyle: 'camel',
+        mount({ target, property, obj, isLast }) {
+          if (isLast) {
+            const alias = property[0].toLowerCase() + property.substring(1);
+            Object.defineProperty(target, property, { value: obj, enumerable: false });
+            if (alias !== property) target[alias] = obj;
+          } else {
+            target[property] = obj;
+          }
+        },
+      });
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should load', () => {
+      assert(app.middlewares.userAuth);
+      assert(app.middlewares.userAuth === app.middlewares.UserAuth);
+    });
+  });
 });

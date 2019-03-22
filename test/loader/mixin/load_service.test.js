@@ -166,4 +166,44 @@ describe('test/loader/mixin/load_service.test.js', function() {
       assert(app.serviceClasses.user);
     });
   });
+
+  describe('service alias', () => {
+    before(() => {
+      app = utils.createApp('camel-alias');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadApplicationExtend();
+      app.loader.loadCustomApp();
+      app.loader.loadService({
+        caseStyle: 'camel',
+        mount({ target, property, obj, isLast }) {
+          if (isLast) {
+            const alias = property[0].toLowerCase() + property.substring(1);
+            Object.defineProperty(target, property, { value: obj, enumerable: true });
+            if (alias !== property) target[alias] = obj;
+          } else {
+            target[property] = obj;
+          }
+        },
+      });
+      app.loader.loadController();
+      app.loader.loadRouter();
+      app.loader.loadController();
+      app.loader.loadRouter();
+      return app.ready();
+    });
+
+    it('should load', async () => {
+      assert(app.serviceClasses.UserProfile);
+      assert(app.serviceClasses.userProfile);
+      await request(app.callback())
+        .get('/')
+        .expect({
+          UserProfile: true,
+          userProfile: true,
+          admin: true,
+          Admin: true,
+        });
+    });
+  });
 });

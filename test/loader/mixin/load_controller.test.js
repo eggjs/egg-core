@@ -356,6 +356,36 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
   });
 
+  describe('controller alias', () => {
+    let app;
+    before(() => {
+      app = utils.createApp('camel-alias');
+      app.loader.loadController({
+        caseStyle: 'camel',
+        mount({ target, property, obj, isLast }) {
+          if (isLast) {
+            const alias = property[0].toLowerCase() + property.substring(1);
+            Object.defineProperty(target, property, { value: obj, enumerable: false });
+            if (alias !== property) target[alias] = obj;
+          } else {
+            target[property] = obj;
+          }
+        },
+      });
+      return app.ready();
+    });
+    after(() => app.close());
+
+    it('should load', () => {
+      assert(app.controller.powerUser);
+      assert(app.controller.PowerUser === app.controller.powerUser);
+      assert(app.controller.subDir.otherUser);
+      assert(app.controller.subDir.otherUser === app.controller.subDir.OtherUser);
+      assert(app.controller.UpperDir.user);
+      assert(app.controller.UpperDir.User === app.controller.UpperDir.user);
+    });
+  });
+
   describe('when controller.supportParams === true', () => {
     let app;
     before(() => {
