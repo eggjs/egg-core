@@ -42,6 +42,22 @@ describe('test/loader/file_loader.test.js', () => {
     assert(services.dir.service.load === true);
   });
 
+  it('should load files with meta', () => {
+    const FULLPATH = FileLoader.FULLPATH;
+    const MOUNTPATH = FileLoader.MOUNTPATH;
+    const EXPORTS = FileLoader.EXPORTS;
+
+    const services = {};
+    new FileLoader({
+      directory: path.join(dirBase, 'services'),
+      target: services,
+    }).load();
+
+    assert(services.underscoreDir.a[FULLPATH] === path.join(dirBase, 'services/underscore_dir/a.js'));
+    assert(services.underscoreDir.a[MOUNTPATH] === 'underscoreDir.a');
+    assert(services.underscoreDir.a[EXPORTS] === true);
+  });
+
   it('should not overwrite property', () => {
     const app = {
       services: {
