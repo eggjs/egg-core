@@ -1,4 +1,10 @@
 
+4.16.2 / 2019-04-11
+==================
+
+**others**
+  * [[`1ba4d7c`](http://github.com/eggjs/egg-core/commit/1ba4d7ca8f137399ad10c54814a334264752a41f)] - fix(d.ts):  caseStyle should return array (#209) (JimmyDaddy <<heyjimmygo@gmail.com>>)
+
 4.16.1 / 2019-03-20
 ==================
 
