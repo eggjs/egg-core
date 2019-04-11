@@ -291,7 +291,7 @@ export interface FileLoaderOption {
   /** a function that filter the exports which can be loaded */
   filter?(obj: object): boolean;
   /** set property's case when converting a filepath to property list. */
-  caseStyle?: string | ((str: string) => string);
+  caseStyle?: string | ((str: string) => string[]);
 }
 
 export interface ContextLoaderOption extends Partial<FileLoaderOption> {
