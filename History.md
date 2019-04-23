@@ -1,4 +1,10 @@
 
+4.17.0 / 2019-04-24
+==================
+
+**features**
+  * [[`515d50f`](http://github.com/eggjs/egg-core/commit/515d50f59a00e1987affc8a06002d353ee926ab2)] - feat: debug middleware enter log on every request (#210) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.16.2 / 2019-04-11
 ==================
 
