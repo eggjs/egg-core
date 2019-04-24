@@ -1,4 +1,10 @@
 
+4.17.1 / 2019-04-24
+==================
+
+**fixes**
+  * [[`947292c`](http://github.com/eggjs/egg-core/commit/947292c77c1e54f22af0a7a31d0bb918d8d2a70d)] - fix: ignore console instance on config meta (#211) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.17.0 / 2019-04-24
 ==================
 
