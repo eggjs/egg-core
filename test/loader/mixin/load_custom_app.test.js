@@ -30,4 +30,13 @@ describe('test/loader/mixin/load_custom_app.test.js', () => {
       assert(!app.a);
     });
   });
+
+  it('app.js should not be class', () => {
+    assert.throws(() => {
+      const app = utils.createApp('boot-class');
+      app.loader.loadPlugin();
+      app.loader.loadConfig();
+      app.loader.loadCustomApp();
+    }, /boot-class\/app.js is not support class at this version/);
+  });
 });
