@@ -1,4 +1,10 @@
 
+3.21.4 / 2019-05-14
+==================
+
+**fixes**
+  * [[`e94f55a`](http://github.com/eggjs/egg-core/commit/e94f55a2f9caa931e68b5d5d6d565229fc620850)] - fix: app.js is not support class (#212) (TZ | 天猪 <<atian25@qq.com>>)
+
 3.21.3 / 2018-05-08
 ==================
 
