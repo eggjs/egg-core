@@ -28,4 +28,13 @@ describe('test/loader/mixin/load_custom_agent.test.js', function() {
   it('should not load plugin that is disabled', function() {
     assert(!agent.a);
   });
+
+  it('agent.js should not be class', () => {
+    assert.throws(() => {
+      const agent = utils.createApp('boot-class');
+      agent.loader.loadPlugin();
+      agent.loader.loadConfig();
+      agent.loader.loadCustomAgent();
+    }, /boot-class\/agent.js is not support class at this version/);
+  });
 });
