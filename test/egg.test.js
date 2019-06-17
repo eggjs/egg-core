@@ -855,5 +855,24 @@ describe('test/egg.test.js', () => {
         app.close();
       });
     });
+
+    describe('boot timeout', () => {
+      beforeEach(() => {
+        mm(process.env, 'EGG_READY_TIMEOUT_ENV', 1);
+      });
+
+      it('should warn write filename and function', async () => {
+        let timeoutId;
+        const app = utils.createApp('boot-timeout');
+        app.once('ready_timeout', id => {
+          timeoutId = id;
+        });
+        app.loader.loadAll();
+        await app.ready();
+        assert(timeoutId);
+        const suffix = path.normalize('test/fixtures/boot-timeout/app.js');
+        assert(timeoutId.endsWith(suffix + ':didLoad'));
+      });
+    });
   });
 });

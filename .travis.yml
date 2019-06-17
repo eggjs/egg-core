@@ -2,7 +2,6 @@ sudo: false
 os:
   - linux
   - osx
-  - windows
 language: node_js
 node_js:
   - '8'
@@ -13,4 +12,4 @@ install:
 script:
   - npm run ci
 after_success:
-  - npminstall codecov && codecov --disable=gcov -f .nyc_output/*.json
+  - npminstall codecov && codecov --disable=gcov
