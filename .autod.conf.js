@@ -18,4 +18,7 @@ module.exports = {
     '@types/depd',
     '@types/koa',
   ],
+  semver: [
+    'globby@8',
+  ],
 };
