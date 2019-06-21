@@ -33,10 +33,10 @@
   "ci": {
     "type": "travis",
     "os": {
-      "travis": "linux, osx, windows"
+      "travis": "linux, osx"
     },
     "version": "8, 10, 12",
-    "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov -f .nyc_output/*.json",
+    "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov",
     "license": {
       "year": 2016
     }
