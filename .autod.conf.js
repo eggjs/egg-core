@@ -15,5 +15,10 @@ module.exports = {
     'eslint-config-egg',
   ],
   keep: [
+    '@types/depd',
+    '@types/koa',
+  ],
+  semver: [
+    'globby@8',
   ],
 };
