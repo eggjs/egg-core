@@ -1,4 +1,13 @@
 
+4.17.3 / 2019-07-07
+==================
+
+**fixes**
+  * [[`77e11f5`](http://github.com/eggjs/egg-core/commit/77e11f5fb38b3646fb20deb78bbc239b06bf8349)] - fix: fix ready callback id (#214) (killa <<killa123@126.com>>)
+
+**others**
+  * [[`5bb4fe4`](http://github.com/eggjs/egg-core/commit/5bb4fe4ac7e13a44744e580fc797fc6c29191159)] - deps: upgrade dependencies (#215) (Haoliang Gao <<sakura9515@gmail.com>>)
+
 4.17.2 / 2019-05-14
 ==================
 
