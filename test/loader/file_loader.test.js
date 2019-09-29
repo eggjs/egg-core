@@ -297,6 +297,20 @@ describe('test/loader/file_loader.test.js', () => {
       assert(target.fooBar4);
     });
 
+    it('should load when caseStyle = keep', () => {
+      const target = {};
+      new FileLoader({
+        directory: path.join(dirBase, 'camelize'),
+        target,
+        caseStyle: 'keep',
+      }).load();
+
+      assert(target.foo_bar1);
+      assert(target.fooBar2);
+      assert(target.FooBar3);
+      assert(target['foo-bar4']);
+    });
+
     it('should load when caseStyle is function', () => {
       const target = {};
       new FileLoader({
