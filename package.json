@@ -42,6 +42,7 @@
     }
   },
   "devDependencies": {
+    "@types/jest": "^24.0.21",
     "autod": "^3.1.0",
     "await-event": "^2.1.0",
     "coffee": "^5.2.1",
@@ -58,6 +59,7 @@
     "rimraf": "^2.6.3",
     "spy": "^1.0.0",
     "supertest": "^4.0.2",
+    "ts-jest": "^24.1.0",
     "ts-node": "^8.0.3",
     "typescript": "^3.3.3333"
   },

@@ -15,4 +15,15 @@ describe('test/jest.test.js', () => {
 
     assert((stdout + stderr).includes('Test Suites: 1 passed, 1 total'));
   });
+
+  it('should works without error with jest-ts', async () => {
+    const { stdout, stderr } = await coffee
+      .fork(require.resolve('jest/bin/jest'), [], {
+        cwd: path.resolve(__dirname, './fixtures/egg-ts-jest'),
+      })
+      // .debug()
+      .end();
+
+    assert((stdout + stderr).includes('Test Suites: 1 passed, 1 total'));
+  });
 });
