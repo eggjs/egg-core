@@ -874,5 +874,20 @@ describe('test/egg.test.js', () => {
         assert(timeoutId.endsWith(suffix + ':didLoad'));
       });
     });
+
+    describe('beforeClose order', () => {
+      it('should be plugin dep -> plugin -> app', async () => {
+        const app = utils.createApp('boot-before-close');
+        app.loader.loadAll();
+        await app.close();
+        assert.deepStrictEqual(
+          app.bootLog,
+          [
+            'beforeClose in app',
+            'beforeClose in plugin',
+            'beforeClose in plugin dep',
+          ]);
+      });
+    });
   });
 });
