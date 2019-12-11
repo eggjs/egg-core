@@ -1,4 +1,10 @@
 
+4.17.4 / 2019-12-11
+==================
+
+**fixes**
+  * [[`2935e16`](http://github.com/eggjs/egg-core/commit/2935e16376cf4c49e049b0e0d9cb7c0bf0b8870a)] - fix: fix before close order (#219) (killa <<killa123@126.com>>)
+
 4.17.3 / 2019-07-07
 ==================
 
