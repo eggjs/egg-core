@@ -432,11 +432,11 @@ export class EggLoader<T = EggCore, Config = any> {
   /**
    * Load files using {@link FileLoader}, inject to {@link Application}
    * @param {String|Array} directory - see {@link FileLoader}
-   * @param {String} property - see {@link FileLoader}
+   * @param {String|symbol} property - see {@link FileLoader}
    * @param {Object} opt - see {@link FileLoader}
    * @since 1.0.0
    */
-  loadToApp(directory: string | string[], property: string, opt?: Partial<FileLoaderOption>): void;
+  loadToApp(directory: string | string[], property: string|symbol, opt?: Partial<FileLoaderOption>): void;
 
   /**
    * Load files using {@link ContextLoader}
