@@ -362,7 +362,7 @@ export interface ContextLoader {
   new (options: ContextLoaderOption): ContextLoaderBase;
 }
 
-export class EggLoader<T = EggCore, Config = any> {
+export class EggLoader<T = EggCore, Config = any, Options = EggLoaderOptions> {
   app: T;
   eggPaths: string[];
   pkg: PlainObject;
@@ -370,6 +370,7 @@ export class EggLoader<T = EggCore, Config = any> {
   serverScope: string;
   plugins: Plugins;
   config: Config;
+  options: Options;
 
   /**
    * @constructor
@@ -428,6 +429,10 @@ export class EggLoader<T = EggCore, Config = any> {
    * @since 1.0.0
    */
   getLoadUnits(): Array<{ path: string; type: string; }>;
+
+  getEggPaths(): string[];
+
+  getServerEnv(): string;
 
   /**
    * Load files using {@link FileLoader}, inject to {@link Application}
