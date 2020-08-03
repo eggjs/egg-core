@@ -12,6 +12,7 @@ const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const awaitEvent = require('await-event');
+const fs = require('mz/fs');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -558,6 +559,21 @@ describe('test/egg.test.js', () => {
       });
     });
 
+    describe('script timing', () => {
+      it('should work', async () => {
+        const fixtureApp = utils.getFilepath('timing');
+        await coffee.fork(path.join(fixtureApp, 'index.js'))
+          .beforeScript(path.join(fixtureApp, 'preload'))
+          .debug()
+          .expect('code', 0)
+          .end();
+        const timingJSON = await fs.readFile(path.join(fixtureApp, 'timing.json'), 'utf8');
+        const timing = JSON.parse(timingJSON);
+        const scriptStart = timing.find(item => item.name === 'Script Start');
+        assert(scriptStart);
+        assert(scriptStart.start);
+      });
+    });
   });
 
   describe('boot', () => {

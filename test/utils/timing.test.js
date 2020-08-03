@@ -65,4 +65,12 @@ describe('test/utils/timing.test.js', () => {
       timing.end('a');
     }, /should run timing.start\('a'\) first/);
   });
+
+  it('should init process start time', () => {
+    const timing = new Timing();
+
+    const processStart = timing.toJSON().find(item => item.name === 'Process Start');
+    assert(processStart);
+    assert(processStart.start);
+  });
 });
