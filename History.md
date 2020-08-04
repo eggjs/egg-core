@@ -1,4 +1,10 @@
 
+4.17.5 / 2020-08-04
+==================
+
+**others**
+  * [[`8cb0a6e`](http://github.com/eggjs/egg-core/commit/8cb0a6ef56f47b5e003a2fd8bc3be9d037736149)] - chore(typings): add EggLoader interface (#221) (Kiho · Cham <<monkindey@163.com>>)
+
 4.17.4 / 2019-12-11
 ==================
 
