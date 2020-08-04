@@ -480,47 +480,47 @@ describe('test/egg.test.js', () => {
         yield app.ready();
 
         const json = app.timing.toJSON();
-        assert(json.length === 24);
+        assert(json.length === 25);
 
-        assert(json[0].name === 'Application Start');
-        assert(json[0].end - json[0].start === json[0].duration);
-        assert(json[0].pid === process.pid);
+        assert(json[1].name === 'Application Start');
+        assert(json[1].end - json[1].start === json[1].duration);
+        assert(json[1].pid === process.pid);
 
         // loadPlugin
-        assert(json[1].name === 'Load Plugin');
+        assert(json[2].name === 'Load Plugin');
 
         // loadConfig
-        assert(json[2].name === 'Load Config');
-        assert(json[3].name === 'Require(0) config/config.default.js');
-        assert(json[5].name === 'Require(2) config/config.default.js');
+        assert(json[3].name === 'Load Config');
+        assert(json[4].name === 'Require(0) config/config.default.js');
+        assert(json[6].name === 'Require(2) config/config.default.js');
 
         // loadExtend
-        assert(json[7].name === 'Load extend/application.js');
-        assert(json[9].name === 'Require(5) app/extend/application.js');
+        assert(json[8].name === 'Load extend/application.js');
+        assert(json[10].name === 'Require(5) app/extend/application.js');
 
         // loadCustomApp
-        assert(json[10].name === 'Load app.js');
-        assert(json[11].name === 'Require(6) app.js');
-        assert(json[12].name === 'Before Start in app.js:6:9');
-        assert(json[13].name === 'Load "proxy" to Context');
-        assert(json[14].name === 'Load Controller');
-        assert(json[15].name === 'Load "controller" to Application');
+        assert(json[11].name === 'Load app.js');
+        assert(json[12].name === 'Require(6) app.js');
+        assert(json[13].name === 'Before Start in app.js:6:9');
+        assert(json[14].name === 'Load "proxy" to Context');
+        assert(json[15].name === 'Load Controller');
+        assert(json[16].name === 'Load "controller" to Application');
 
         // loadService
-        assert(json[16].name === 'Load Service');
-        assert(json[17].name === 'Load "service" to Context');
+        assert(json[17].name === 'Load Service');
+        assert(json[18].name === 'Load "service" to Context');
 
         // loadMiddleware
-        assert(json[18].name === 'Load Middleware');
-        assert(json[19].name === 'Load "middlewares" to Application');
+        assert(json[19].name === 'Load Middleware');
+        assert(json[20].name === 'Load "middlewares" to Application');
 
         // loadController
-        assert(json[20].name === 'Load Controller');
-        assert(json[21].name === 'Load "controller" to Application');
+        assert(json[21].name === 'Load Controller');
+        assert(json[22].name === 'Load "controller" to Application');
 
         // loadRouter
-        assert(json[22].name === 'Load Router');
-        assert(json[23].name === 'Require(7) app/router.js');
+        assert(json[23].name === 'Load Router');
+        assert(json[24].name === 'Require(7) app/router.js');
       });
     });
 
@@ -534,28 +534,28 @@ describe('test/egg.test.js', () => {
         yield app.ready();
 
         const json = app.timing.toJSON();
-        assert(json.length === 13);
+        assert(json.length === 14);
 
-        assert(json[0].name === 'Application Start');
-        assert(json[0].end - json[0].start === json[0].duration);
-        assert(json[0].pid === process.pid);
+        assert(json[1].name === 'Application Start');
+        assert(json[1].end - json[1].start === json[1].duration);
+        assert(json[1].pid === process.pid);
 
         // loadPlugin
-        assert(json[1].name === 'Load Plugin');
+        assert(json[2].name === 'Load Plugin');
 
         // loadConfig
-        assert(json[2].name === 'Load Config');
-        assert(json[3].name === 'Require(0) config/config.default.js');
-        assert(json[5].name === 'Require(2) config/config.default.js');
+        assert(json[3].name === 'Load Config');
+        assert(json[4].name === 'Require(0) config/config.default.js');
+        assert(json[6].name === 'Require(2) config/config.default.js');
 
         // loadExtend
-        assert(json[7].name === 'Load extend/application.js');
-        assert(json[9].name === 'Require(5) app/extend/application.js');
+        assert(json[8].name === 'Load extend/application.js');
+        assert(json[10].name === 'Require(5) app/extend/application.js');
 
         // loadCustomAgent
-        assert(json[10].name === 'Load agent.js');
-        assert(json[11].name === 'Require(6) agent.js');
-        assert(json[12].name === 'Before Start in agent.js:5:11');
+        assert(json[11].name === 'Load agent.js');
+        assert(json[12].name === 'Require(6) agent.js');
+        assert(json[13].name === 'Before Start in agent.js:5:11');
       });
     });
 
