@@ -362,7 +362,11 @@ export interface ContextLoader {
   new (options: ContextLoaderOption): ContextLoaderBase;
 }
 
-export class EggLoader<T = EggCore, Config = any, Options = EggLoaderOptions> {
+export class EggLoader<
+  T extends EggCore = EggCore,
+  Config = any,
+  Options extends EggLoaderOptions = EggLoaderOptions
+> {
   app: T;
   eggPaths: string[];
   pkg: PlainObject;
