@@ -235,6 +235,39 @@ call           | `Boolean`      | determine whether invoke when exports is funct
 inject         | `Object`       | an object that be the argument when invoke the function
 filter         | `Function`     | a function that filter the exports which can be loaded
 
+## Timing
+
+EggCore record boot progress with `Timing`, include:
+- Process start time
+- Script start time(node don't implement an interface like `process.uptime` to record the script start running time, framework can implement a prestart file used with node `--require` options to set `process.scriptTime`)
+- Application start time
+- Load duration
+- `require` duration
+
+### start
+
+Start record a item. If the item exits, end the old one and start a new one.
+
+- {String} name - record item name
+- {Number} [start] - record item start time, default is Date.now()
+
+### end
+
+End a item.
+
+- {String} name - end item name
+
+### toJSON
+
+Generate all record items to json
+
+- {String} name - record item name
+- {Number} start - item start time
+- {Number} end - item end time
+- {Number} duration - item duration
+- {Number} pid - pid
+- {Number} index - item index
+
 ## Questions & Suggestions
 
 Please open an issue [here](https://github.com/eggjs/egg/issues).
