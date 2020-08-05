@@ -165,7 +165,7 @@ export interface EggCoreBase<Config> extends KoaApplication {
    * @member {EggLoader} EggCore#loader
    * @since 1.0.0
    */
-  loader: EggLoader<this, Config>;
+  loader: EggLoader<EggCore, Config>;
 
   /**
    * The configuration of application
