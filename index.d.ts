@@ -363,7 +363,7 @@ export interface ContextLoader {
 }
 
 export class EggLoader<
-  T extends EggCore = EggCore,
+  T = EggCore,
   Config = any,
   Options extends EggLoaderOptions = EggLoaderOptions
 > {
