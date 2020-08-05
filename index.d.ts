@@ -165,7 +165,7 @@ export interface EggCoreBase<Config> extends KoaApplication {
    * @member {EggLoader} EggCore#loader
    * @since 1.0.0
    */
-  loader: EggLoader<EggCore, Config>;
+  loader: EggLoader<this, Config>;
 
   /**
    * The configuration of application
@@ -363,7 +363,7 @@ export interface ContextLoader {
 }
 
 export class EggLoader<
-  T extends EggCore = EggCore,
+  T = EggCore,
   Config = any,
   Options extends EggLoaderOptions = EggLoaderOptions
 > {
