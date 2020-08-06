@@ -1,4 +1,10 @@
 
+4.17.6 / 2020-08-05
+==================
+
+**fixes**
+  * [[`f704e99`](http://github.com/eggjs/egg-core/commit/f704e99399833248e1ceb51f0fb440c5fdeff3fd)] - fix: this type in EggLoader (#223) (maxming <<maxming2333@gmail.com>>)
+
 4.17.5 / 2020-08-04
 ==================
 
