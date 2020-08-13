@@ -55,7 +55,47 @@ describe('test/utils/timing.test.js', () => {
     const timing = new Timing();
     timing.end();
     assert(timing.toJSON().length === 0);
+  });
 
+  it('should enable/disable', () => {
+    const timing = new Timing();
+    timing.start('a');
+    timing.end('a');
+
+    timing.disable();
+
+    timing.start('b');
+    timing.end('b');
+
+    timing.enable();
+
+    timing.start('c');
+    timing.end('c');
+
+    const json = timing.toJSON();
+
+    assert(json[0].name === 'a');
+    assert(json[1].name === 'c');
+    assert(json.length === 2);
+  });
+
+  it('should clear', () => {
+    const timing = new Timing();
+    timing.start('a');
+    timing.end('a');
+
+    const json = timing.toJSON();
+    assert(json[0].name === 'a');
+
+    timing.clear();
+
+    timing.start('b');
+    timing.end('b');
+
+    const json2 = timing.toJSON();
+
+    assert(json2[0].name === 'b');
+    assert(json2.length === 1);
   });
 
   it('should throw when end and name dont exists', () => {
