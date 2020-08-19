@@ -1,4 +1,10 @@
 
+4.18.0 / 2020-08-18
+==================
+
+**features**
+  * [[`9b371fa`](http://github.com/eggjs/egg-core/commit/9b371fa55b80d8322995329da758e98fba3c5060)] - feat: support enable/disable/clear timing (#224) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.17.6 / 2020-08-05
 ==================
 
