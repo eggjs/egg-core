@@ -76,7 +76,7 @@ describe('test/utils/timing.test.js', () => {
 
     assert(json[1].name === 'a');
     assert(json[2].name === 'c');
-    assert(json.length === 2);
+    assert(json.length === 3);
   });
 
   it('should clear', () => {
