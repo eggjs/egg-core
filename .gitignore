@@ -10,3 +10,4 @@ test/fixtures/egg/node_modules/egg-core
 .nyc_output
 package-lock.json
 run
+test/fixtures/*/timing.json
