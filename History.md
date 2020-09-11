@@ -1,4 +1,11 @@
 
+4.19.0 / 2020-09-11
+==================
+
+**features**
+  * [[`9e3b454`](http://github.com/eggjs/egg-core/commit/9e3b454dc6cb52deca371a4a5512c5c9fe07716b)] - feat: support process.env.EGG_APP_CONFIG (#225) (TZ | 天猪 <<atian25@qq.com>>)
+  * [[`b207f89`](http://github.com/eggjs/egg-core/commit/b207f89b214cfd2a432df87d771a5126ffce9289)] - feat: timing support Process Start/Script Start (#222) (killa <<killa123@126.com>>)
+
 4.18.0 / 2020-08-18
 ==================
 
