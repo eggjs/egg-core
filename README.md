@@ -90,6 +90,8 @@ Load config/plugin.js
 
 Load config/config.js and config/{serverEnv}.js
 
+If `process.env.EGG_APP_CONFIG` is exists, then it will be parse and override config.
+
 #### loadController
 
 Load app/controller

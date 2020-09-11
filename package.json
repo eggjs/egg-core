@@ -31,7 +31,7 @@
     "node": ">= 8.0.0"
   },
   "ci": {
-    "type": "travis",
+    "type": "travis, github",
     "os": {
       "travis": "linux, osx"
     },
