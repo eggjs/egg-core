@@ -56,6 +56,35 @@ describe('test/loader/mixin/load_config.test.js', () => {
     assert(loader.config.egg === 'egg-unittest');
   });
 
+  it('should override config by env.EGG_APP_CONFIG', () => {
+    mm(process.env, 'EGG_APP_CONFIG', JSON.stringify({
+      egg: 'env_egg',
+      foo: {
+        bar: 'env_bar',
+      },
+    }));
+    app = utils.createApp('config-env-app-config');
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    assert(loader.config.egg === 'env_egg');
+    assert(loader.config.foo.bar === 'env_bar');
+    assert(loader.config.foo.bar2 === 'b');
+    assert(loader.configMeta.egg === '<process.env.EGG_APP_CONFIG>');
+    assert(loader.configMeta.foo.bar === '<process.env.EGG_APP_CONFIG>');
+  });
+
+  it('should override config with invalid env.EGG_APP_CONFIG', () => {
+    mm(process.env, 'EGG_APP_CONFIG', 'abc');
+    app = utils.createApp('config-env-app-config');
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    assert(loader.config.egg === 'egg-unittest');
+    assert(loader.config.foo.bar === 'a');
+    assert(loader.config.foo.bar2 === 'b');
+  });
+
   it('should not load config of plugin that is disabled', () => {
     app = utils.createApp('plugin');
     const loader = app.loader;
