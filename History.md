@@ -1,4 +1,10 @@
 
+4.19.1 / 2020-09-15
+==================
+
+**fixes**
+  * [[`19a60de`](http://github.com/eggjs/egg-core/commit/19a60dec40279166968eae7a72a721eebe400141)] - fix: should end some timings (#226) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.19.0 / 2020-09-11
 ==================
 
