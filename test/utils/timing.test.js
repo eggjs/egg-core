@@ -112,5 +112,6 @@ describe('test/utils/timing.test.js', () => {
     const processStart = timing.toJSON().find(item => item.name === 'Process Start');
     assert(processStart);
     assert(processStart.start);
+    assert(processStart.end);
   });
 });
