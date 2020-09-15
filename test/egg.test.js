@@ -572,6 +572,7 @@ describe('test/egg.test.js', () => {
         const scriptStart = timing.find(item => item.name === 'Script Start');
         assert(scriptStart);
         assert(scriptStart.start);
+        assert(scriptStart.end);
       });
     });
   });
