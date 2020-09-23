@@ -522,6 +522,17 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
+  it.only('should support optionalDependencies', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-optional-dependencies-case2');
+      }
+    }
+    app = utils.createApp('plugin-optional-dependencies-case2/app', {
+      'b', 'a', 'c',
+    ]);
+  });
+
   it('should parse implicitly enable dependencies', () => {
     class Application extends EggCore {
       get [Symbol.for('egg#eggPath')]() {
@@ -529,6 +540,7 @@ describe('test/load_plugin.test.js', function() {
       }
     }
     app = utils.createApp('plugin-implicit-enable-dependencies', {
+
       // use clean framework
       Application,
     });
@@ -584,4 +596,5 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.gw.enable === false);
     assert(loader.allPlugins.rpcServer.enable === false);
   });
+
 });
