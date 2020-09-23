@@ -1,4 +1,10 @@
 
+4.20.0 / 2020-09-23
+==================
+
+**features**
+  * [[`9684589`](http://github.com/eggjs/egg-core/commit/9684589dd13cdd97068d4ecdfe98bca68aa51632)] - feat: expose set config meta (#227) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.19.1 / 2020-09-15
 ==================
 
