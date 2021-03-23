@@ -274,7 +274,7 @@ describe('test/egg.test.js', () => {
       promise.then(done);
     });
 
-    it('should throw err and console log when close error', async() => {
+    it('should throw err and console log when close error', async () => {
       app = utils.createApp('close-error');
       app.loader.loadAll();
 
@@ -947,6 +947,28 @@ describe('test/egg.test.js', () => {
             'beforeClose in plugin',
             'beforeClose in plugin dep',
           ]);
+      });
+    });
+
+    describe('framework error format log', () => {
+      it('should console log formatter message', async () => {
+        const app = utils.createApp('boot-framework-error');
+        let logErrorMessage;
+        let error;
+        mm(process.stderr, 'write', msg => {
+          if (/framework.CustomError/.test(msg)) {
+            logErrorMessage = msg;
+          }
+        });
+        try {
+          app.loader.loadAll();
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+
+        assert.strictEqual(error.message, 'didLoad error');
+        assert(/framework\.CustomError\: didLoad error/.test(logErrorMessage));
       });
     });
   });
