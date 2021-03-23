@@ -274,16 +274,23 @@ describe('test/egg.test.js', () => {
       promise.then(done);
     });
 
-    it('should throw when close error', done => {
-      app = utils.createApp('close');
+    it('should throw err and console log when close error', async() => {
+      app = utils.createApp('close-error');
       app.loader.loadAll();
-      mm(app, 'removeAllListeners', () => {
-        throw new Error('removeAllListeners error');
+
+      let logError;
+      let error;
+      mm(app.console, 'error', err => {
+        logError = err;
       });
-      app.close().catch(err => {
-        assert(err.message === 'removeAllListeners error');
-        done();
-      });
+      try {
+        await app.close();
+      } catch (err) {
+        error = err;
+      }
+
+      assert(error === logError);
+      assert.strictEqual(error.message, 'close error');
     });
 
     it('should close only once', done => {
@@ -590,6 +597,7 @@ describe('test/egg.test.js', () => {
               'app.js in plugin',
               'configDidLoad in app',
             ]);
+          assert(app.config.appSet === true);
           await app.ready();
           assert.deepStrictEqual(
             app.bootLog,
@@ -721,31 +729,61 @@ describe('test/egg.test.js', () => {
       });
     });
 
-    describe('configDidLoad failed', () => {
-      it('should throw error', async () => {
-        const app = utils.createApp('boot-configDidLoad-error');
+    describe('configWillLoad failed', () => {
+      it('should throw error and console log', async () => {
+        const app = utils.createApp('boot-configWillLoad-error');
+        let logError;
         let error;
+        mm(app.console, 'error', err => {
+          logError = err;
+        });
         try {
           app.loader.loadAll();
           await app.ready();
         } catch (e) {
           error = e;
         }
+        assert(error === logError);
+        assert.strictEqual(error.message, 'configWillLoad error');
+        assert.deepStrictEqual(app.bootLog, []);
+      });
+    });
+
+    describe('configDidLoad failed', () => {
+      it('should throw error and console log', async () => {
+        const app = utils.createApp('boot-configDidLoad-error');
+        let logError;
+        let error;
+        mm(app.console, 'error', err => {
+          logError = err;
+        });
+        try {
+          app.loader.loadAll();
+          await app.ready();
+        } catch (e) {
+          error = e;
+        }
+        assert(error === logError);
         assert.strictEqual(error.message, 'configDidLoad error');
         assert.deepStrictEqual(app.bootLog, []);
       });
     });
 
     describe('didLoad failed', () => {
-      it('should throw error', async () => {
+      it('should throw error and console log', async () => {
         const app = utils.createApp('boot-didLoad-error');
-        app.loader.loadAll();
+        let logError;
         let error;
+        mm(app.console, 'error', err => {
+          logError = err;
+        });
+        app.loader.loadAll();
         try {
           await app.ready();
         } catch (e) {
           error = e;
         }
+        assert(error === logError);
         assert.strictEqual(error.message, 'didLoad error');
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad' ]);
         await sleep(10);
@@ -762,15 +800,20 @@ describe('test/egg.test.js', () => {
     });
 
     describe('willReady failed', () => {
-      it('should throw error', async () => {
+      it('should throw error and console log', async () => {
         const app = utils.createApp('boot-willReady-error');
-        app.loader.loadAll();
+        let logError;
         let error;
+        mm(app.console, 'error', err => {
+          logError = err;
+        });
+        app.loader.loadAll();
         try {
           await app.ready();
         } catch (e) {
           error = e;
         }
+        assert(error === logError);
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad' ]);
         assert.strictEqual(error.message, 'willReady error');
         await sleep(10);
