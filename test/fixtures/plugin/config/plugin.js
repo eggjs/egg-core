@@ -40,4 +40,6 @@ module.exports = {
     package: 'rds',
   },
 
+  // layer plugin
+  layerPlugin: true
 };

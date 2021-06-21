@@ -15,6 +15,8 @@ const EggLoader = require('../../..').EggLoader;
 describe('test/load_plugin.test.js', function() {
   let app;
 
+  process.env.EGG_EXTRA_PLUGIN_DIR = utils.getFilepath('outside-plugins');
+
   afterEach(() => {
     mm.restore();
     app && app.close();
@@ -65,6 +67,23 @@ describe('test/load_plugin.test.js', function() {
       from: path.join(baseDir, 'config/plugin.js'),
     });
     assert(loader.orderPlugins instanceof Array);
+  });
+
+  it('should loadConfig outside layer plugin', function() {
+    const baseDir = utils.getFilepath('plugin');
+    app = utils.createApp('plugin');
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    assert.deepEqual(loader.plugins.layerPlugin, {
+      enable: true,
+      name: 'layerPlugin',
+      dependencies: [],
+      optionalDependencies: [],
+      env: [],
+      path: path.join(utils.getFilepath('outside-plugins'), 'layerPlugin'),
+      from: path.join(baseDir, 'config/plugin.js'),
+    });
   });
 
   it('should follow the search order，node_modules of application > node_modules of framework', function() {
