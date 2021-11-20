@@ -19,6 +19,6 @@ module.exports = {
     '@types/koa',
   ],
   semver: [
-    'globby@8',
+    'globby@10',
   ],
 };
