@@ -28,14 +28,11 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 8.0.0"
+    "node": ">= 8.5.0"
   },
   "ci": {
-    "type": "travis, github",
-    "os": {
-      "travis": "linux, osx"
-    },
-    "version": "8, 10, 12",
+    "type": "github",
+    "version": "8, 10, 12, 14, 16",
     "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov",
     "license": {
       "year": 2016
@@ -72,7 +69,7 @@
     "egg-path-matching": "^1.0.1",
     "extend2": "^1.0.0",
     "get-ready": "^2.0.1",
-    "globby": "^8.0.2",
+    "globby": "^10.0.2",
     "is-type-of": "^1.2.1",
     "koa": "^2.7.0",
     "koa-convert": "^1.2.0",
