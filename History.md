@@ -1,4 +1,11 @@
 
+4.21.0 / 2021-11-24
+==================
+
+**others**
+  * [[`4b523c5`](http://github.com/eggjs/egg-core/commit/4b523c55bfba9e95a2c1a5b965f32ab3633ec194)] - deps: use globby@10.0.2 to fix security warning (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`26ec6e4`](http://github.com/eggjs/egg-core/commit/26ec6e443f75daadceb558ddb32bcb8eebb39125)] - ci: remove travis (#233) (hyj1991 <<yeekwanvong@gmail.com>>)
+
 4.20.0 / 2020-09-23
 ==================
 

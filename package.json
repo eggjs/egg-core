@@ -1,6 +1,6 @@
 {
   "name": "egg-core",
-  "version": "4.20.0",
+  "version": "4.21.0",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
   "types": "index.d.ts",
@@ -11,7 +11,8 @@
     "test-local": "egg-bin test",
     "cov": "egg-bin cov",
     "pkgfiles": "egg-bin pkgfiles",
-    "ci": "egg-bin pkgfiles --check && npm run lint && npm run cov"
+    "ci": "egg-bin pkgfiles --check && npm run lint && npm run cov",
+    "contributor": "git-contributor"
   },
   "repository": {
     "type": "git",
@@ -47,6 +48,7 @@
     "egg-utils": "^2.4.1",
     "eslint": "^5.16.0",
     "eslint-config-egg": "^7.4.1",
+    "git-contributor": "^1.0.10",
     "jest": "^24.8.0",
     "js-yaml": "^3.13.1",
     "mm": "^2.5.0",
