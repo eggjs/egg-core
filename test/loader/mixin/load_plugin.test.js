@@ -86,7 +86,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it.only('should support pnpm node_modules style', () => {
+  it('should support pnpm node_modules style', () => {
     class Application extends EggCore {
       get [ Symbol.for('egg#loader') ]() {
         return EggLoader;
