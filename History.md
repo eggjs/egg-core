@@ -1,4 +1,10 @@
 
+4.22.0 / 2022-01-07
+==================
+
+**features**
+  * [[`43f15ad`](http://github.com/eggjs/egg-core/commit/43f15ada7291734aa583c274a8af5e321688deb5)] - feat: support pnpm node_modules style (#237) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.21.0 / 2021-11-24
 ==================
 
