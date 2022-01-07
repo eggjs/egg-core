@@ -86,6 +86,28 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
+  it.only('should support pnpm node_modules style', () => {
+    class Application extends EggCore {
+      get [ Symbol.for('egg#loader') ]() {
+        return EggLoader;
+      }
+      get [ Symbol.for('egg#eggPath') ]() {
+        return utils.getFilepath('plugin-pnpm/node_modules/.pnpm/framework@1.0.0/node_modules/framework');
+      }
+    }
+    app = utils.createApp('plugin-pnpm', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
+  });
+
   it('should support alias', function() {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
@@ -406,16 +428,15 @@ describe('test/load_plugin.test.js', function() {
     assert(plugin.path === utils.getFilepath('realpath/a'));
   });
 
-  class Application extends EggCore {
-    get [Symbol.for('egg#loader')]() {
-      return EggLoader;
-    }
-    get [Symbol.for('egg#eggPath')]() {
-      return utils.getFilepath('plugin-from/framework');
-    }
-  }
-
   it('should get the defining plugin path in every plugin', () => {
+    class Application extends EggCore {
+      get [ Symbol.for('egg#loader') ]() {
+        return EggLoader;
+      }
+      get [ Symbol.for('egg#eggPath') ]() {
+        return utils.getFilepath('plugin-from/framework');
+      }
+    }
     app = utils.createApp('plugin-from', {
       Application,
     });
