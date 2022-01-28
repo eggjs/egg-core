@@ -605,4 +605,43 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.gw.enable === false);
     assert(loader.allPlugins.rpcServer.enable === false);
   });
+
+  it('should load plugin with duplicate plugin dir from eggPaths', () => {
+    class BaseApplication extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate'));
+      }
+    }
+
+    class Application extends BaseApplication {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate', 'node_modules', '@scope', 'b'));
+      }
+    }
+
+    const baseDir = utils.getFilepath('plugin-duplicate');
+    app = utils.createApp(path.join('plugin-duplicate', 'release'), {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+
+    assert.deepEqual(loader.plugins['a-duplicate'], {
+      enable: true,
+      name: 'a-duplicate',
+      dependencies: [],
+      optionalDependencies: [ 'a' ],
+      env: [],
+      package: '@scope/a',
+      path: path.join(baseDir, 'node_modules', '@scope', 'a'),
+      from: path.join(baseDir, 'release', 'config', 'plugin.js'),
+    });
+  });
 });
