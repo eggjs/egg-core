@@ -1,4 +1,10 @@
 
+4.22.1 / 2022-01-28
+==================
+
+**fixes**
+  * [[`a9fc514`](http://github.com/eggjs/egg-core/commit/a9fc514f506a4f804099b60ea12c29351f373676)] - fix: plugin loader support pnpm (#239) (hyj1991 <<yeekwanvong@gmail.com>>)
+
 4.22.0 / 2022-01-07
 ==================
 
