@@ -162,6 +162,17 @@ describe('test/load_plugin.test.js', function() {
     assert(message === '[egg:loader] pluginName(e) is different from pluginConfigName(wrong-name)');
   });
 
+  it('should not warn when the plugin.skipCheckName is true', function() {
+    let message;
+    app = utils.createApp('plugin-skipcheckname');
+    mm(app.console, 'warn', function(m) {
+      message = m;
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(!message);
+  });
+
   it('should loadConfig plugins with custom plugins config', function() {
     const baseDir = utils.getFilepath('plugin');
     const plugins = {
