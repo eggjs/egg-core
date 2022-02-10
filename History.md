@@ -1,4 +1,10 @@
 
+4.23.0 / 2022-02-10
+==================
+
+**features**
+  * [[`f8169f1`](http://github.com/eggjs/egg-core/commit/f8169f1a6cfc451448364958e880f4db0cb33b63)] - feat: support plugin strict config (#240) (吖猩 <<whx89768@alibaba-inc.com>>)
+
 4.22.1 / 2022-01-28
 ==================
 
