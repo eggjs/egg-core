@@ -101,7 +101,7 @@ describe('test/load_plugin.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    console.log(loader.plugins, loader.config);
+    // console.log(loader.plugins, loader.config);
     assert(loader.plugins.a);
     assert(loader.plugins.b);
     assert(loader.config.a === 'a');
@@ -123,7 +123,7 @@ describe('test/load_plugin.test.js', function() {
     const loader = app.loader;
     loader.loadPlugin();
     loader.loadConfig();
-    console.log(loader.plugins, loader.config);
+    // console.log(loader.plugins, loader.config);
     assert(loader.plugins.a);
     assert(loader.plugins.b);
     assert(loader.config.a === 'a');
