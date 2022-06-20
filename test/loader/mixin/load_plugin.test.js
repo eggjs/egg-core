@@ -88,14 +88,36 @@ describe('test/load_plugin.test.js', function() {
 
   it('should support pnpm node_modules style', () => {
     class Application extends EggCore {
-      get [ Symbol.for('egg#loader') ]() {
+      get [Symbol.for('egg#loader')]() {
         return EggLoader;
       }
-      get [ Symbol.for('egg#eggPath') ]() {
+      get [Symbol.for('egg#eggPath')]() {
         return utils.getFilepath('plugin-pnpm/node_modules/.pnpm/framework@1.0.0/node_modules/framework');
       }
     }
     app = utils.createApp('plugin-pnpm', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
+  });
+
+  it('should support pnpm node_modules style with scope', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-pnpm-scope/node_modules/.pnpm/@eggjs+yadan@1.0.0/node_modules/@eggjs/yadan');
+      }
+    }
+    app = utils.createApp('plugin-pnpm-scope', {
       Application,
     });
     const loader = app.loader;
