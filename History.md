@@ -1,4 +1,11 @@
 
+4.24.0 / 2022-06-21
+==================
+
+**others**
+  * [[`970134b`](http://github.com/eggjs/egg-core/commit/970134b28f72fbcbb4bda50944ec5c301c7b7d89)] - chore: update node engines to 8.9.0+ (#243) (TZ | 天猪 <<atian25@qq.com>>)
+  * [[`02bb843`](http://github.com/eggjs/egg-core/commit/02bb8434066f1508fa522aaa5e6490ac50b9d963)] - refactor: use require.resolve instead of fs.exists (#238) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.23.0 / 2022-02-10
 ==================
 
