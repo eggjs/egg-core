@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 8.5.0"
+    "node": ">= 8.9.0"
   },
   "ci": {
     "type": "github",
