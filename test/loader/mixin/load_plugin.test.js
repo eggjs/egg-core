@@ -261,6 +261,29 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.allPlugins.h);
   });
 
+  it('should validate plugin.package', function() {
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '../' }, bar: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '/home' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+  });
+
   it('should throw when plugin not exist', function() {
     assert.throws(() => {
       app = utils.createApp('plugin-noexist');
