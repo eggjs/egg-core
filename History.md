@@ -1,4 +1,10 @@
 
+4.24.1 / 2022-06-23
+==================
+
+**fixes**
+  * [[`f8c069b`](http://github.com/eggjs/egg-core/commit/f8c069b0c1e8757ac8ee619c53d2d6f21ccd03db)] - fix: validate plugin.package (#244) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.24.0 / 2022-06-21
 ==================
 
