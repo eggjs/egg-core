@@ -5,9 +5,13 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main
+      - master
   pull_request:
-    branches: [ master ]
+    branches:
+      - main
+      - master
   schedule:
     - cron: '0 2 * * *'
 
@@ -18,7 +22,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [8, 10, 12]
+        node-version: [8, 10, 12, 14, 16]
         os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
@@ -31,7 +35,7 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Install Dependencies
-      run: npm i -g npminstall && npminstall
+      run: npm i -g npminstall@5 && npminstall
 
     - name: Continuous Integration
       run: npm run ci

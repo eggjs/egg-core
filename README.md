@@ -1,20 +1,15 @@
 # egg-core
 
 [![NPM version][npm-image]][npm-url]
-[![build status][travis-image]][travis-url]
+[![Node.js CI](https://github.com/eggjs/egg-core/actions/workflows/nodejs.yml/badge.svg)](https://github.com/eggjs/egg-core/actions/workflows/nodejs.yml)
 [![Test coverage][codecov-image]][codecov-url]
-[![David deps][david-image]][david-url]
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
 [npm-image]: https://img.shields.io/npm/v/egg-core.svg?style=flat-square
 [npm-url]: https://npmjs.org/package/egg-core
-[travis-image]: https://img.shields.io/travis/eggjs/egg-core.svg?style=flat-square
-[travis-url]: https://travis-ci.org/eggjs/egg-core
 [codecov-image]: https://codecov.io/github/eggjs/egg-core/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/eggjs/egg-core?branch=master
-[david-image]: https://img.shields.io/david/eggjs/egg-core.svg?style=flat-square
-[david-url]: https://david-dm.org/eggjs/egg-core
 [snyk-image]: https://snyk.io/test/npm/egg-core/badge.svg?style=flat-square
 [snyk-url]: https://snyk.io/test/npm/egg-core
 [download-image]: https://img.shields.io/npm/dm/egg-core.svg?style=flat-square
@@ -279,3 +274,17 @@ Please open an issue [here](https://github.com/eggjs/egg/issues).
 [MIT](LICENSE)
 
 [egg]: https://github.com/eggjs/egg
+<!-- GITCONTRIBUTOR_START -->
+
+## Contributors
+
+|[<img src="https://avatars.githubusercontent.com/u/360661?v=4" width="100px;"/><br/><sub><b>popomore</b></sub>](https://github.com/popomore)<br/>|[<img src="https://avatars.githubusercontent.com/u/985607?v=4" width="100px;"/><br/><sub><b>dead-horse</b></sub>](https://github.com/dead-horse)<br/>|[<img src="https://avatars.githubusercontent.com/u/156269?v=4" width="100px;"/><br/><sub><b>fengmk2</b></sub>](https://github.com/fengmk2)<br/>|[<img src="https://avatars.githubusercontent.com/u/227713?v=4" width="100px;"/><br/><sub><b>atian25</b></sub>](https://github.com/atian25)<br/>|[<img src="https://avatars.githubusercontent.com/u/5856440?v=4" width="100px;"/><br/><sub><b>whxaxes</b></sub>](https://github.com/whxaxes)<br/>|[<img src="https://avatars.githubusercontent.com/u/1207064?v=4" width="100px;"/><br/><sub><b>gxcsoccer</b></sub>](https://github.com/gxcsoccer)<br/>|
+| :---: | :---: | :---: | :---: | :---: | :---: |
+|[<img src="https://avatars.githubusercontent.com/u/6897780?v=4" width="100px;"/><br/><sub><b>killagu</b></sub>](https://github.com/killagu)<br/>|[<img src="https://avatars.githubusercontent.com/u/2170848?v=4" width="100px;"/><br/><sub><b>iyuq</b></sub>](https://github.com/iyuq)<br/>|[<img src="https://avatars.githubusercontent.com/u/5243774?v=4" width="100px;"/><br/><sub><b>ngot</b></sub>](https://github.com/ngot)<br/>|[<img src="https://avatars.githubusercontent.com/u/17722900?v=4" width="100px;"/><br/><sub><b>initial-wu</b></sub>](https://github.com/initial-wu)<br/>|[<img src="https://avatars.githubusercontent.com/u/1763067?v=4" width="100px;"/><br/><sub><b>waitingsong</b></sub>](https://github.com/waitingsong)<br/>|[<img src="https://avatars.githubusercontent.com/u/7315743?v=4" width="100px;"/><br/><sub><b>AnzerWall</b></sub>](https://github.com/AnzerWall)<br/>|
+|[<img src="https://avatars.githubusercontent.com/u/174904?v=4" width="100px;"/><br/><sub><b>army8735</b></sub>](https://github.com/army8735)<br/>|[<img src="https://avatars.githubusercontent.com/u/5938871?v=4" width="100px;"/><br/><sub><b>njugray</b></sub>](https://github.com/njugray)<br/>|[<img src="https://avatars.githubusercontent.com/u/327019?v=4" width="100px;"/><br/><sub><b>JacksonTian</b></sub>](https://github.com/JacksonTian)<br/>|[<img src="https://avatars.githubusercontent.com/u/16460813?v=4" width="100px;"/><br/><sub><b>JimmyDaddy</b></sub>](https://github.com/JimmyDaddy)<br/>|[<img src="https://avatars.githubusercontent.com/u/2842176?v=4" width="100px;"/><br/><sub><b>XadillaX</b></sub>](https://github.com/XadillaX)<br/>|[<img src="https://avatars.githubusercontent.com/u/6913898?v=4" width="100px;"/><br/><sub><b>monkindey</b></sub>](https://github.com/monkindey)<br/>|
+|[<img src="https://avatars.githubusercontent.com/u/1148428?v=4" width="100px;"/><br/><sub><b>mattma</b></sub>](https://github.com/mattma)<br/>|[<img src="https://avatars.githubusercontent.com/u/456108?v=4" width="100px;"/><br/><sub><b>shaoshuai0102</b></sub>](https://github.com/shaoshuai0102)<br/>|[<img src="https://avatars.githubusercontent.com/u/7530656?v=4" width="100px;"/><br/><sub><b>zhang740</b></sub>](https://github.com/zhang740)<br/>|[<img src="https://avatars.githubusercontent.com/u/457552?v=4" width="100px;"/><br/><sub><b>dsonet</b></sub>](https://github.com/dsonet)<br/>|[<img src="https://avatars.githubusercontent.com/u/3995814?v=4" width="100px;"/><br/><sub><b>chenbin92</b></sub>](https://github.com/chenbin92)<br/>|[<img src="https://avatars.githubusercontent.com/u/19908330?v=4" width="100px;"/><br/><sub><b>hyj1991</b></sub>](https://github.com/hyj1991)<br/>|
+[<img src="https://avatars.githubusercontent.com/u/8816730?v=4" width="100px;"/><br/><sub><b>maxming2333</b></sub>](https://github.com/maxming2333)<br/>|[<img src="https://avatars.githubusercontent.com/u/26317926?v=4" width="100px;"/><br/><sub><b>supperchong</b></sub>](https://github.com/supperchong)<br/>|[<img src="https://avatars.githubusercontent.com/u/18463189?v=4" width="100px;"/><br/><sub><b>ZhangDianPeng</b></sub>](https://github.com/ZhangDianPeng)<br/>|[<img src="https://avatars.githubusercontent.com/u/15242708?v=4" width="100px;"/><br/><sub><b>mosaic101</b></sub>](https://github.com/mosaic101)<br/>
+
+This project follows the git-contributor [spec](https://github.com/xudafeng/git-contributor), auto updated at `Wed Nov 24 2021 22:24:39 GMT+0800`.
+
+<!-- GITCONTRIBUTOR_END -->
