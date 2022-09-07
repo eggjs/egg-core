@@ -1,4 +1,13 @@
 
+4.25.0 / 2022-09-07
+==================
+
+**features**
+  * [[`8ae1aad`](https://github.com/eggjs/egg-core.git/commit/8ae1aade1f3702f944b3c0e8794c88adc0a10459)] - feat: add load plugin methods (#245) (吖猩 <<whx89768@alibaba-inc.com>>)
+
+**others**
+  * [[`7c4707c`](https://github.com/eggjs/egg-core.git/commit/7c4707c64c6df365e2c2b77b9dd8c7581c62a97f)] - Create codeql-analysis.yml (fengmk2 <<fengmk2@gmail.com>>)
+
 4.24.1 / 2022-06-23
 ==================
 
