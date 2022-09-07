@@ -1,4 +1,10 @@
 
+4.26.0 / 2022-09-07
+==================
+
+**features**
+  * [[`7c6353f`](http://github.com/eggjs/egg-core/commit/7c6353f1dfe2ed4ebf0d9ae432356608372664bd)] - feat: extract plugin loader method for override (#246) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.25.0 / 2022-09-07
 ==================
 
