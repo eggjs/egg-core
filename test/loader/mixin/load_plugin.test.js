@@ -84,8 +84,8 @@ describe('test/load_plugin.test.js', function() {
 
     loader.loadPlugin();
     assert.deepEqual(loaderOrders, [
-      'loadAppPlugins',
       'loadEggPlugins',
+      'loadAppPlugins',
       'loadCustomPlugins',
     ]);
   });
