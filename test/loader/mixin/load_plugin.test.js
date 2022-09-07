@@ -67,6 +67,29 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.orderPlugins instanceof Array);
   });
 
+  it('should loadPlugin with order', function() {
+    app = utils.createApp('plugin');
+    const loader = app.loader;
+    const loaderOrders = [];
+    [
+      'loadAppPlugins',
+      'loadEggPlugins',
+      'loadCustomPlugins',
+    ].forEach(method => {
+      mm(loader, method, () => {
+        loaderOrders.push(method);
+        return {};
+      });
+    });
+
+    loader.loadPlugin();
+    assert.deepEqual(loaderOrders, [
+      'loadAppPlugins',
+      'loadEggPlugins',
+      'loadCustomPlugins',
+    ]);
+  });
+
   it('should follow the search order，node_modules of application > node_modules of framework', function() {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
