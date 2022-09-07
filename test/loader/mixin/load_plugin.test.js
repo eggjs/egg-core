@@ -72,8 +72,8 @@ describe('test/load_plugin.test.js', function() {
     const loader = app.loader;
     const loaderOrders = [];
     [
-      'loadAppPlugins',
       'loadEggPlugins',
+      'loadAppPlugins',
       'loadCustomPlugins',
     ].forEach(method => {
       mm(loader, method, () => {
@@ -84,8 +84,8 @@ describe('test/load_plugin.test.js', function() {
 
     loader.loadPlugin();
     assert.deepEqual(loaderOrders, [
-      'loadAppPlugins',
       'loadEggPlugins',
+      'loadAppPlugins',
       'loadCustomPlugins',
     ]);
   });
