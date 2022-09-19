@@ -38,4 +38,10 @@ describe('test/loader/get_app_info.test.js', () => {
     app = utils.createApp('appinfo');
     assert(app.loader.appInfo.root === process.env.HOME);
   });
+
+  it('should get scope when specified', () => {
+    mm(process.env, 'EGG_SERVER_SCOPE', 'en');
+    app = utils.createApp('appinfo');
+    assert(app.loader.appInfo.scope === 'en');
+  });
 });
