@@ -1,4 +1,10 @@
 
+4.26.1 / 2022-09-20
+==================
+
+**fixes**
+  * [[`0c571d8`](http://github.com/eggjs/egg-core/commit/0c571d81ef9b000da67918caafa2800c64be4987)] - fix: appInfo.scope no value (#247) (一剑 <<answord@163.com>>)
+
 4.26.0 / 2022-09-07
 ==================
 
