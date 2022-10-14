@@ -1,4 +1,10 @@
 
+4.27.0 / 2022-10-14
+==================
+
+**features**
+  * [[`7750ebc`](http://github.com/eggjs/egg-core/commit/7750ebc283543fb5c2ca9b704e247f04c7ca1ec8)] - feat: dump plugin info when it implicit enable by dependents plugin (#248) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.26.1 / 2022-09-20
 ==================
 
