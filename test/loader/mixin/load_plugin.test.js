@@ -641,6 +641,10 @@ describe('test/load_plugin.test.js', function() {
       'tracelog',
       'gateway',
     ]);
+
+    assert(loader.allPlugins.zoneclient.enable === true);
+    assert(loader.allPlugins.zoneclient.implicitEnable === true);
+    assert.deepEqual(loader.allPlugins.zoneclient.dependents, [ 'ldc' ]);
   });
 
   it('should load plugin from scope', () => {
