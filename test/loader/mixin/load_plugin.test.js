@@ -67,6 +67,29 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.orderPlugins instanceof Array);
   });
 
+  it('should loadPlugin with order', function() {
+    app = utils.createApp('plugin');
+    const loader = app.loader;
+    const loaderOrders = [];
+    [
+      'loadEggPlugins',
+      'loadAppPlugins',
+      'loadCustomPlugins',
+    ].forEach(method => {
+      mm(loader, method, () => {
+        loaderOrders.push(method);
+        return {};
+      });
+    });
+
+    loader.loadPlugin();
+    assert.deepEqual(loaderOrders, [
+      'loadEggPlugins',
+      'loadAppPlugins',
+      'loadCustomPlugins',
+    ]);
+  });
+
   it('should follow the search order，node_modules of application > node_modules of framework', function() {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
@@ -84,6 +107,50 @@ describe('test/load_plugin.test.js', function() {
       path: path.join(baseDir, 'node_modules/rds'),
       from: path.join(baseDir, 'config/plugin.js'),
     });
+  });
+
+  it('should support pnpm node_modules style', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-pnpm/node_modules/.pnpm/framework@1.0.0/node_modules/framework');
+      }
+    }
+    app = utils.createApp('plugin-pnpm', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    // console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
+  });
+
+  it('should support pnpm node_modules style with scope', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-pnpm-scope/node_modules/.pnpm/@eggjs+yadan@1.0.0/node_modules/@eggjs/yadan');
+      }
+    }
+    app = utils.createApp('plugin-pnpm-scope', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    // console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
   });
 
   it('should support alias', function() {
@@ -138,6 +205,17 @@ describe('test/load_plugin.test.js', function() {
     loader.loadConfig();
 
     assert(message === '[egg:loader] pluginName(e) is different from pluginConfigName(wrong-name)');
+  });
+
+  it('should not warn when the config.strict is false', function() {
+    let message;
+    app = utils.createApp('plugin-strict');
+    mm(app.console, 'warn', function(m) {
+      message = m;
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(!message);
   });
 
   it('should loadConfig plugins with custom plugins config', function() {
@@ -204,6 +282,29 @@ describe('test/load_plugin.test.js', function() {
     loader.loadPlugin();
     loader.loadConfig();
     assert(!loader.allPlugins.h);
+  });
+
+  it('should validate plugin.package', function() {
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '../' }, bar: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '/home' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
   });
 
   it('should throw when plugin not exist', function() {
@@ -406,16 +507,15 @@ describe('test/load_plugin.test.js', function() {
     assert(plugin.path === utils.getFilepath('realpath/a'));
   });
 
-  class Application extends EggCore {
-    get [Symbol.for('egg#loader')]() {
-      return EggLoader;
-    }
-    get [Symbol.for('egg#eggPath')]() {
-      return utils.getFilepath('plugin-from/framework');
-    }
-  }
-
   it('should get the defining plugin path in every plugin', () => {
+    class Application extends EggCore {
+      get [ Symbol.for('egg#loader') ]() {
+        return EggLoader;
+      }
+      get [ Symbol.for('egg#eggPath') ]() {
+        return utils.getFilepath('plugin-from/framework');
+      }
+    }
     app = utils.createApp('plugin-from', {
       Application,
     });
@@ -541,6 +641,10 @@ describe('test/load_plugin.test.js', function() {
       'tracelog',
       'gateway',
     ]);
+
+    assert(loader.allPlugins.zoneclient.enable === true);
+    assert(loader.allPlugins.zoneclient.implicitEnable === true);
+    assert.deepEqual(loader.allPlugins.zoneclient.dependents, [ 'ldc' ]);
   });
 
   it('should load plugin from scope', () => {
@@ -583,5 +687,44 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.tracelog.enable === true);
     assert(loader.allPlugins.gw.enable === false);
     assert(loader.allPlugins.rpcServer.enable === false);
+  });
+
+  it('should load plugin with duplicate plugin dir from eggPaths', () => {
+    class BaseApplication extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate'));
+      }
+    }
+
+    class Application extends BaseApplication {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate', 'node_modules', '@scope', 'b'));
+      }
+    }
+
+    const baseDir = utils.getFilepath('plugin-duplicate');
+    app = utils.createApp(path.join('plugin-duplicate', 'release'), {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+
+    assert.deepEqual(loader.plugins['a-duplicate'], {
+      enable: true,
+      name: 'a-duplicate',
+      dependencies: [],
+      optionalDependencies: [ 'a' ],
+      env: [],
+      package: '@scope/a',
+      path: path.join(baseDir, 'node_modules', '@scope', 'a'),
+      from: path.join(baseDir, 'release', 'config', 'plugin.js'),
+    });
   });
 });
