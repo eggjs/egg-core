@@ -480,7 +480,7 @@ describe('test/egg.test.js', () => {
         yield app.ready();
 
         const json = app.timing.toJSON();
-        assert(json.length === 28);
+        assert(json.length === 27);
 
         assert(json[1].name === 'Application Start');
         assert(json[1].end - json[1].start === json[1].duration);
@@ -503,28 +503,27 @@ describe('test/egg.test.js', () => {
         assert(json[12].name === 'Require(6) app.js');
         assert(json[13].name === 'Before Start in app.js:6:9');
         assert(json[14].name === 'Before Start in mock Block');
-        assert(json[15].name === 'Did Load in mockReadyCallbackWithFunction');
-        assert(json[16].name === 'Did Load in mockReadyCallbackWithoutFunction');
+        assert(json[15].name === 'readyCallback in mockReadyCallbackWithoutFunction');
 
-        assert(json[17].name === 'Load "proxy" to Context');
-        assert(json[18].name === 'Load Controller');
-        assert(json[19].name === 'Load "controller" to Application');
+        assert(json[16].name === 'Load "proxy" to Context');
+        assert(json[17].name === 'Load Controller');
+        assert(json[18].name === 'Load "controller" to Application');
 
         // loadService
-        assert(json[20].name === 'Load Service');
-        assert(json[21].name === 'Load "service" to Context');
+        assert(json[19].name === 'Load Service');
+        assert(json[20].name === 'Load "service" to Context');
 
         // loadMiddleware
-        assert(json[22].name === 'Load Middleware');
-        assert(json[23].name === 'Load "middlewares" to Application');
+        assert(json[21].name === 'Load Middleware');
+        assert(json[22].name === 'Load "middlewares" to Application');
 
         // loadController
-        assert(json[24].name === 'Load Controller');
-        assert(json[25].name === 'Load "controller" to Application');
+        assert(json[23].name === 'Load Controller');
+        assert(json[24].name === 'Load "controller" to Application');
 
         // loadRouter
-        assert(json[26].name === 'Load Router');
-        assert(json[27].name === 'Require(7) app/router.js');
+        assert(json[25].name === 'Load Router');
+        assert(json[26].name === 'Require(7) app/router.js');
       });
     });
 

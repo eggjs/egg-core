@@ -14,9 +14,6 @@ module.exports = app => {
     block();
   }, 'mock Block');
 
-  app.readyCallback('mockReadyCallbackWithFunction', function() {
-  });
-
   const cb = app.readyCallback('mockReadyCallbackWithoutFunction');
   setTimeout(cb, 1000);
 
