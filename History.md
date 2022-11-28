@@ -1,4 +1,10 @@
 
+4.28.0 / 2022-11-28
+==================
+
+**features**
+  * [[`d4080c0`](http://github.com/eggjs/egg-core/commit/d4080c0bdb727ea8a323c43a86e37baf7b6067e0)] - feat: add legacy timing (#249) (killa <<killa123@126.com>>)
+
 4.27.0 / 2022-10-14
 ==================
 
