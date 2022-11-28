@@ -1,4 +1,10 @@
 
+4.28.1 / 2022-11-28
+==================
+
+**fixes**
+  * [[`1d7d19b`](http://github.com/eggjs/egg-core/commit/1d7d19bc6c1fabdb8cea51dcd680fd608f5cc4fe)] - fix: fix call legacyReadyCallback with options (#250) (killa <<killa123@126.com>>)
+
 4.28.0 / 2022-11-28
 ==================
 
