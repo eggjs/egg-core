@@ -37,7 +37,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     for (const mw of app.middleware) {
       assert(typeof mw === 'function');
     }
-    assert(Object.keys(app.middleware).length === 3);
+    assert(Object.keys(app.middleware).length === 4);
   });
 
   it('should override middlewares of plugin by framework', async () => {
