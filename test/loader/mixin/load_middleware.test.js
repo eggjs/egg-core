@@ -3,6 +3,7 @@
 const path = require('path');
 const assert = require('assert');
 const request = require('supertest');
+const enableAsyncLocalStorage = !!require('async_hooks').AsyncLocalStorage;
 const utils = require('../../utils');
 
 describe('test/loader/mixin/load_middleware.test.js', function() {
@@ -37,7 +38,12 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     for (const mw of app.middleware) {
       assert(typeof mw === 'function');
     }
-    assert(Object.keys(app.middleware).length === 4);
+    if (enableAsyncLocalStorage) {
+      // the first middleware is asyncCtxStorage
+      assert(Object.keys(app.middleware).length === 4);
+    } else {
+      assert(Object.keys(app.middleware).length === 3);
+    }
   });
 
   it('should override middlewares of plugin by framework', async () => {
