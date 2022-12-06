@@ -1,4 +1,10 @@
 
+4.29.0 / 2022-12-06
+==================
+
+**features**
+  * [[`0e48956`](http://github.com/eggjs/egg-core/commit/0e4895602bcc690e8e5ef6c6ccca64aed6732cbe)] - feat: enable asyncLocalStorage by default (#251) (fengmk2 <<fengmk2@gmail.com>>)
+
 4.28.1 / 2022-11-28
 ==================
 
