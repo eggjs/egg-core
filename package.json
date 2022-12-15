@@ -12,8 +12,8 @@
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test -r co-mocha",
-    "cov": "egg-bin cov -r co-mocha",
+    "test-local": "egg-bin test",
+    "cov": "egg-bin cov",
     "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"
   },
@@ -36,9 +36,8 @@
   },
   "devDependencies": {
     "await-event": "^2.1.0",
-    "co-mocha": "^1.2.2",
     "coffee": "^5.2.1",
-    "egg-bin": "^5.5.0",
+    "egg-bin": "^4.20.0",
     "egg-utils": "^2.4.1",
     "eslint": "^5.16.0",
     "eslint-config-egg": "^7.4.1",
