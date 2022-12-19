@@ -70,6 +70,7 @@
     "koa-convert": "^1.2.0",
     "node-homedir": "^1.1.1",
     "ready-callback": "^2.1.0",
+    "tsconfig-paths": "^4.1.1",
     "utility": "^1.16.1"
   }
 }
