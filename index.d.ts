@@ -1,6 +1,6 @@
 import KoaApplication = require('koa');
-import { Logger, EggConsoleLogger } from 'egg-logger';
 import depd = require('depd');
+import { Logger } from 'egg-logger';
 
 type EggType = 'application' | 'agent';
 
