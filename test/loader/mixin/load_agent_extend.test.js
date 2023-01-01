@@ -1,11 +1,9 @@
-'use strict';
-
 const assert = require('assert');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_agent_extend.test.js', function() {
+describe('test/loader/mixin/load_agent_extend.test.js', () => {
   let agent;
-  before(function() {
+  before(() => {
     agent = utils.createApp('agent');
     agent.loader.loadPlugin();
     agent.loader.loadConfig();
@@ -13,7 +11,7 @@ describe('test/loader/mixin/load_agent_extend.test.js', function() {
   });
   after(() => agent.close());
 
-  it('should load extend from chair, plugin and agent', function() {
+  it('should load extend from chair, plugin and agent', () => {
     assert(agent.poweredBy);
     assert(agent.a);
     assert(agent.b);
@@ -21,13 +19,13 @@ describe('test/loader/mixin/load_agent_extend.test.js', function() {
     assert(agent.bar);
   });
 
-  it('should override chair by plugin', function() {
+  it('should override chair by plugin', () => {
     assert(agent.a === 'plugin a');
     assert(agent.b === 'plugin b');
     assert(agent.poweredBy === 'plugin a');
   });
 
-  it('should override plugin by agent', function() {
+  it('should override plugin by agent', () => {
     assert(agent.foo === 'agent bar');
     assert(agent.bar === 'foo');
   });

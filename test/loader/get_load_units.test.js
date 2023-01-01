@@ -1,15 +1,13 @@
-'use strict';
-
 const mm = require('mm');
 const assert = require('assert');
 const utils = require('../utils');
 
-describe('test/get_load_units.test.js', function() {
+describe('test/get_load_units.test.js', () => {
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it('should get plugin dir', function() {
+  it('should get plugin dir', () => {
     app = utils.createApp('plugin');
     app.loader.loadPlugin();
     // delete cache
@@ -22,7 +20,7 @@ describe('test/get_load_units.test.js', function() {
     assert(units[11].path === utils.getFilepath('plugin'));
   });
 
-  it('should not get plugin dir', function() {
+  it('should not get plugin dir', () => {
     app = utils.createApp('plugin');
     const units = app.loader.getLoadUnits();
     assert(units.length === 2);

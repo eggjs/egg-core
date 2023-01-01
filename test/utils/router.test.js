@@ -1,5 +1,3 @@
-'use strict';
-
 const assert = require('assert');
 const request = require('supertest');
 const utils = require('../utils');
@@ -140,7 +138,7 @@ describe('test/utils/router.test.js', () => {
       });
     });
 
-    describe('no name', function() {
+    describe('no name', () => {
       it('should GET /comments', () => {
         return request(app.callback())
           .get('/comments')

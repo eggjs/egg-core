@@ -12,8 +12,8 @@
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
-    "cov": "egg-bin cov",
+    "test-local": "egg-bin test -p",
+    "cov": "egg-bin cov -p",
     "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"
   },
@@ -32,31 +32,29 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 8.9.0"
+    "node": ">= 14.17.0"
   },
   "devDependencies": {
+    "@types/depd": "^1.1.32",
+    "@types/koa": "^2.0.48",
     "await-event": "^2.1.0",
     "coffee": "^5.2.1",
-    "egg-bin": "^4.20.0",
+    "egg-bin": "^5.9.0",
     "egg-utils": "^2.4.1",
-    "eslint": "^5.16.0",
-    "eslint-config-egg": "^7.4.1",
+    "eslint": "^8.31.0",
+    "eslint-config-egg": "^12.1.0",
     "git-contributor": "^1.0.10",
-    "jest": "^24.8.0",
     "js-yaml": "^3.13.1",
-    "mm": "^2.5.0",
-    "mz-modules": "^2.1.0",
+    "mm": "^3.2.1",
     "pedding": "^1.1.0",
-    "rimraf": "^2.6.3",
     "spy": "^1.0.0",
     "supertest": "^4.0.2",
-    "ts-node": "^8.0.3",
-    "typescript": "^3.3.3333"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "urllib": "^3.10.0"
   },
   "dependencies": {
     "@eggjs/router": "^2.0.0",
-    "@types/depd": "^1.1.32",
-    "@types/koa": "^2.0.48",
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "depd": "^2.0.0",

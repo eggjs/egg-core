@@ -197,15 +197,16 @@ To load files from directory, and it will be bound the context.
 // define service in app/service/query.js
 module.exports = class Query {
   constructor(ctx) {
+    super(ctx);
     // get the ctx
   }
 
-  get() {}
+  async get() {}
 };
 
 // use the service in app/controller/home.js
-module.exports = function*() {
-  this.body = this.service.query.get();
+module.exports = async ctx => {
+  ctx.body = await ctx.service.query.get();
 };
 ```
 

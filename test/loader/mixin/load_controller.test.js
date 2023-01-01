@@ -1,5 +1,3 @@
-'use strict';
-
 const is = require('is-type-of');
 const assert = require('assert');
 const request = require('supertest');

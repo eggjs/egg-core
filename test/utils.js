@@ -27,4 +27,9 @@ module.exports = {
     view: Symbol('view'),
   },
 
+  sleep(ms) {
+    return new Promise(resolve => {
+      setTimeout(resolve, ms);
+    });
+  },
 };

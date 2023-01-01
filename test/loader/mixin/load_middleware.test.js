@@ -1,14 +1,11 @@
-'use strict';
-
 const path = require('path');
 const assert = require('assert');
 const request = require('supertest');
-const enableAsyncLocalStorage = !!require('async_hooks').AsyncLocalStorage;
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_middleware.test.js', function() {
+describe('test/loader/mixin/load_middleware.test.js', () => {
   let app;
-  before(function() {
+  before(() => {
     app = utils.createApp('middleware-override');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -19,7 +16,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
   });
   after(() => app.close());
 
-  it('should load application, plugin, and default middlewares', function() {
+  it('should load application, plugin, and default middlewares', () => {
     assert('static' in app.middlewares);
     assert('status' in app.middlewares);
     assert('custom' in app.middlewares);
@@ -27,7 +24,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     assert(!('a' in app.middlewares));
   });
 
-  it('should also support app.middleware', function() {
+  it('should also support app.middleware', () => {
     assert('static' in app.middleware);
     assert('status' in app.middleware);
     assert('custom' in app.middleware);
@@ -38,12 +35,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     for (const mw of app.middleware) {
       assert(typeof mw === 'function');
     }
-    if (enableAsyncLocalStorage) {
-      // the first middleware is asyncCtxStorage
-      assert(Object.keys(app.middleware).length === 4);
-    } else {
-      assert(Object.keys(app.middleware).length === 3);
-    }
+    assert(Object.keys(app.middleware).length === 4);
   });
 
   it('should override middlewares of plugin by framework', async () => {
@@ -64,7 +56,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
       .expect('static');
   });
 
-  it('should throw when middleware return no-generator', function() {
+  it('should throw when middleware return no-generator', () => {
     const app = utils.createApp('custom_session_invaild');
     assert.throws(() => {
       app.loader.loadPlugin();
@@ -74,7 +66,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     }, /Middleware session must be a function, but actual is {}/);
   });
 
-  it('should throw when not load that is not configured', function() {
+  it('should throw when not load that is not configured', () => {
     const app = utils.createApp('no-middleware');
     assert.throws(() => {
       app.loader.loadPlugin();
@@ -84,7 +76,7 @@ describe('test/loader/mixin/load_middleware.test.js', function() {
     }, /Middleware a not found/);
   });
 
-  it('should throw when middleware name redefined', function() {
+  it('should throw when middleware name redefined', () => {
     const app = utils.createApp('middleware-redefined');
     assert.throws(() => {
       app.loader.loadPlugin();

@@ -1,5 +1,3 @@
-'use strict';
-
 const request = require('supertest');
 const mm = require('mm');
 const assert = require('assert');
@@ -7,7 +5,7 @@ const utils = require('../../utils');
 
 describe('test/loader/mixin/load_extend.test.js', () => {
   let app;
-  before(function() {
+  before(() => {
     app = utils.createApp('extend');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -79,27 +77,27 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       .expect(200);
   });
 
-  it('should throw when no deps', function() {
+  it('should throw when no deps', () => {
     assert.throws(() => {
       const app = utils.createApp('load_context_error');
       app.loader.loadContextExtend();
     }, /Cannot find module 'this is a pen'/);
   });
 
-  it('should throw when syntax error', function() {
+  it('should throw when syntax error', () => {
     assert.throws(() => {
       const app = utils.createApp('load_context_syntax_error');
       app.loader.loadContextExtend();
-    }, /Parse Error: Unexpected token/);
+    }, /error: Unexpected end of input/);
   });
 
-  it('should extend symbol', function() {
+  it('should extend symbol', () => {
     const app = utils.createApp('extend-symbol');
     app.loader.loadApplicationExtend();
     assert.equal(app[utils.symbol.view], 'view');
   });
 
-  it('should load application by custom env', function() {
+  it('should load application by custom env', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'custom');
     const app = utils.createApp('extend-env');
     app.loader.loadPlugin();
@@ -111,7 +109,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert(app.b === 'b1');
   });
 
-  it('should not load extend that returned function', function() {
+  it('should not load extend that returned function', () => {
     const proto = {};
     app.loader.loadExtend('call', proto);
     assert(proto.call === undefined);
@@ -121,7 +119,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     let app;
     after(() => app.close());
 
-    it('should load unittext.js when unittest', async () => {
+    it('should load unittext.js when unittest', () => {
       app = utils.createApp('load-plugin-unittest');
       app.loader.loadPlugin();
       app.loader.loadApplicationExtend();
@@ -129,7 +127,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
       assert(app.local !== true);
     });
 
-    it('should load unittext.js when mm.env(default)', async () => {
+    it('should load unittext.js when mm.env(default)', () => {
       mm(process.env, 'EGG_SERVER_ENV', 'local');
       mm(process.env, 'EGG_MOCK_SERVER_ENV', 'local');
       app = utils.createApp('load-plugin-unittest');

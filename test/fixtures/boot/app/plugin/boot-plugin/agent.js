@@ -1,5 +1,4 @@
-'use strict';
-const sleep = require('mz-modules/sleep');
+const { sleep } = require('../../../../../utils');
 
 module.exports = agent => {
   agent.bootLog.push('agent.js in plugin');
