@@ -35,8 +35,6 @@
     "node": ">= 14.17.0"
   },
   "devDependencies": {
-    "@types/depd": "^1.1.32",
-    "@types/koa": "^2.0.48",
     "await-event": "^2.1.0",
     "coffee": "^5.2.1",
     "egg-bin": "^5.9.0",
@@ -55,6 +53,8 @@
   },
   "dependencies": {
     "@eggjs/router": "^2.0.0",
+    "@types/depd": "^1.1.32",
+    "@types/koa": "^2.13.5",
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "depd": "^2.0.0",
