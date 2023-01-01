@@ -1,5 +1,3 @@
-'use strict';
-
 const assert = require('assert');
 const os = require('os');
 const mm = require('mm');

@@ -1,12 +1,10 @@
-'use strict';
-
 const assert = require('assert');
 const request = require('supertest');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_custom_loader.test.js', function() {
+describe('test/loader/mixin/load_custom_loader.test.js', () => {
   let app;
-  before(function() {
+  before(() => {
     app = utils.createApp('custom-loader');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -40,7 +38,7 @@ describe('test/loader/mixin/load_custom_loader.test.js', function() {
       .expect(200);
   });
 
-  it('should support loadunit', async () => {
+  it('should support loadunit', () => {
     let name = app.plugin.a.getName();
     assert(name === 'plugina');
     name = app.plugin.b.getName();

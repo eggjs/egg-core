@@ -1,5 +1,3 @@
-'use strict';
-
 const mm = require('mm');
 const is = require('is-type-of');
 const util = require('util');

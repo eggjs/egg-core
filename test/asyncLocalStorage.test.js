@@ -1,9 +1,6 @@
-'use strict';
-
 const assert = require('assert');
 const path = require('path');
 const request = require('supertest');
-const enableAsyncLocalStorage = !!require('async_hooks').AsyncLocalStorage;
 const EggApplication = require('./fixtures/egg').Application;
 
 describe('test/asyncLocalStorage.test.js', () => {
@@ -23,9 +20,7 @@ describe('test/asyncLocalStorage.test.js', () => {
     assert(res.status === 200);
     console.log(res.body);
     assert(res.body.sessionId === 'mock-session-id-123');
-    if (enableAsyncLocalStorage) {
-      assert(res.body.traceId);
-    }
+    assert(res.body.traceId);
     assert(app.currentContext === undefined);
   });
 });

@@ -4,7 +4,7 @@ const path = require('path');
 const assert = require('assert');
 const EggApplication = require('../').Application;
 
-test('should works', async () => {
+test('should works', () => {
   const app = new EggApplication({
     baseDir: path.resolve(__dirname, '../'),
     type: 'application',

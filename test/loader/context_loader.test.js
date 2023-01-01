@@ -1,5 +1,3 @@
-'use strict';
-
 const request = require('supertest');
 const path = require('path');
 const utils = require('../utils');

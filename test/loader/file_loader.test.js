@@ -1,5 +1,3 @@
-'use strict';
-
 const assert = require('assert');
 const pedding = require('pedding');
 const path = require('path');

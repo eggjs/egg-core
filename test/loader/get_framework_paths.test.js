@@ -1,5 +1,3 @@
-'use strict';
-
 const mm = require('mm');
 const assert = require('assert');
 const utils = require('../utils');
@@ -19,17 +17,17 @@ class Application {
   close() {}
 }
 
-describe('test/loader/get_framework_paths.test.js', function() {
+describe('test/loader/get_framework_paths.test.js', () => {
   let app;
   afterEach(mm.restore);
   afterEach(() => app && app.close());
 
-  it('should get from paramter', function() {
+  it('should get from paramter', () => {
     app = utils.createApp('eggpath');
     assert.deepEqual(app.loader.eggPaths, [ utils.getFilepath('egg') ]);
   });
 
-  it('should get from framework using symbol', function() {
+  it('should get from framework using symbol', () => {
     app = utils.createApp('eggpath', {
       Application: require(utils.getFilepath('framework-symbol')),
     });

@@ -27,7 +27,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert('eggPlugins' in loader);
   });
 
-  it('should loadConfig all plugins', function() {
+  it('should loadConfig all plugins', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -63,7 +63,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.orderPlugins instanceof Array);
   });
 
-  it('should loadPlugin with order', function() {
+  it('should loadPlugin with order', () => {
     app = utils.createApp('plugin');
     const loader = app.loader;
     const loaderOrders = [];
@@ -86,7 +86,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     ]);
   });
 
-  it('should follow the search order，node_modules of application > node_modules of framework', function() {
+  it('should follow the search order，node_modules of application > node_modules of framework', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -149,7 +149,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.config.b === 'b');
   });
 
-  it('should support alias', function() {
+  it('should support alias', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -169,7 +169,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!loader.plugins.d);
   });
 
-  it('should support config in package.json', function() {
+  it('should support config in package.json', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -188,7 +188,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     });
   });
 
-  it('should warn when the name of plugin is not same', function() {
+  it('should warn when the name of plugin is not same', () => {
     let message;
     app = utils.createApp('plugin');
     mm(app.console, 'warn', function(m) {
@@ -203,7 +203,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(message === '[egg:loader] pluginName(e) is different from pluginConfigName(wrong-name)');
   });
 
-  it('should not warn when the config.strict is false', function() {
+  it('should not warn when the config.strict is false', () => {
     let message;
     app = utils.createApp('plugin-strict');
     mm(app.console, 'warn', function(m) {
@@ -214,7 +214,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!message);
   });
 
-  it('should loadConfig plugins with custom plugins config', function() {
+  it('should loadConfig plugins with custom plugins config', () => {
     const baseDir = utils.getFilepath('plugin');
     const plugins = {
       foo: {
@@ -251,7 +251,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!loader.plugins.d);
   });
 
-  it('should custom plugins with EGG_PLUGINS', function() {
+  it('should custom plugins with EGG_PLUGINS', () => {
     const baseDir = utils.getFilepath('plugin');
     const plugins = {
       b: false,
@@ -271,7 +271,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.allPlugins.h.path === path.join(baseDir, 'node_modules/h'));
   });
 
-  it('should ignore when EGG_PLUGINS parse error', function() {
+  it('should ignore when EGG_PLUGINS parse error', () => {
     mm(process.env, 'EGG_PLUGINS', '{h:1}');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -280,7 +280,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!loader.allPlugins.h);
   });
 
-  it('should validate plugin.package', function() {
+  it('should validate plugin.package', () => {
     assert.throws(() => {
       app = utils.createApp('plugin', { plugins: { foo: { package: '../' }, bar: { package: 'c:\\' } } });
       const loader = app.loader;
@@ -303,7 +303,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     }, /plugin foo invalid, use 'path' instead of package/);
   });
 
-  it('should throw when plugin not exist', function() {
+  it('should throw when plugin not exist', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-noexist');
       const loader = app.loader;
@@ -312,7 +312,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     }, /Can not find plugin noexist in /);
   });
 
-  it('should throw when the dependent plugin is disabled', function() {
+  it('should throw when the dependent plugin is disabled', () => {
     assert.throws(() => {
       app = utils.createApp('no-dep-plugin');
       const loader = app.loader;
@@ -321,7 +321,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     }, /Can not find plugin @ali\/b in /);
   });
 
-  it('should make order', function() {
+  it('should make order', () => {
     mm(process.env, 'NODE_ENV', 'development');
     app = utils.createApp('plugin-dep');
     const loader = app.loader;
@@ -342,7 +342,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     ]);
   });
 
-  it('should throw when plugin is recursive', function() {
+  it('should throw when plugin is recursive', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-dep-recursive');
       const loader = app.loader;
@@ -351,7 +351,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     }, /sequencify plugins has problem, missing: \[], recursive: \[a,b,c,a]/);
   });
 
-  it('should throw when the dependent plugin not exist', function() {
+  it('should throw when the dependent plugin not exist', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-dep-missing');
       const loader = app.loader;
@@ -415,7 +415,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!loader.plugins.e);
   });
 
-  it('should enable when not match env', function() {
+  it('should enable when not match env', () => {
     app = utils.createApp('dont-load-plugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -427,7 +427,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(!plugins.includes('testMe'));
   });
 
-  it('should complement infomation by config/plugin.js from plugin', function() {
+  it('should complement infomation by config/plugin.js from plugin', () => {
     const baseDir = utils.getFilepath('plugin');
 
     mm(process.env, 'NODE_ENV', 'test');
@@ -463,7 +463,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     });
   });
 
-  it('should load when all plugins are disabled', function() {
+  it('should load when all plugins are disabled', () => {
     app = utils.createApp('noplugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -471,7 +471,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.orderPlugins.length === 0);
   });
 
-  it('should throw when the dependent plugin is disabled', function() {
+  it('should throw when the dependent plugin is disabled', () => {
     assert.throws(() => {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       app = utils.createApp('env-disable');
@@ -481,7 +481,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     }, /sequencify plugins has problem, missing: \[b], recursive: \[]\n\t>> Plugin \[b] is disabled or missed, but is required by \[a]/);
   });
 
-  it('should pick path or package when override config', function() {
+  it('should pick path or package when override config', () => {
     app = utils.createApp('plugin-path-package');
     const loader = app.loader;
     loader.loadPlugin();
@@ -521,7 +521,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.plugins.b.from === utils.getFilepath('plugin-from/framework/config/plugin.js'));
   });
 
-  it('should load plugin.unittest.js override default', function() {
+  it('should load plugin.unittest.js override default', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'unittest');
     app = utils.createApp('load-plugin-by-env');
     const loader = app.loader;
@@ -530,7 +530,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.allPlugins.b.enable === true);
   });
 
-  it('should load plugin.custom.js when env is custom', function() {
+  it('should load plugin.custom.js when env is custom', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'custom');
     app = utils.createApp('load-plugin-by-env');
     const loader = app.loader;
@@ -540,7 +540,7 @@ describe('test/loader/mixin/load_plugin.test.js', () => {
     assert(loader.allPlugins.c.enable === true);
   });
 
-  it('should not load plugin.js when plugin.default.js exist', function() {
+  it('should not load plugin.js when plugin.default.js exist', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'unittest');
     app = utils.createApp('load-plugin-default');
     const loader = app.loader;
