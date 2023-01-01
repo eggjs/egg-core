@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.0](https://github.com/eggjs/egg-core/compare/v5.0.0...v5.1.0) (2023-01-01)
+
+
+### Features
+
+* use globby@11 ([#236](https://github.com/eggjs/egg-core/issues/236)) ([c8898ac](https://github.com/eggjs/egg-core/commit/c8898acf28b202a5f04f422d9adc9d48aa3b0e3f))
+
 ## [5.0.0](https://github.com/eggjs/egg-core/compare/v4.30.1...v5.0.0) (2023-01-01)
 
 
