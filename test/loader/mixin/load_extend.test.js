@@ -90,7 +90,7 @@ describe('test/loader/mixin/load_extend.test.js', () => {
     assert.throws(() => {
       const app = utils.createApp('load_context_syntax_error');
       app.loader.loadContextExtend();
-    }, /Parse Error: Unexpected token/);
+    }, /error: Unexpected end of input/);
   });
 
   it('should extend symbol', function() {

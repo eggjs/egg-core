@@ -1,7 +1,5 @@
-'use strict';
-
-const HttpClient2 = require('urllib').HttpClient2;
-const urllib = new HttpClient2();
+const HttpClient = require('urllib').HttpClient;
+const urllib = new HttpClient();
 
 exports.urllib = {
   keepAlive: false,
@@ -12,7 +10,7 @@ exports.urllib = {
   httpclient: urllib,
 };
 
-exports.buffer = new Buffer('1234');
+exports.buffer = Buffer.from('1234');
 exports.array = [];
 
 exports.console = console;

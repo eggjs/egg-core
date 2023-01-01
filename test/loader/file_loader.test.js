@@ -215,7 +215,7 @@ describe('test/loader/file_loader.test.js', () => {
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
-    }, /Parse Error:/);
+    }, /error: Unexpected identifier/);
   });
 
   it('should throw when directory contains dot', () => {

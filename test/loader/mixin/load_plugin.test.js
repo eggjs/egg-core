@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
 const mm = require('mm');
@@ -10,7 +8,7 @@ const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
 
-describe('test/load_plugin.test.js', function() {
+describe('test/loader/mixin/load_plugin.test.js', () => {
   let app;
 
   afterEach(() => {

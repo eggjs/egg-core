@@ -502,7 +502,7 @@ describe('test/egg.test.js', () => {
         // test/fixtures/egg/node_modules/session/app.js
         assert(json[12].name.startsWith('Require(6) '));
         assert(json[13].name === 'Require(7) app.js');
-        assert(json[14].name === 'Before Start in app.js:6:9');
+        assert.equal(json[14].name, 'Before Start in app.js:9:7');
         assert(json[15].name === 'Before Start in mock Block');
         assert(json[16].name === 'readyCallback in mockReadyCallbackWithoutFunction');
 
@@ -529,13 +529,13 @@ describe('test/egg.test.js', () => {
     });
 
     describe('agent', () => {
-      it('should get timing', function* () {
+      it('should get timing', async () => {
         app = utils.createApp('timing');
         app.loader.loadPlugin();
         app.loader.loadConfig();
         app.loader.loadApplicationExtend();
         app.loader.loadCustomAgent();
-        yield app.ready();
+        await app.ready();
 
         const json = app.timing.toJSON();
         assert(json.length === 14);
@@ -559,7 +559,7 @@ describe('test/egg.test.js', () => {
         // loadCustomAgent
         assert(json[11].name === 'Load agent.js');
         assert(json[12].name === 'Require(6) agent.js');
-        assert(json[13].name === 'Before Start in agent.js:5:11');
+        assert.equal(json[13].name, 'Before Start in agent.js:8:9');
       });
     });
 

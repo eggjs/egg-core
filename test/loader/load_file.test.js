@@ -25,7 +25,7 @@ describe('test/load_file.test.js', () => {
     assert.throws(() => {
       app = utils.createApp('syntaxerror');
       app.loader.loadCustomApp();
-    }, /Parse Error: Unexpected token/);
+    }, /error: Unexpected end of input/);
   });
 
   it('should load custom file', () => {
