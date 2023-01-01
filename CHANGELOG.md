@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.1.1](https://github.com/eggjs/egg-core/compare/v5.1.0...v5.1.1) (2023-01-01)
+
+
+### Bug Fixes
+
+* @types/depd and @types/koa should be dependencies ([#257](https://github.com/eggjs/egg-core/issues/257)) ([91937c3](https://github.com/eggjs/egg-core/commit/91937c392f8381a83e954385f99188a7f3590f52))
+
 ## [5.1.0](https://github.com/eggjs/egg-core/compare/v5.0.0...v5.1.0) (2023-01-01)
 
 
