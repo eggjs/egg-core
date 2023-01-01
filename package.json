@@ -44,7 +44,6 @@
     "eslint": "^8.31.0",
     "eslint-config-egg": "^12.1.0",
     "git-contributor": "^1.0.10",
-    "jest": "^29.3.1",
     "js-yaml": "^3.13.1",
     "mm": "^3.2.1",
     "pedding": "^1.1.0",
