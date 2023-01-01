@@ -1,9 +1,7 @@
-'use strict';
-
 const assert = require('assert');
-
 const Lifecycle = require('../lib/lifecycle.js');
 const EggCore = require('..').EggCore;
+
 describe('test/lifecycle.js', () => {
   it('should forbid adding hook atfter initialization', () => {
     const lifecycle = new Lifecycle({

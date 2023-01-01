@@ -1,18 +1,14 @@
-'use strict';
-
 const path = require('path');
 const fs = require('fs');
 const mm = require('mm');
 const assert = require('assert');
-const rimraf = require('rimraf');
 const spy = require('spy');
 const pedding = require('pedding');
 const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
 
-
-describe('test/load_plugin.test.js', function() {
+describe('test/loader/mixin/load_plugin.test.js', () => {
   let app;
 
   afterEach(() => {
@@ -31,7 +27,7 @@ describe('test/load_plugin.test.js', function() {
     assert('eggPlugins' in loader);
   });
 
-  it('should loadConfig all plugins', function() {
+  it('should loadConfig all plugins', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -67,7 +63,30 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.orderPlugins instanceof Array);
   });
 
-  it('should follow the search order，node_modules of application > node_modules of framework', function() {
+  it('should loadPlugin with order', () => {
+    app = utils.createApp('plugin');
+    const loader = app.loader;
+    const loaderOrders = [];
+    [
+      'loadEggPlugins',
+      'loadAppPlugins',
+      'loadCustomPlugins',
+    ].forEach(method => {
+      mm(loader, method, () => {
+        loaderOrders.push(method);
+        return {};
+      });
+    });
+
+    loader.loadPlugin();
+    assert.deepEqual(loaderOrders, [
+      'loadEggPlugins',
+      'loadAppPlugins',
+      'loadCustomPlugins',
+    ]);
+  });
+
+  it('should follow the search order，node_modules of application > node_modules of framework', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -86,7 +105,51 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('should support alias', function() {
+  it('should support pnpm node_modules style', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-pnpm/node_modules/.pnpm/framework@1.0.0/node_modules/framework');
+      }
+    }
+    app = utils.createApp('plugin-pnpm', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    // console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
+  });
+
+  it('should support pnpm node_modules style with scope', () => {
+    class Application extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath('plugin-pnpm-scope/node_modules/.pnpm/@eggjs+yadan@1.0.0/node_modules/@eggjs/yadan');
+      }
+    }
+    app = utils.createApp('plugin-pnpm-scope', {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+    // console.log(loader.plugins, loader.config);
+    assert(loader.plugins.a);
+    assert(loader.plugins.b);
+    assert(loader.config.a === 'a');
+    assert(loader.config.b === 'b');
+  });
+
+  it('should support alias', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -106,7 +169,7 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.plugins.d);
   });
 
-  it('should support config in package.json', function() {
+  it('should support config in package.json', () => {
     const baseDir = utils.getFilepath('plugin');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -125,7 +188,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('should warn when the name of plugin is not same', function() {
+  it('should warn when the name of plugin is not same', () => {
     let message;
     app = utils.createApp('plugin');
     mm(app.console, 'warn', function(m) {
@@ -140,7 +203,18 @@ describe('test/load_plugin.test.js', function() {
     assert(message === '[egg:loader] pluginName(e) is different from pluginConfigName(wrong-name)');
   });
 
-  it('should loadConfig plugins with custom plugins config', function() {
+  it('should not warn when the config.strict is false', () => {
+    let message;
+    app = utils.createApp('plugin-strict');
+    mm(app.console, 'warn', function(m) {
+      message = m;
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    assert(!message);
+  });
+
+  it('should loadConfig plugins with custom plugins config', () => {
     const baseDir = utils.getFilepath('plugin');
     const plugins = {
       foo: {
@@ -177,7 +251,7 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.plugins.d);
   });
 
-  it('should custom plugins with EGG_PLUGINS', function() {
+  it('should custom plugins with EGG_PLUGINS', () => {
     const baseDir = utils.getFilepath('plugin');
     const plugins = {
       b: false,
@@ -197,7 +271,7 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.h.path === path.join(baseDir, 'node_modules/h'));
   });
 
-  it('should ignore when EGG_PLUGINS parse error', function() {
+  it('should ignore when EGG_PLUGINS parse error', () => {
     mm(process.env, 'EGG_PLUGINS', '{h:1}');
     app = utils.createApp('plugin');
     const loader = app.loader;
@@ -206,7 +280,30 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.allPlugins.h);
   });
 
-  it('should throw when plugin not exist', function() {
+  it('should validate plugin.package', () => {
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '../' }, bar: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: 'c:\\' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+
+    assert.throws(() => {
+      app = utils.createApp('plugin', { plugins: { foo: { package: '/home' } } });
+      const loader = app.loader;
+      loader.loadPlugin();
+      loader.loadConfig();
+    }, /plugin foo invalid, use 'path' instead of package/);
+  });
+
+  it('should throw when plugin not exist', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-noexist');
       const loader = app.loader;
@@ -215,7 +312,7 @@ describe('test/load_plugin.test.js', function() {
     }, /Can not find plugin noexist in /);
   });
 
-  it('should throw when the dependent plugin is disabled', function() {
+  it('should throw when the dependent plugin is disabled', () => {
     assert.throws(() => {
       app = utils.createApp('no-dep-plugin');
       const loader = app.loader;
@@ -224,7 +321,7 @@ describe('test/load_plugin.test.js', function() {
     }, /Can not find plugin @ali\/b in /);
   });
 
-  it('should make order', function() {
+  it('should make order', () => {
     mm(process.env, 'NODE_ENV', 'development');
     app = utils.createApp('plugin-dep');
     const loader = app.loader;
@@ -245,7 +342,7 @@ describe('test/load_plugin.test.js', function() {
     ]);
   });
 
-  it('should throw when plugin is recursive', function() {
+  it('should throw when plugin is recursive', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-dep-recursive');
       const loader = app.loader;
@@ -254,7 +351,7 @@ describe('test/load_plugin.test.js', function() {
     }, /sequencify plugins has problem, missing: \[], recursive: \[a,b,c,a]/);
   });
 
-  it('should throw when the dependent plugin not exist', function() {
+  it('should throw when the dependent plugin not exist', () => {
     assert.throws(() => {
       app = utils.createApp('plugin-dep-missing');
       const loader = app.loader;
@@ -318,7 +415,7 @@ describe('test/load_plugin.test.js', function() {
     assert(!loader.plugins.e);
   });
 
-  it('should enable when not match env', function() {
+  it('should enable when not match env', () => {
     app = utils.createApp('dont-load-plugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -330,7 +427,7 @@ describe('test/load_plugin.test.js', function() {
     assert(!plugins.includes('testMe'));
   });
 
-  it('should complement infomation by config/plugin.js from plugin', function() {
+  it('should complement infomation by config/plugin.js from plugin', () => {
     const baseDir = utils.getFilepath('plugin');
 
     mm(process.env, 'NODE_ENV', 'test');
@@ -366,7 +463,7 @@ describe('test/load_plugin.test.js', function() {
     });
   });
 
-  it('should load when all plugins are disabled', function() {
+  it('should load when all plugins are disabled', () => {
     app = utils.createApp('noplugin');
     const loader = app.loader;
     loader.loadPlugin();
@@ -374,7 +471,7 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.orderPlugins.length === 0);
   });
 
-  it('should throw when the dependent plugin is disabled', function() {
+  it('should throw when the dependent plugin is disabled', () => {
     assert.throws(() => {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       app = utils.createApp('env-disable');
@@ -384,7 +481,7 @@ describe('test/load_plugin.test.js', function() {
     }, /sequencify plugins has problem, missing: \[b], recursive: \[]\n\t>> Plugin \[b] is disabled or missed, but is required by \[a]/);
   });
 
-  it('should pick path or package when override config', function() {
+  it('should pick path or package when override config', () => {
     app = utils.createApp('plugin-path-package');
     const loader = app.loader;
     loader.loadPlugin();
@@ -396,7 +493,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should resolve the realpath of plugin path', () => {
-    rimraf.sync(utils.getFilepath('realpath/node_modules/a'));
+    fs.rmSync(utils.getFilepath('realpath/node_modules/a'), { force: true, recursive: true });
     fs.symlinkSync('../a', utils.getFilepath('realpath/node_modules/a'), 'dir');
     app = utils.createApp('realpath');
     const loader = app.loader;
@@ -406,16 +503,15 @@ describe('test/load_plugin.test.js', function() {
     assert(plugin.path === utils.getFilepath('realpath/a'));
   });
 
-  class Application extends EggCore {
-    get [Symbol.for('egg#loader')]() {
-      return EggLoader;
-    }
-    get [Symbol.for('egg#eggPath')]() {
-      return utils.getFilepath('plugin-from/framework');
-    }
-  }
-
   it('should get the defining plugin path in every plugin', () => {
+    class Application extends EggCore {
+      get [ Symbol.for('egg#loader') ]() {
+        return EggLoader;
+      }
+      get [ Symbol.for('egg#eggPath') ]() {
+        return utils.getFilepath('plugin-from/framework');
+      }
+    }
     app = utils.createApp('plugin-from', {
       Application,
     });
@@ -425,7 +521,7 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.plugins.b.from === utils.getFilepath('plugin-from/framework/config/plugin.js'));
   });
 
-  it('should load plugin.unittest.js override default', function() {
+  it('should load plugin.unittest.js override default', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'unittest');
     app = utils.createApp('load-plugin-by-env');
     const loader = app.loader;
@@ -434,7 +530,7 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.b.enable === true);
   });
 
-  it('should load plugin.custom.js when env is custom', function() {
+  it('should load plugin.custom.js when env is custom', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'custom');
     app = utils.createApp('load-plugin-by-env');
     const loader = app.loader;
@@ -444,7 +540,7 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.c.enable === true);
   });
 
-  it('should not load plugin.js when plugin.default.js exist', function() {
+  it('should not load plugin.js when plugin.default.js exist', () => {
     mm(process.env, 'EGG_SERVER_ENV', 'unittest');
     app = utils.createApp('load-plugin-default');
     const loader = app.loader;
@@ -541,6 +637,10 @@ describe('test/load_plugin.test.js', function() {
       'tracelog',
       'gateway',
     ]);
+
+    assert(loader.allPlugins.zoneclient.enable === true);
+    assert(loader.allPlugins.zoneclient.implicitEnable === true);
+    assert.deepEqual(loader.allPlugins.zoneclient.dependents, [ 'ldc' ]);
   });
 
   it('should load plugin from scope', () => {
@@ -583,5 +683,44 @@ describe('test/load_plugin.test.js', function() {
     assert(loader.allPlugins.tracelog.enable === true);
     assert(loader.allPlugins.gw.enable === false);
     assert(loader.allPlugins.rpcServer.enable === false);
+  });
+
+  it('should load plugin with duplicate plugin dir from eggPaths', () => {
+    class BaseApplication extends EggCore {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate'));
+      }
+    }
+
+    class Application extends BaseApplication {
+      get [Symbol.for('egg#loader')]() {
+        return EggLoader;
+      }
+      get [Symbol.for('egg#eggPath')]() {
+        return utils.getFilepath(path.join('plugin-duplicate', 'node_modules', '@scope', 'b'));
+      }
+    }
+
+    const baseDir = utils.getFilepath('plugin-duplicate');
+    app = utils.createApp(path.join('plugin-duplicate', 'release'), {
+      Application,
+    });
+    const loader = app.loader;
+    loader.loadPlugin();
+    loader.loadConfig();
+
+    assert.deepEqual(loader.plugins['a-duplicate'], {
+      enable: true,
+      name: 'a-duplicate',
+      dependencies: [],
+      optionalDependencies: [ 'a' ],
+      env: [],
+      package: '@scope/a',
+      path: path.join(baseDir, 'node_modules', '@scope', 'a'),
+      from: path.join(baseDir, 'release', 'config', 'plugin.js'),
+    });
   });
 });

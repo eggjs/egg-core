@@ -1,5 +1,3 @@
-'use strict';
-
 const path = require('path');
 const assert = require('assert');
 const mm = require('mm');
@@ -177,7 +175,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
   });
 
   describe('get config with scope', () => {
-    it('should return without scope when env = default', async () => {
+    it('should return without scope when env = default', () => {
       mm(process.env, 'EGG_SERVER_ENV', 'default');
       app = utils.createApp('scope-env');
       const loader = app.loader;
@@ -186,7 +184,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
       assert(loader.config.from === 'default');
     });
 
-    it('should return without scope when env = prod', async () => {
+    it('should return without scope when env = prod', () => {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       app = utils.createApp('scope-env');
       const loader = app.loader;
@@ -195,7 +193,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
       assert(loader.config.from === 'prod');
     });
 
-    it('should return with scope when env = default', async () => {
+    it('should return with scope when env = default', () => {
       mm(process.env, 'EGG_SERVER_ENV', 'default');
       mm(process.env, 'EGG_SERVER_SCOPE', 'en');
       app = utils.createApp('scope-env');
@@ -205,7 +203,7 @@ describe('test/loader/mixin/load_config.test.js', () => {
       assert(loader.config.from === 'en');
     });
 
-    it('should return with scope when env = prod', async () => {
+    it('should return with scope when env = prod', () => {
       mm(process.env, 'EGG_SERVER_ENV', 'prod');
       mm(process.env, 'EGG_SERVER_SCOPE', 'en');
       app = utils.createApp('scope-env');

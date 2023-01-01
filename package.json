@@ -1,17 +1,20 @@
 {
   "name": "egg-core",
-  "version": "4.21.0",
+  "version": "5.0.0",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
   "types": "index.d.ts",
+  "files": [
+    "index.js",
+    "lib",
+    "index.d.ts"
+  ],
   "scripts": {
-    "autod": "autod",
     "lint": "eslint .",
-    "test": "npm run lint -- --fix && egg-bin test",
-    "test-local": "egg-bin test",
-    "cov": "egg-bin cov",
-    "pkgfiles": "egg-bin pkgfiles",
-    "ci": "egg-bin pkgfiles --check && npm run lint && npm run cov",
+    "test": "npm run lint -- --fix && npm run test-local",
+    "test-local": "egg-bin test -p",
+    "cov": "egg-bin cov -p",
+    "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"
   },
   "repository": {
@@ -29,41 +32,29 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 8.5.0"
-  },
-  "ci": {
-    "type": "github",
-    "version": "8, 10, 12, 14, 16",
-    "afterScript": "after_success:\n  - npminstall codecov && codecov --disable=gcov",
-    "license": {
-      "year": 2016
-    }
+    "node": ">= 14.17.0"
   },
   "devDependencies": {
-    "autod": "^3.1.0",
+    "@types/depd": "^1.1.32",
+    "@types/koa": "^2.0.48",
     "await-event": "^2.1.0",
     "coffee": "^5.2.1",
-    "egg-bin": "^4.13.0",
-    "egg-ci": "^1.12.0",
+    "egg-bin": "^5.9.0",
     "egg-utils": "^2.4.1",
-    "eslint": "^5.16.0",
-    "eslint-config-egg": "^7.4.1",
+    "eslint": "^8.31.0",
+    "eslint-config-egg": "^12.1.0",
     "git-contributor": "^1.0.10",
-    "jest": "^24.8.0",
     "js-yaml": "^3.13.1",
-    "mm": "^2.5.0",
-    "mz-modules": "^2.1.0",
+    "mm": "^3.2.1",
     "pedding": "^1.1.0",
-    "rimraf": "^2.6.3",
     "spy": "^1.0.0",
     "supertest": "^4.0.2",
-    "ts-node": "^8.0.3",
-    "typescript": "^3.3.3333"
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4",
+    "urllib": "^3.10.0"
   },
   "dependencies": {
     "@eggjs/router": "^2.0.0",
-    "@types/depd": "^1.1.32",
-    "@types/koa": "^2.0.48",
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "depd": "^2.0.0",
@@ -73,15 +64,11 @@
     "get-ready": "^2.0.1",
     "globby": "^11.0.2",
     "is-type-of": "^1.2.1",
-    "koa": "^2.7.0",
+    "koa": "^2.14.0",
     "koa-convert": "^1.2.0",
     "node-homedir": "^1.1.1",
     "ready-callback": "^2.1.0",
+    "tsconfig-paths": "^4.1.1",
     "utility": "^1.16.1"
-  },
-  "files": [
-    "index.js",
-    "lib",
-    "index.d.ts"
-  ]
+  }
 }

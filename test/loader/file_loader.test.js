@@ -1,5 +1,3 @@
-'use strict';
-
 const assert = require('assert');
 const pedding = require('pedding');
 const path = require('path');
@@ -215,7 +213,7 @@ describe('test/loader/file_loader.test.js', () => {
         directory: path.join(dirBase, 'syntax_error'),
         target: app.model,
       }).load();
-    }, /Parse Error:/);
+    }, /error: Unexpected identifier/);
   });
 
   it('should throw when directory contains dot', () => {

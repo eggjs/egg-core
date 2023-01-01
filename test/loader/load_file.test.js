@@ -1,10 +1,8 @@
-'use strict';
-
 const mm = require('mm');
 const assert = require('assert');
 const utils = require('../utils');
 
-describe('test/load_file.test.js', () => {
+describe('test/loader/load_file.test.js', () => {
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -25,7 +23,7 @@ describe('test/load_file.test.js', () => {
     assert.throws(() => {
       app = utils.createApp('syntaxerror');
       app.loader.loadCustomApp();
-    }, /Parse Error: Unexpected token/);
+    }, /error: Unexpected end of input/);
   });
 
   it('should load custom file', () => {

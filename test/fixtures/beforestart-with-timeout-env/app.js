@@ -1,6 +1,4 @@
-'use strict';
-
-const sleep = require('ko-sleep');
+const { sleep } = require('../../utils');
 module.exports = function (app) {
   app.beforeStart(function* () {
     yield sleep(11000);

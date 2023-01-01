@@ -1,6 +1,5 @@
-'use strict';
-const sleep = require('mz-modules/sleep');
 const assert = require('assert');
+const { sleep } = require('../../../../../utils');
 
 module.exports = app => {
   app.bootLog.push('app.js in plugin');

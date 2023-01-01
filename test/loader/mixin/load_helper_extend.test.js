@@ -1,12 +1,10 @@
-'use strict';
-
 const request = require('supertest');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_helper_extend.test.js', function() {
+describe('test/loader/mixin/load_helper_extend.test.js', () => {
   describe('helper', () => {
     let app;
-    before(function() {
+    before(() => {
       app = utils.createApp('helper');
       app.loader.loadPlugin();
       app.loader.loadConfig();

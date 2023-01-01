@@ -1,12 +1,10 @@
-'use strict';
-
 const path = require('path');
 const request = require('supertest');
 const mm = require('mm');
 const assert = require('assert');
 const utils = require('../../utils');
 
-describe('test/loader/mixin/load_service.test.js', function() {
+describe('test/loader/mixin/load_service.test.js', () => {
   let app;
   afterEach(mm.restore);
   afterEach(() => app.close());
@@ -39,7 +37,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       .expect(200);
   });
 
-  it('should throw when dulplicate', function() {
+  it('should throw when dulplicate', () => {
     assert.throws(() => {
       app = utils.createApp('service-override');
       app.loader.loadPlugin();
@@ -48,7 +46,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
     }, /can't overwrite property 'foo'/);
   });
 
-  it('should check es6', function() {
+  it('should check es6', () => {
     app = utils.createApp('services_loader_verify');
     app.loader.loadPlugin();
     app.loader.loadConfig();
@@ -99,7 +97,7 @@ describe('test/loader/mixin/load_service.test.js', function() {
       .expect(200);
   });
 
-  describe('subdir', function() {
+  describe('subdir', () => {
     it('should load 2 level dir', async () => {
       mm(process.env, 'NO_DEPRECATION', '*');
       app = utils.createApp('subdir-services');

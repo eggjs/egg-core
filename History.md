@@ -1,4 +1,80 @@
 
+4.29.0 / 2022-12-06
+==================
+
+**features**
+  * [[`0e48956`](http://github.com/eggjs/egg-core/commit/0e4895602bcc690e8e5ef6c6ccca64aed6732cbe)] - feat: enable asyncLocalStorage by default (#251) (fengmk2 <<fengmk2@gmail.com>>)
+
+4.28.1 / 2022-11-28
+==================
+
+**fixes**
+  * [[`1d7d19b`](http://github.com/eggjs/egg-core/commit/1d7d19bc6c1fabdb8cea51dcd680fd608f5cc4fe)] - fix: fix call legacyReadyCallback with options (#250) (killa <<killa123@126.com>>)
+
+4.28.0 / 2022-11-28
+==================
+
+**features**
+  * [[`d4080c0`](http://github.com/eggjs/egg-core/commit/d4080c0bdb727ea8a323c43a86e37baf7b6067e0)] - feat: add legacy timing (#249) (killa <<killa123@126.com>>)
+
+4.27.0 / 2022-10-14
+==================
+
+**features**
+  * [[`7750ebc`](http://github.com/eggjs/egg-core/commit/7750ebc283543fb5c2ca9b704e247f04c7ca1ec8)] - feat: dump plugin info when it implicit enable by dependents plugin (#248) (TZ | 天猪 <<atian25@qq.com>>)
+
+4.26.1 / 2022-09-20
+==================
+
+**fixes**
+  * [[`0c571d8`](http://github.com/eggjs/egg-core/commit/0c571d81ef9b000da67918caafa2800c64be4987)] - fix: appInfo.scope no value (#247) (一剑 <<answord@163.com>>)
+
+4.26.0 / 2022-09-07
+==================
+
+**features**
+  * [[`7c6353f`](http://github.com/eggjs/egg-core/commit/7c6353f1dfe2ed4ebf0d9ae432356608372664bd)] - feat: extract plugin loader method for override (#246) (TZ | 天猪 <<atian25@qq.com>>)
+
+4.25.0 / 2022-09-07
+==================
+
+**features**
+  * [[`8ae1aad`](https://github.com/eggjs/egg-core.git/commit/8ae1aade1f3702f944b3c0e8794c88adc0a10459)] - feat: add load plugin methods (#245) (吖猩 <<whx89768@alibaba-inc.com>>)
+
+**others**
+  * [[`7c4707c`](https://github.com/eggjs/egg-core.git/commit/7c4707c64c6df365e2c2b77b9dd8c7581c62a97f)] - Create codeql-analysis.yml (fengmk2 <<fengmk2@gmail.com>>)
+
+4.24.1 / 2022-06-23
+==================
+
+**fixes**
+  * [[`f8c069b`](http://github.com/eggjs/egg-core/commit/f8c069b0c1e8757ac8ee619c53d2d6f21ccd03db)] - fix: validate plugin.package (#244) (TZ | 天猪 <<atian25@qq.com>>)
+
+4.24.0 / 2022-06-21
+==================
+
+**others**
+  * [[`970134b`](http://github.com/eggjs/egg-core/commit/970134b28f72fbcbb4bda50944ec5c301c7b7d89)] - chore: update node engines to 8.9.0+ (#243) (TZ | 天猪 <<atian25@qq.com>>)
+  * [[`02bb843`](http://github.com/eggjs/egg-core/commit/02bb8434066f1508fa522aaa5e6490ac50b9d963)] - refactor: use require.resolve instead of fs.exists (#238) (TZ | 天猪 <<atian25@qq.com>>)
+
+4.23.0 / 2022-02-10
+==================
+
+**features**
+  * [[`f8169f1`](http://github.com/eggjs/egg-core/commit/f8169f1a6cfc451448364958e880f4db0cb33b63)] - feat: support plugin strict config (#240) (吖猩 <<whx89768@alibaba-inc.com>>)
+
+4.22.1 / 2022-01-28
+==================
+
+**fixes**
+  * [[`a9fc514`](http://github.com/eggjs/egg-core/commit/a9fc514f506a4f804099b60ea12c29351f373676)] - fix: plugin loader support pnpm (#239) (hyj1991 <<yeekwanvong@gmail.com>>)
+
+4.22.0 / 2022-01-07
+==================
+
+**features**
+  * [[`43f15ad`](http://github.com/eggjs/egg-core/commit/43f15ada7291734aa583c274a8af5e321688deb5)] - feat: support pnpm node_modules style (#237) (TZ | 天猪 <<atian25@qq.com>>)
+
 4.21.0 / 2021-11-24
 ==================
 

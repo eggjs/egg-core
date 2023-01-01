@@ -1,18 +1,15 @@
-'use strict';
-
 const mm = require('mm');
 const is = require('is-type-of');
 const util = require('util');
 const path = require('path');
 const assert = require('assert');
 const spy = require('spy');
-const sleep = require('mz-modules/sleep');
 const request = require('supertest');
 const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const awaitEvent = require('await-event');
-const fs = require('mz/fs');
+const fs = require('fs/promises');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -323,7 +320,7 @@ describe('test/egg.test.js', () => {
       const first = spy();
       const second = spy();
       app = utils.createApp('close');
-      app.beforeClose(() => sleep(200));
+      app.beforeClose(() => utils.sleep(200));
       app.close().then(first);
       app.close().then(second);
       setTimeout(() => {
@@ -466,7 +463,7 @@ describe('test/egg.test.js', () => {
     after(() => app && app.close());
 
     describe('app', () => {
-      it('should get timing', function* () {
+      it('should get timing', async () => {
         app = utils.createApp('timing');
         app.loader.loadPlugin();
         app.loader.loadConfig();
@@ -477,10 +474,10 @@ describe('test/egg.test.js', () => {
         app.loader.loadMiddleware();
         app.loader.loadController();
         app.loader.loadRouter();
-        yield app.ready();
+        await app.ready();
 
         const json = app.timing.toJSON();
-        assert(json.length === 25);
+        assert(json.length === 28);
 
         assert(json[1].name === 'Application Start');
         assert(json[1].end - json[1].start === json[1].duration);
@@ -500,38 +497,43 @@ describe('test/egg.test.js', () => {
 
         // loadCustomApp
         assert(json[11].name === 'Load app.js');
-        assert(json[12].name === 'Require(6) app.js');
-        assert(json[13].name === 'Before Start in app.js:6:9');
-        assert(json[14].name === 'Load "proxy" to Context');
-        assert(json[15].name === 'Load Controller');
-        assert(json[16].name === 'Load "controller" to Application');
+        // test/fixtures/egg/node_modules/session/app.js
+        assert(json[12].name.startsWith('Require(6) '));
+        assert(json[13].name === 'Require(7) app.js');
+        assert.equal(json[14].name, 'Before Start in app.js:9:7');
+        assert(json[15].name === 'Before Start in mock Block');
+        assert(json[16].name === 'readyCallback in mockReadyCallbackWithoutFunction');
+
+        assert(json[17].name === 'Load "proxy" to Context');
+        assert(json[18].name === 'Load Controller');
+        assert(json[19].name === 'Load "controller" to Application');
 
         // loadService
-        assert(json[17].name === 'Load Service');
-        assert(json[18].name === 'Load "service" to Context');
+        assert(json[20].name === 'Load Service');
+        assert(json[21].name === 'Load "service" to Context');
 
         // loadMiddleware
-        assert(json[19].name === 'Load Middleware');
-        assert(json[20].name === 'Load "middlewares" to Application');
+        assert(json[22].name === 'Load Middleware');
+        assert(json[23].name === 'Load "middlewares" to Application');
 
         // loadController
-        assert(json[21].name === 'Load Controller');
-        assert(json[22].name === 'Load "controller" to Application');
+        assert(json[24].name === 'Load Controller');
+        assert(json[25].name === 'Load "controller" to Application');
 
         // loadRouter
-        assert(json[23].name === 'Load Router');
-        assert(json[24].name === 'Require(7) app/router.js');
+        assert(json[26].name === 'Load Router');
+        assert(json[27].name === 'Require(8) app/router.js');
       });
     });
 
     describe('agent', () => {
-      it('should get timing', function* () {
+      it('should get timing', async () => {
         app = utils.createApp('timing');
         app.loader.loadPlugin();
         app.loader.loadConfig();
         app.loader.loadApplicationExtend();
         app.loader.loadCustomAgent();
-        yield app.ready();
+        await app.ready();
 
         const json = app.timing.toJSON();
         assert(json.length === 14);
@@ -555,7 +557,7 @@ describe('test/egg.test.js', () => {
         // loadCustomAgent
         assert(json[11].name === 'Load agent.js');
         assert(json[12].name === 'Require(6) agent.js');
-        assert(json[13].name === 'Before Start in agent.js:5:11');
+        assert.equal(json[13].name, 'Before Start in agent.js:8:9');
       });
     });
 
@@ -602,7 +604,7 @@ describe('test/egg.test.js', () => {
               'willReady',
               'ready',
             ]);
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -616,7 +618,7 @@ describe('test/egg.test.js', () => {
               'didReady',
             ]);
           await app.lifecycle.triggerServerDidReady();
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -674,7 +676,7 @@ describe('test/egg.test.js', () => {
               'willReady',
               'ready',
             ]);
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -688,7 +690,7 @@ describe('test/egg.test.js', () => {
               'didReady',
             ]);
           await app.lifecycle.triggerServerDidReady();
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -748,7 +750,7 @@ describe('test/egg.test.js', () => {
         }
         assert.strictEqual(error.message, 'didLoad error');
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad' ]);
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didReady' ]);
         await app.close();
         assert.deepStrictEqual(
@@ -773,7 +775,7 @@ describe('test/egg.test.js', () => {
         }
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad' ]);
         assert.strictEqual(error.message, 'willReady error');
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'didReady' ]);
         await app.close();
         assert.deepStrictEqual(
@@ -818,7 +820,7 @@ describe('test/egg.test.js', () => {
         const app = utils.createApp('boot-serverDidLoad-error');
         app.loader.loadAll();
         await app.ready();
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [
           'configDidLoad',
           'didLoad',
@@ -855,7 +857,7 @@ describe('test/egg.test.js', () => {
         app.ready(() => {
           app.bootLog.push('readyFunction');
         });
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(
           app.bootLog,
           [
