@@ -3,7 +3,7 @@
 const mm = require('mm');
 const path = require('path');
 const assert = require('assert');
-const sleep = require('mz-modules/sleep');
+const { sleep } = require('../utils');
 const utils = require('../../lib/utils');
 
 describe('test/utils/index.test.js', () => {

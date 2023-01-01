@@ -6,13 +6,12 @@ const util = require('util');
 const path = require('path');
 const assert = require('assert');
 const spy = require('spy');
-const sleep = require('mz-modules/sleep');
 const request = require('supertest');
 const coffee = require('coffee');
 const utils = require('./utils');
 const EggCore = require('..').EggCore;
 const awaitEvent = require('await-event');
-const fs = require('mz/fs');
+const fs = require('fs/promises');
 
 describe('test/egg.test.js', () => {
   afterEach(mm.restore);
@@ -323,7 +322,7 @@ describe('test/egg.test.js', () => {
       const first = spy();
       const second = spy();
       app = utils.createApp('close');
-      app.beforeClose(() => sleep(200));
+      app.beforeClose(() => utils.sleep(200));
       app.close().then(first);
       app.close().then(second);
       setTimeout(() => {
@@ -607,7 +606,7 @@ describe('test/egg.test.js', () => {
               'willReady',
               'ready',
             ]);
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -621,7 +620,7 @@ describe('test/egg.test.js', () => {
               'didReady',
             ]);
           await app.lifecycle.triggerServerDidReady();
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -679,7 +678,7 @@ describe('test/egg.test.js', () => {
               'willReady',
               'ready',
             ]);
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -693,7 +692,7 @@ describe('test/egg.test.js', () => {
               'didReady',
             ]);
           await app.lifecycle.triggerServerDidReady();
-          await sleep(10);
+          await utils.sleep(10);
           assert.deepStrictEqual(
             app.bootLog,
             [
@@ -753,7 +752,7 @@ describe('test/egg.test.js', () => {
         }
         assert.strictEqual(error.message, 'didLoad error');
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad' ]);
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didReady' ]);
         await app.close();
         assert.deepStrictEqual(
@@ -778,7 +777,7 @@ describe('test/egg.test.js', () => {
         }
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad' ]);
         assert.strictEqual(error.message, 'willReady error');
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [ 'configDidLoad', 'didLoad', 'didReady' ]);
         await app.close();
         assert.deepStrictEqual(
@@ -823,7 +822,7 @@ describe('test/egg.test.js', () => {
         const app = utils.createApp('boot-serverDidLoad-error');
         app.loader.loadAll();
         await app.ready();
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(app.bootLog, [
           'configDidLoad',
           'didLoad',
@@ -860,7 +859,7 @@ describe('test/egg.test.js', () => {
         app.ready(() => {
           app.bootLog.push('readyFunction');
         });
-        await sleep(10);
+        await utils.sleep(10);
         assert.deepStrictEqual(
           app.bootLog,
           [

@@ -4,13 +4,11 @@ const path = require('path');
 const fs = require('fs');
 const mm = require('mm');
 const assert = require('assert');
-const rimraf = require('rimraf');
 const spy = require('spy');
 const pedding = require('pedding');
 const utils = require('../../utils');
 const EggCore = require('../../..').EggCore;
 const EggLoader = require('../../..').EggLoader;
-
 
 describe('test/load_plugin.test.js', function() {
   let app;
@@ -497,7 +495,7 @@ describe('test/load_plugin.test.js', function() {
   });
 
   it('should resolve the realpath of plugin path', () => {
-    rimraf.sync(utils.getFilepath('realpath/node_modules/a'));
+    fs.rmSync(utils.getFilepath('realpath/node_modules/a'), { force: true, recursive: true });
     fs.symlinkSync('../a', utils.getFilepath('realpath/node_modules/a'), 'dir');
     app = utils.createApp('realpath');
     const loader = app.loader;

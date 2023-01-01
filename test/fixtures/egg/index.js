@@ -1,11 +1,8 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
-const rimraf = require('mz-modules/rimraf');
 
 const eggPath = path.join(__dirname, 'node_modules/egg-core');
-rimraf.sync(eggPath);
+fs.rmSync(eggPath, { force: true, recursive: true });
 fs.symlinkSync(
   path.join(__dirname, '../../..'),
   eggPath,
