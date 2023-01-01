@@ -12,8 +12,8 @@
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test -p -r co-mocha",
-    "cov": "egg-bin cov -p -r co-mocha",
+    "test-local": "egg-bin test -r co-mocha",
+    "cov": "egg-bin cov -r co-mocha",
     "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"
   },
