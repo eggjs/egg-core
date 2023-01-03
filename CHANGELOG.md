@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.2.0](https://github.com/eggjs/egg-core/compare/v5.1.1...v5.2.0) (2023-01-03)
+
+
+### Features
+
+* upgrade ready-callback v3 ([#258](https://github.com/eggjs/egg-core/issues/258)) ([8a94313](https://github.com/eggjs/egg-core/commit/8a9431353ea3418cdfce04ca4be40eecb51fd4fe))
+
 ## [5.1.1](https://github.com/eggjs/egg-core/compare/v5.1.0...v5.1.1) (2023-01-01)
 
 
