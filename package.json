@@ -58,7 +58,7 @@
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "depd": "^2.0.0",
-    "egg-logger": "^2.4.1",
+    "egg-logger": "^3.0.0",
     "egg-path-matching": "^1.0.1",
     "extend2": "^1.0.0",
     "get-ready": "^2.0.1",
