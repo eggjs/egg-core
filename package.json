@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test -p",
+    "test-single": "egg-bin test",
     "cov": "egg-bin cov -p",
     "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"
@@ -58,7 +59,7 @@
     "co": "^4.6.0",
     "debug": "^4.1.1",
     "depd": "^2.0.0",
-    "egg-logger": "^2.4.1",
+    "egg-logger": "^3.1.0",
     "egg-path-matching": "^1.0.1",
     "extend2": "^1.0.0",
     "get-ready": "^2.0.1",
