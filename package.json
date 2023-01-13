@@ -13,6 +13,7 @@
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test -p",
+    "test-single": "egg-bin test",
     "cov": "egg-bin cov -p",
     "ci": "npm run lint && npm run cov",
     "contributor": "git-contributor"

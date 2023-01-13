@@ -21,6 +21,9 @@ describe('test/utils/timing.test.js', () => {
     assert(json[2].name === 'b');
     assert(json[2].end - json[2].start === json[2].duration);
     assert(json[2].pid === process.pid);
+
+    timing.start('c');
+    console.log(timing.toString());
   });
 
   it('should set item when start', () => {

@@ -149,6 +149,7 @@ describe('test/egg.test.js', () => {
         assert(message === '[egg:core:ready_timeout] %s seconds later %s was still unable to finish.');
         assert(b === 10);
         assert(a === 'a');
+        console.log(app.timing.toString());
         done();
       });
       app.ready(() => {
@@ -156,7 +157,7 @@ describe('test/egg.test.js', () => {
       });
     });
 
-    it('should log info when plugin is not ready', done => {
+    it('should log info when plugin is ready', done => {
       app = utils.createApp('ready');
       app.loader.loadAll();
       let message = '';
@@ -166,6 +167,7 @@ describe('test/egg.test.js', () => {
       app.ready(() => {
         assert(/\[egg:core:ready_stat] end ready task a, remain \["b"]/.test(message));
         assert(/\[egg:core:ready_stat] end ready task b, remain \[]/.test(message));
+        console.log(app.timing.toString());
         done();
       });
     });
@@ -206,6 +208,9 @@ describe('test/egg.test.js', () => {
       assert(app.beforeStartFunction === false);
       await app.ready();
       assert(app.beforeStartFunction === true);
+      const timeline = app.timing.toString();
+      console.log(timeline);
+      assert.match(timeline, /#14 Before Start in app.js:3:7/)
     });
 
     it('should beforeStart excute timeout without EGG_READY_TIMEOUT_ENV too short', function(done) {
@@ -215,6 +220,10 @@ describe('test/egg.test.js', () => {
       app.once('ready_timeout', id => {
         const file = path.normalize('test/fixtures/beforestart-with-timeout-env/app.js');
         assert(id.includes(file));
+        const timeline = app.timing.toString();
+        console.log(timeline);
+        assert.match(timeline, /▇ \[\d+ms NOT_END] - #1 Application Start/)
+        assert.match(timeline, /▇ \[\d+ms NOT_END] - #14 Before Start in app.js:3:7/)
         done();
       });
     });
@@ -224,6 +233,7 @@ describe('test/egg.test.js', () => {
       app.loader.loadAll();
       app.once('error', err => {
         assert(err.message === 'not ready');
+        console.log(app.timing.toString());
         done();
       });
     });
@@ -236,6 +246,7 @@ describe('test/egg.test.js', () => {
         throw new Error('should not run');
       } catch (err) {
         assert(err.message === 'not ready');
+        console.log(app.timing.toString());
       }
     });
 
@@ -760,6 +771,9 @@ describe('test/egg.test.js', () => {
             'didReady',
             'beforeClose',
           ]);
+        console.log(app.timing.toString());
+        assert.match(app.timing.toString(), /egg start timeline:/);
+        assert.match(app.timing.toString(), /#1 Application Start/);
       });
     });
 
