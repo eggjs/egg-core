@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.0](https://github.com/eggjs/egg-core/compare/v5.2.0...v5.3.0) (2023-01-13)
+
+
+### Features
+
+* support show app.timing in timline string ([#260](https://github.com/eggjs/egg-core/issues/260)) ([5b7af12](https://github.com/eggjs/egg-core/commit/5b7af1230637e5266ea05bd97fd19d4da85f1aab)), closes [#0](https://github.com/eggjs/egg-core/issues/0) [#1](https://github.com/eggjs/egg-core/issues/1) [#2](https://github.com/eggjs/egg-core/issues/2) [#3](https://github.com/eggjs/egg-core/issues/3) [#4](https://github.com/eggjs/egg-core/issues/4) [#5](https://github.com/eggjs/egg-core/issues/5) [#6](https://github.com/eggjs/egg-core/issues/6) [#7](https://github.com/eggjs/egg-core/issues/7) [#8](https://github.com/eggjs/egg-core/issues/8) [#9](https://github.com/eggjs/egg-core/issues/9) [#10](https://github.com/eggjs/egg-core/issues/10) [#11](https://github.com/eggjs/egg-core/issues/11) [#12](https://github.com/eggjs/egg-core/issues/12) [#13](https://github.com/eggjs/egg-core/issues/13) [#14](https://github.com/eggjs/egg-core/issues/14) [#15](https://github.com/eggjs/egg-core/issues/15) [#16](https://github.com/eggjs/egg-core/issues/16) [#17](https://github.com/eggjs/egg-core/issues/17) [#18](https://github.com/eggjs/egg-core/issues/18) [#19](https://github.com/eggjs/egg-core/issues/19) [#20](https://github.com/eggjs/egg-core/issues/20) [#21](https://github.com/eggjs/egg-core/issues/21) [#22](https://github.com/eggjs/egg-core/issues/22)
+
 ## [5.2.0](https://github.com/eggjs/egg-core/compare/v5.1.1...v5.2.0) (2023-01-03)
 
 
