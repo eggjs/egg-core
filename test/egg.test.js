@@ -210,7 +210,7 @@ describe('test/egg.test.js', () => {
       assert(app.beforeStartFunction === true);
       const timeline = app.timing.toString();
       console.log(timeline);
-      assert.match(timeline, /#14 Before Start in app.js:3:7/)
+      assert.match(timeline, /#14 Before Start in app.js:3:7/);
     });
 
     it('should beforeStart excute timeout without EGG_READY_TIMEOUT_ENV too short', function(done) {
@@ -222,8 +222,8 @@ describe('test/egg.test.js', () => {
         assert(id.includes(file));
         const timeline = app.timing.toString();
         console.log(timeline);
-        assert.match(timeline, /▇ \[\d+ms NOT_END] - #1 Application Start/)
-        assert.match(timeline, /▇ \[\d+ms NOT_END] - #14 Before Start in app.js:3:7/)
+        assert.match(timeline, /▇ \[\d+ms NOT_END] - #1 Application Start/);
+        assert.match(timeline, /▇ \[\d+ms NOT_END] - #14 Before Start in app.js:3:7/);
         done();
       });
     });
