@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.3.1](https://github.com/eggjs/egg-core/compare/v5.3.0...v5.3.1) (2023-04-06)
+
+
+### Bug Fixes
+
+* skip register tsconfig-paths if tsconfig.json not exists ([#261](https://github.com/eggjs/egg-core/issues/261)) ([24a0d64](https://github.com/eggjs/egg-core/commit/24a0d64cee90b283870ba325a650f7fe592f4abc)), closes [/github.com/eggjs/egg-core/pull/254#issuecomment-1493713971](https://github.com/eggjs//github.com/eggjs/egg-core/pull/254/issues/issuecomment-1493713971)
+
 ## [5.3.0](https://github.com/eggjs/egg-core/compare/v5.2.0...v5.3.0) (2023-01-13)
 
 
