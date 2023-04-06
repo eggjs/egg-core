@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 14.17.0"
+    "node": ">= 14.19.0"
   },
   "devDependencies": {
     "await-event": "^2.1.0",
