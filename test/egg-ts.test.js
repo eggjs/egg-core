@@ -120,6 +120,15 @@ describe('test/egg-ts.test.js', () => {
     assert(app.serviceClasses.test);
   });
 
+  it('should auto require tsconfig-paths', async () => {
+    mm(process.env, 'EGG_TYPESCRIPT', 'true');
+    app = utils.createApp('egg-ts-js-tsconfig-paths');
+
+    app.loader.loadService();
+    assert(app.serviceClasses.lord);
+    assert(app.serviceClasses.test);
+  });
+
   it('should not load ts files while EGG_TYPESCRIPT was not exist', async () => {
     app = utils.createApp('egg-ts-js');
 
