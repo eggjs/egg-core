@@ -1,4 +1,13 @@
 
+4.30.2 / 2023-04-07
+==================
+
+**fixes**
+  * [[`eaeabd6`](http://github.com/eggjs/egg-core/commit/eaeabd6b4c31f972739db2539d013aee86e21a12)] - fix: skip register tsconfig-paths if tsconfig.json not exists (#263) (fengmk2 <<fengmk2@gmail.com>>)
+
+**others**
+  * [[`6319f16`](http://github.com/eggjs/egg-core/commit/6319f161825208d66eeccd42bb6e6deaeec40920)] - chore: add latest-4 publish tag (fengmk2 <<fengmk2@gmail.com>>)
+
 4.29.0 / 2022-12-06
 ==================
 
