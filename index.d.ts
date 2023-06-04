@@ -1,4 +1,4 @@
-import KoaApplication = require('koa');
+import KoaApplication from '@eggjs/koa';
 import depd = require('depd');
 import { Logger } from 'egg-logger';
 
