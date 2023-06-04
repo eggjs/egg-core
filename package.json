@@ -1,5 +1,5 @@
 {
-  "name": "egg-core",
+  "name": "@eggjs/core",
   "version": "5.3.1",
   "description": "A core Pluggable framework based on koa",
   "main": "index.js",
@@ -33,7 +33,7 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "engines": {
-    "node": ">= 14.19.0"
+    "node": ">= 16.13.0"
   },
   "devDependencies": {
     "await-event": "^2.1.0",
@@ -72,5 +72,8 @@
     "ready-callback": "^3.0.0",
     "tsconfig-paths": "^4.1.1",
     "utility": "^1.16.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
