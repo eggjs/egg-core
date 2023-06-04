@@ -1,4 +1,4 @@
-# egg-core
+# @eggjs/core
 
 [![NPM version][npm-image]][npm-url]
 [![Node.js CI](https://github.com/eggjs/egg-core/actions/workflows/nodejs.yml/badge.svg)](https://github.com/eggjs/egg-core/actions/workflows/nodejs.yml)
@@ -23,7 +23,7 @@ A core Pluggable framework based on [koa](https://github.com/koajs/koa).
 
 Directory structure
 
-```
+```bash
 ├── package.json
 ├── app.js (optional)
 ├── agent.js (optional)
@@ -56,8 +56,9 @@ Directory structure
 
 Then you can start with code below
 
-```js
-const Application = require('egg-core').EggCore;
+```ts
+import { EggCore as Application } from '@eggjs/core';
+
 const app = new Application({
   baseDir: '/path/to/app'
 });
@@ -79,11 +80,11 @@ EggLoader can easily load files or directories in your [egg] project. In additio
 
 #### loadPlugin
 
-Load config/plugin.js
+Load config/plugin.ts
 
 #### loadConfig
 
-Load config/config.js and config/{serverEnv}.js
+Load config/config.ts and config/{serverEnv}.ts
 
 If `process.env.EGG_APP_CONFIG` is exists, then it will be parse and override config.
 
@@ -97,31 +98,31 @@ Load app/middleware
 
 #### loadApplicationExtend
 
-Load app/extend/application.js
+Load app/extend/application.ts
 
 #### loadContextExtend
 
-Load app/extend/context.js
+Load app/extend/context.ts
 
 #### loadRequestExtend
 
-Load app/extend/request.js
+Load app/extend/request.ts
 
 #### loadResponseExtend
 
-Load app/extend/response.js
+Load app/extend/response.ts
 
 #### loadHelperExtend
 
-Load app/extend/helper.js
+Load app/extend/helper.ts
 
 #### loadCustomApp
 
-Load app.js, if app.js export boot class, then trigger configDidLoad
+Load app.ts, if app.ts export boot class, then trigger configDidLoad
 
 #### loadCustomAgent
 
-Load agent.js, if agent.js export boot class, then trigger configDidLoad
+Load agent.ts, if agent.ts export boot class, then trigger configDidLoad
 
 #### loadService
 
@@ -193,28 +194,28 @@ Invoke `this.loadToApp('$baseDir/app/controller', 'controller')`, then you can u
 
 To load files from directory, and it will be bound the context.
 
-```js
-// define service in app/service/query.js
-module.exports = class Query {
-  constructor(ctx) {
+```ts
+// define service in app/service/query.ts
+export default class Query {
+  constructor(ctx: Context) {
     super(ctx);
     // get the ctx
   }
 
   async get() {}
-};
+}
 
-// use the service in app/controller/home.js
-module.exports = async ctx => {
+// use the service in app/controller/home.ts
+export default async (ctx: Context) => {
   ctx.body = await ctx.service.query.get();
 };
 ```
 
 #### loadExtend(name, target)
 
-Loader app/extend/xx.js to target, For example,
+Loader app/extend/xx.ts to target, For example,
 
-```js
+```ts
 this.loadExtend('application', app);
 ```
 
@@ -275,6 +276,7 @@ Please open an issue [here](https://github.com/eggjs/egg/issues).
 [MIT](LICENSE)
 
 [egg]: https://github.com/eggjs/egg
+
 <!-- GITCONTRIBUTOR_START -->
 
 ## Contributors
