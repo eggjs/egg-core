@@ -1,9 +1,7 @@
-'use strict';
+import { strict as assert } from 'node:assert';
+import Timing from '../../src/utils/timing';
 
-const assert = require('assert');
-const Timing = require('../../lib/utils/timing');
-
-describe('test/utils/timing.test.js', () => {
+describe('test/utils/timing.test.ts', () => {
 
   it('should trace', () => {
     const timing = new Timing();
@@ -13,14 +11,14 @@ describe('test/utils/timing.test.js', () => {
     timing.end('b');
 
     const json = timing.toJSON();
-    assert(json.length === 3);
+    assert.equal(json.length, 3);
 
-    assert(json[1].name === 'a');
-    assert(json[1].end - json[1].start === json[1].duration);
-    assert(json[1].pid === process.pid);
-    assert(json[2].name === 'b');
-    assert(json[2].end - json[2].start === json[2].duration);
-    assert(json[2].pid === process.pid);
+    assert.equal(json[1].name, 'a');
+    assert.equal(json[1].end - json[1].start, json[1].duration);
+    assert.equal(json[1].pid, process.pid);
+    assert.equal(json[2].name, 'b');
+    assert.equal(json[2].end - json[2].start, json[2].duration);
+    assert.equal(json[2].pid, process.pid);
 
     timing.start('c');
     console.log(timing.toString());
@@ -31,10 +29,10 @@ describe('test/utils/timing.test.js', () => {
     timing.start('a');
 
     const json = timing.toJSON();
-    assert(json[1].name === 'a');
+    assert.equal(json[1].name, 'a');
     assert(json[1].start);
-    assert(json[1].end === undefined);
-    assert(json[1].duration === undefined);
+    assert.equal(json[1].end, undefined);
+    assert.equal(json[1].duration, undefined);
   });
 
   it('should ignore start when name is empty', () => {
@@ -42,22 +40,22 @@ describe('test/utils/timing.test.js', () => {
     timing.start();
 
     const json = timing.toJSON();
-    assert(json.length === 1);
+    assert.equal(json.length, 1);
   });
 
   it('should throw when name exists', () => {
     const timing = new Timing();
     timing.start('a');
-    assert(timing.toJSON().length === 2);
+    assert.equal(timing.toJSON().length, 2);
 
     timing.start('a');
-    assert(timing.toJSON().length === 3);
+    assert.equal(timing.toJSON().length, 3);
   });
 
   it('should ignore end when name dont exist', () => {
     const timing = new Timing();
     timing.end();
-    assert(timing.toJSON().length === 1);
+    assert.equal(timing.toJSON().length, 1);
   });
 
   it('should enable/disable', () => {
@@ -77,9 +75,9 @@ describe('test/utils/timing.test.js', () => {
 
     const json = timing.toJSON();
 
-    assert(json[1].name === 'a');
-    assert(json[2].name === 'c');
-    assert(json.length === 3);
+    assert.equal(json[1].name, 'a');
+    assert.equal(json[2].name, 'c');
+    assert.equal(json.length, 3);
   });
 
   it('should clear', () => {
@@ -88,7 +86,7 @@ describe('test/utils/timing.test.js', () => {
     timing.end('a');
 
     const json = timing.toJSON();
-    assert(json[1].name === 'a');
+    assert.equal(json[1].name, 'a');
 
     timing.clear();
 
@@ -97,8 +95,8 @@ describe('test/utils/timing.test.js', () => {
 
     const json2 = timing.toJSON();
 
-    assert(json2[0].name === 'b');
-    assert(json2.length === 1);
+    assert.equal(json2[0].name, 'b');
+    assert.equal(json2.length, 1);
   });
 
   it('should throw when end and name dont exists', () => {

@@ -4,7 +4,7 @@ const join = require('path').join;
 const is = require('is-type-of');
 const inspect = require('util').inspect;
 const assert = require('assert');
-const debug = require('debug')('egg-core:middleware');
+const debug = require('node:util').debuglog('egg-core:middleware');
 const pathMatching = require('egg-path-matching');
 const utils = require('../../utils');
 

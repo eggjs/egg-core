@@ -1,14 +1,14 @@
 'use strict';
 
-const debug = require('debug')('egg-core:extend');
+const debug = require('node:util').debuglog('egg-core:extend');
 const deprecate = require('depd')('egg');
 const path = require('path');
 
 const originalPrototypes = {
-  request: require('koa/lib/request'),
-  response: require('koa/lib/response'),
-  context: require('koa/lib/context'),
-  application: require('koa/lib/application'),
+  request: require('@eggjs/koa/lib/request').default.prototype,
+  response: require('@eggjs/koa/lib/response').default.prototype,
+  context: require('@eggjs/koa/lib/context').default.prototype,
+  application: require('@eggjs/koa/lib/application').default.prototype,
 };
 
 module.exports = {

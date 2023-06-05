@@ -1,10 +1,8 @@
-'use strict';
-
 const fs = require('fs');
 const path = require('path');
 const assert = require('assert');
 const is = require('is-type-of');
-const debug = require('debug')('egg-core');
+const debug = require('node:util').debuglog('egg-core');
 const homedir = require('node-homedir');
 const FileLoader = require('./file_loader');
 const ContextLoader = require('./context_loader');
@@ -49,6 +47,7 @@ class EggLoader {
       // skip require tsconfig-paths if tsconfig.json not exists
       const tsConfigFile = path.join(this.options.baseDir, 'tsconfig.json');
       if (fs.existsSync(tsConfigFile)) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         require('tsconfig-paths').register({ cwd: this.options.baseDir });
       } else {
         this.options.logger.info('[egg:loader] skip register "tsconfig-paths" because tsconfig.json not exists at %s', tsConfigFile);
@@ -259,7 +258,7 @@ class EggLoader {
    */
   getEggPaths() {
     // avoid require recursively
-    const EggCore = require('../egg');
+    const EggCore = require('../egg').default;
     const eggPaths = [];
 
     let proto = this.app;
