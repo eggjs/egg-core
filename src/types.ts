@@ -1,8 +1,8 @@
-import KoaApplication from '@eggjs/koa';
-import depd = require('depd');
-import { Logger } from 'egg-logger';
+import type KoaApplication from '@eggjs/koa';
+import type depd = require('depd');
+import type { Logger } from 'egg-logger';
 
-type EggType = 'application' | 'agent';
+export type EggType = 'application' | 'agent';
 
 interface PlainObject<T = any> {
   [key: string]: T;
@@ -205,8 +205,8 @@ export interface EggCore<Config = PlainObject> extends EggCoreBase<Config> {
 }
 
 export class EggCore {
-   /**
-   * @constructor
+  /**
+   * @class
    * @param {Object} options - options
    * @param {String} [options.baseDir=process.cwd()] - the directory of application
    * @param {String} [options.type=application|agent] - whether it's running in app worker or agent worker
@@ -279,13 +279,13 @@ export interface FileLoaderOption {
   /** match the files when load, support glob, default to all js files */
   match?: string | string[];
   /** ignore the files when load, support glob */
-  ignore?: string | string[]; 
+  ignore?: string | string[];
   /** custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path` */
   initializer?(obj: object, options: { path: string; pathName: string; }): any;
   /** determine whether invoke when exports is function */
   call?: boolean;
   /** determine whether override the property when get the same name */
-  override?: boolean; 
+  override?: boolean;
   /** an object that be the argument when invoke the function */
   inject?: object;
   /** a function that filter the exports which can be loaded */
@@ -356,7 +356,7 @@ export interface FileLoader {
 export interface ContextLoader {
   /**
    * Same as {@link FileLoader}, but it will attach file to `inject[fieldClass]`. The exports will be lazy loaded, such as `ctx.group.repository`.
-   * @extends FileLoader
+   * @augments FileLoader
    * @since 1.0.0
    */
   new (options: ContextLoaderOption): ContextLoaderBase;
@@ -377,7 +377,7 @@ export class EggLoader<
   options: Options;
 
   /**
-   * @constructor
+   * @class
    * @param {Object} options - options
    * @param {String} options.baseDir - the directory of application
    * @param {EggCore} options.app - Application instance

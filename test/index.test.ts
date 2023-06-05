@@ -1,7 +1,7 @@
-const assert = require('assert');
-const EggCore = require('..');
+import { strict as assert } from 'node:assert';
+import * as EggCore from '..';
 
-describe('test/index.test.js', () => {
+describe('test/index.test.ts', () => {
   it('should expose properties', () => {
     assert(EggCore.EggCore);
     assert(EggCore.EggLoader);

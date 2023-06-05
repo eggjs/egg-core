@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('egg-core:extend');
+const debug = require('node:util').debuglog('egg-core:extend');
 const deprecate = require('depd')('egg');
 const path = require('path');
 

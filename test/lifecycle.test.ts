@@ -1,9 +1,9 @@
-const assert = require('assert');
-const Lifecycle = require('../lib/lifecycle.js');
-const EggCore = require('..').EggCore;
+import { strict as assert } from 'node:assert';
+import Lifecycle from '../src/lifecycle';
+import EggCore from '../src/egg';
 
-describe('test/lifecycle.js', () => {
-  it('should forbid adding hook atfter initialization', () => {
+describe('test/lifecycle.test.ts', () => {
+  it('should forbid adding hook after initialization', () => {
     const lifecycle = new Lifecycle({
       baseDir: '.',
       app: new EggCore(),
@@ -13,18 +13,19 @@ describe('test/lifecycle.js', () => {
     assert.throws(() => {
       lifecycle.addBootHook(
         class Hook {
-          constructor(app) {
+          app: EggCore;
+          constructor(app: EggCore) {
             this.app = app;
           }
           configDidLoad() {
             console.log('test');
           }
-        }
+        },
       );
     }, /do not add hook when lifecycle has been initialized/);
 
     assert.throws(() => {
-      lifecycle.addBootHook(() => {
+      lifecycle.addFunctionAsBootHook(() => {
         console.log('test');
       });
     }, /do not add hook when lifecycle has been initialized/);

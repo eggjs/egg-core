@@ -3,7 +3,7 @@
 const assert = require('assert');
 const fs = require('fs');
 const path = require('path');
-const debug = require('debug')('egg-core:plugin');
+const debug = require('node:util').debuglog('egg-core:plugin');
 const sequencify = require('../../utils/sequencify');
 const loadFile = require('../../utils').loadFile;
 

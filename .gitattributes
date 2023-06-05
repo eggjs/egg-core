@@ -1,3 +1,0 @@
-# make sure git clone linebreak keep as \n on windows
-# https://eslint.org/docs/rules/linebreak-style
-*.js text eol=lf
