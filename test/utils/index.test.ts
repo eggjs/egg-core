@@ -1,10 +1,10 @@
-const mm = require('mm');
-const path = require('path');
-const assert = require('assert');
-const { sleep } = require('../utils');
-const utils = require('../../lib/utils');
+import path from 'node:path';
+import { strict as assert } from 'node:assert';
+import mm from 'mm';
+import { sleep } from '../utils';
+import utils from '../../src/utils';
 
-describe('test/utils/index.test.js', () => {
+describe('test/utils/index.test.ts', () => {
   afterEach(mm.restore);
 
   describe('callFn', () => {
@@ -15,7 +15,7 @@ describe('test/utils/index.test.js', () => {
     it('should call function', async () => {
       function fn() { return 1; }
       const result = await utils.callFn(fn);
-      assert(result === 1);
+      assert.equal(result, 1);
     });
 
     it('should call generator function', async () => {
@@ -24,7 +24,7 @@ describe('test/utils/index.test.js', () => {
         return 1;
       }
       const result = await utils.callFn(fn);
-      assert(result === 1);
+      assert.equal(result, 1);
     });
 
     it('should call return promise function', async () => {
@@ -32,7 +32,7 @@ describe('test/utils/index.test.js', () => {
         return sleep(10).then(() => (1));
       }
       const result = await utils.callFn(fn);
-      assert(result === 1);
+      assert.equal(result, 1);
     });
 
     it('should call async function', async () => {
@@ -41,7 +41,7 @@ describe('test/utils/index.test.js', () => {
         return 1;
       }
       const result = await utils.callFn(fn);
-      assert(result === 1);
+      assert.equal(result, 1);
     });
 
     it('should call with args', async () => {
@@ -58,17 +58,17 @@ describe('test/utils/index.test.js', () => {
     const baseDir = path.join(__dirname, '../fixtures/loadfile');
     it('should load object', () => {
       const result = utils.loadFile(path.join(baseDir, 'object.js'));
-      assert(result.a === 1);
+      assert.equal(result.a, 1);
     });
 
     it('should load null', () => {
       const result = utils.loadFile(path.join(baseDir, 'null.js'));
-      assert(result === null);
+      assert.equal(result, null);
     });
 
     it('should load null', () => {
       const result = utils.loadFile(path.join(baseDir, 'zero.js'));
-      assert(result === 0);
+      assert.equal(result, 0);
     });
 
     it('should load es module', () => {
@@ -83,7 +83,7 @@ describe('test/utils/index.test.js', () => {
 
     it('should load es module with default = null', () => {
       const result = utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
-      assert(result === null);
+      assert.equal(result, null);
     });
 
     it('should load no js file', () => {
@@ -91,7 +91,7 @@ describe('test/utils/index.test.js', () => {
       if (process.platform === 'win32') {
         result = result.replace(/\r\n/g, '\n');
       }
-      assert(result === '---\nmap:\n a: 1\n b: 2');
+      assert.equal(result, '---\nmap:\n a: 1\n b: 2');
     });
   });
 });

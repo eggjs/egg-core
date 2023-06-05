@@ -1,7 +1,7 @@
 {
   "name": "@eggjs/core",
   "version": "5.3.1",
-  "description": "A core Pluggable framework based on koa",
+  "description": "A core plugin framework based on koa",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -9,12 +9,13 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test -p --ts false",
-    "test-single": "egg-bin test --ts false",
-    "cov": "egg-bin cov -p --ts false",
-    "ci": "npm run lint && npm run cov",
-    "contributor": "git-contributor"
+    "test": "npm run lint -- --fix && npm run test-local -- -p",
+    "test-local": "egg-bin test",
+    "ci": "egg-bin cov -p",
+    "contributor": "git-contributor",
+    "clean": "tsc -b --clean",
+    "tsc": "tsc",
+    "prepublishOnly": "npm run tsc"
   },
   "repository": {
     "type": "git",
@@ -33,8 +34,29 @@
   "engines": {
     "node": ">= 16.13.0"
   },
+  "dependencies": {
+    "@eggjs/koa": "^2.15.1",
+    "@eggjs/router": "^2.0.1",
+    "@types/depd": "^1.1.32",
+    "co": "^4.6.0",
+    "depd": "^2.0.0",
+    "egg-logger": "^3.3.1",
+    "egg-path-matching": "^1.0.1",
+    "extend2": "^1.0.0",
+    "gals": "^1.0.1",
+    "get-ready": "^3.0.0",
+    "globby": "^11.0.2",
+    "is-type-of": "^1.2.1",
+    "koa-convert": "^1.2.0",
+    "node-homedir": "^1.1.1",
+    "ready-callback": "^3.0.0",
+    "tsconfig-paths": "^4.1.1",
+    "utility": "^1.16.1"
+  },
   "devDependencies": {
     "@eggjs/tsconfig": "^1.3.3",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.2.5",
     "await-event": "^2.1.0",
     "coffee": "^5.2.1",
     "egg-bin": "^6.4.1",
@@ -50,27 +72,6 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.1.3",
     "urllib": "^3.10.0"
-  },
-  "dependencies": {
-    "@eggjs/koa": "^2.15.0",
-    "@eggjs/router": "^2.0.0",
-    "@types/depd": "^1.1.32",
-    "@types/koa": "^2.13.5",
-    "co": "^4.6.0",
-    "debug": "^4.1.1",
-    "depd": "^2.0.0",
-    "egg-logger": "^3.1.0",
-    "egg-path-matching": "^1.0.1",
-    "extend2": "^1.0.0",
-    "gals": "^1.0.1",
-    "get-ready": "^2.0.1",
-    "globby": "^11.0.2",
-    "is-type-of": "^1.2.1",
-    "koa-convert": "^1.2.0",
-    "node-homedir": "^1.1.1",
-    "ready-callback": "^3.0.0",
-    "tsconfig-paths": "^4.1.1",
-    "utility": "^1.16.1"
   },
   "publishConfig": {
     "access": "public"

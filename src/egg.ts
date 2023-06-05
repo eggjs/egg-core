@@ -1,23 +1,44 @@
-const assert = require('assert');
-const fs = require('fs');
-const KoaApplication = require('@eggjs/koa').default;
-const EggConsoleLogger = require('egg-logger').EggConsoleLogger;
-const debug = require('debug')('egg-core');
-const is = require('is-type-of');
-const co = require('co');
-const Router = require('@eggjs/router').EggRouter;
-const { getAsyncLocalStorage } = require('gals');
-const BaseContextClass = require('./utils/base_context_class');
-const utils = require('./utils');
-const Timing = require('./utils/timing');
-const Lifecycle = require('./lifecycle');
+import assert from 'node:assert';
+import fs from 'node:fs';
+import { debuglog } from 'node:util';
+import is from 'is-type-of';
+import KoaApplication from '@eggjs/koa';
+import type { MiddlewareFunc } from '@eggjs/koa';
+import { EggConsoleLogger } from 'egg-logger';
+import { EggRouter as Router } from '@eggjs/router';
+import type { ReadyFunctionArg } from 'get-ready';
+import { getAsyncLocalStorage } from 'gals';
+import { BaseContextClass } from './utils/base_context_class';
+import utils from './utils';
+import { Timing } from './utils/timing';
+import type { Fun } from './utils';
+import { Lifecycle } from './lifecycle';
+import type { EggLoader } from './loader/egg_loader';
+
+const debug = debuglog('@eggjs/core:egg');
 
 const DEPRECATE = Symbol('EggCore#deprecate');
 const ROUTER = Symbol('EggCore#router');
 const EGG_LOADER = Symbol.for('egg#loader');
 const CLOSE_PROMISE = Symbol('EggCore#closePromise');
 
-class EggCore extends KoaApplication {
+export interface EggCoreOptions {
+  baseDir: string;
+  type: 'application' | 'agent';
+  plugins?: any;
+  serverScope?: string;
+  env?: string;
+}
+
+export class EggCore extends KoaApplication {
+  options: EggCoreOptions;
+  timing: Timing;
+  console: EggConsoleLogger;
+  BaseContextClass: typeof BaseContextClass;
+  Controller: typeof BaseContextClass;
+  Service: typeof BaseContextClass;
+  lifecycle: Lifecycle;
+  loader: EggLoader;
 
   /**
    * @class
@@ -27,7 +48,7 @@ class EggCore extends KoaApplication {
    * @param {Object} [options.plugins] - custom plugins
    * @since 1.0.0
    */
-  constructor(options = {}) {
+  constructor(options: Partial<EggCoreOptions> = {}) {
     options.baseDir = options.baseDir || process.cwd();
     options.type = options.type || 'application';
 
@@ -35,7 +56,6 @@ class EggCore extends KoaApplication {
     assert(fs.existsSync(options.baseDir), `Directory ${options.baseDir} not exists`);
     assert(fs.statSync(options.baseDir).isDirectory(), `Directory ${options.baseDir} is not a directory`);
     assert(options.type === 'application' || options.type === 'agent', 'options.type should be application or agent');
-
     // disable koa als and use egg logic
     super({ asyncLocalStorage: false });
     // can access the AsyncLocalStorage instance in global
@@ -51,8 +71,7 @@ class EggCore extends KoaApplication {
      * @private
      * @since 1.0.0
      */
-    this._options = this.options = options;
-    this.deprecate.property(this, '_options', 'app._options is deprecated, use app.options instead');
+    this.options = options as EggCoreOptions;
 
     /**
      * logging for EggCore, avoid using console directly
@@ -129,13 +148,11 @@ class EggCore extends KoaApplication {
 
   /**
    * override koa's app.use, support generator function
-   * @param {Function} fn - middleware
-   * @return {Application} app
    * @since 1.0.0
    */
-  use(fn) {
+  use(fn: MiddlewareFunc) {
     assert(is.function(fn), 'app.use() requires a function');
-    debug('use %s', fn._name || fn.name || '-');
+    debug('use %s', (fn as any)._name || fn.name || '-');
     this.middleware.push(utils.middleware(fn));
     return this;
   }
@@ -167,6 +184,7 @@ class EggCore extends KoaApplication {
   get deprecate() {
     const caller = utils.getCalleeFromStack();
     if (!this[DEPRECATE].has(caller)) {
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const deprecate = require('depd')('egg');
       // dynamic set _file to caller
       deprecate._file = caller;
@@ -216,16 +234,14 @@ class EggCore extends KoaApplication {
    * @param  {Function|GeneratorFunction|AsyncFunction} scope function will execute before app start
    * @param {string} [name] scope name, default is empty string
    */
-  beforeStart(scope, name) {
+  beforeStart(scope: Fun, name?: string) {
     this.lifecycle.registerBeforeStart(scope, name || '');
   }
 
   /**
    * register an callback function that will be invoked when application is ready.
-   * @see https://github.com/node-modules/ready
+   * @see https://github.com/node-modules/get-ready
    * @since 1.0.0
-   * @param {boolean|Error|Function} [flagOrFunction] -
-   * @return {Promise|null} return promise when argument is undefined
    * @example
    * const app = new Application(...);
    * app.ready(err => {
@@ -233,7 +249,7 @@ class EggCore extends KoaApplication {
    *   console.log('done');
    * });
    */
-  ready(flagOrFunction) {
+  ready(flagOrFunction: ReadyFunctionArg) {
     return this.lifecycle.ready(flagOrFunction);
   }
 
@@ -255,7 +271,7 @@ class EggCore extends KoaApplication {
    * const done = app.readyCallback('mysql');
    * mysql.ready(done);
    */
-  readyCallback(name, opts) {
+  readyCallback(name: string, opts) {
     return this.lifecycle.legacyReadyCallback(name, opts);
   }
 
@@ -305,7 +321,7 @@ class EggCore extends KoaApplication {
     // register router middleware
     this.beforeStart(() => {
       this.use(router.middleware());
-    });
+    }, 'use-router');
     return router;
   }
 
@@ -315,11 +331,11 @@ class EggCore extends KoaApplication {
    * @param {Object} params - more parameters
    * @return {String} url
    */
-  url(name, params) {
+  url(name: string, params?: object) {
     return this.router.url(name, params);
   }
 
-  del(...args) {
+  del(...args: any[]) {
     this.router.delete(...args);
     return this;
   }
@@ -327,58 +343,12 @@ class EggCore extends KoaApplication {
   get [EGG_LOADER]() {
     return require('./loader/egg_loader');
   }
-
-  /**
-   * Convert a generator function to a promisable one.
-   *
-   * Notice: for other kinds of functions, it directly returns you what it is.
-   *
-   * @param  {Function} fn The inputted function.
-   * @return {AsyncFunction} An async promise-based function.
-   * @example
-    ```javascript
-     const fn = function* (arg) {
-        return arg;
-      };
-      const wrapped = app.toAsyncFunction(fn);
-      wrapped(true).then((value) => console.log(value));
-    ```
-   */
-  toAsyncFunction(fn) {
-    if (!is.generatorFunction(fn)) return fn;
-    fn = co.wrap(fn);
-    return async function(...args) {
-      return fn.apply(this, args);
-    };
-  }
-
-  /**
-   * Convert an object with generator functions to a Promisable one.
-   * @param  {Mixed} obj The inputted object.
-   * @return {Promise} A Promisable result.
-   * @example
-    ```javascript
-     const fn = function* (arg) {
-        return arg;
-      };
-      const arr = [ fn(1), fn(2) ];
-      const promise = app.toPromise(arr);
-      promise.then(res => console.log(res));
-    ```
-   */
-  toPromise(obj) {
-    return co(function* () {
-      return yield obj;
-    });
-  }
 }
 
 // delegate all router method to application
 utils.methods.concat([ 'all', 'resources', 'register', 'redirect' ]).forEach(method => {
-  EggCore.prototype[method] = function(...args) {
+  EggCore.prototype[method] = function(...args: any[]) {
     this.router[method](...args);
     return this;
   };
 });
-
-module.exports = EggCore;

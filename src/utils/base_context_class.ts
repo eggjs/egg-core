@@ -1,18 +1,25 @@
-'use strict';
+import type { Context as KoaContext } from '@eggjs/koa';
+import type { EggCore } from '../egg';
+
+export type EggCoreContext = KoaContext & {
+  app: EggCore;
+};
 
 /**
  * BaseContextClass is a base class that can be extended,
  * it's instantiated in context level,
  * {@link Helper}, {@link Service} is extending it.
  */
-class BaseContextClass {
+export class BaseContextClass {
+  ctx: EggCoreContext;
+  app: EggCore;
+  config: Record<string, any>;
+  service: BaseContextClass;
 
   /**
-   * @class
-   * @param {Context} ctx - context instance
    * @since 1.0.0
    */
-  constructor(ctx) {
+  constructor(ctx: EggCoreContext) {
     /**
      * @member {Context} BaseContextClass#ctx
      * @since 1.0.0
@@ -35,5 +42,3 @@ class BaseContextClass {
     this.service = ctx.service;
   }
 }
-
-module.exports = BaseContextClass;

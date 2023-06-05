@@ -1,6 +1,6 @@
 'use strict';
 
-const debug = require('debug')('egg-core:config');
+const debug = require('node:util').debuglog('egg-core:config');
 const path = require('path');
 const extend = require('extend2');
 const assert = require('assert');

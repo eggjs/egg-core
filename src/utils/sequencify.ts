@@ -1,6 +1,6 @@
-'use strict';
+import { debuglog } from 'node:util';
 
-const debug = require('debug')('egg-core#sequencify');
+const debug = debuglog('@eggjs/core:utils:sequencify');
 
 function sequence(tasks, names, results, missing, recursive, nest, optional, parent) {
   names.forEach(function(name) {
@@ -37,7 +37,7 @@ function sequence(tasks, names, results, missing, recursive, nest, optional, par
 
 // tasks: object with keys as task names
 // names: array of task names
-module.exports = function(tasks, names) {
+export default function sequencify(tasks, names: string[]) {
   const results = {
     sequence: [],
     requires: {},
@@ -56,4 +56,4 @@ module.exports = function(tasks, names) {
     missingTasks: missing,
     recursiveDependencies: recursive,
   };
-};
+}

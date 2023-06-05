@@ -53,7 +53,7 @@ describe('test/loader/file_loader.test.js', () => {
           target: app.services,
         }).load();
       },
-      /can't overwrite property 'foo'/
+      /can't overwrite property 'foo'/,
     );
   });
 

@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const fs = require('fs');
-const debug = require('debug')('egg-core:loader');
+const debug = require('node:util').debuglog('egg-core:loader');
 const path = require('path');
 const globby = require('globby');
 const is = require('is-type-of');

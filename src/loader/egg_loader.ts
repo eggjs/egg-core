@@ -1,20 +1,79 @@
-'use strict';
+import fs from 'node:fs';
+import path from 'node:path';
+import assert from 'node:assert';
+import { debuglog } from 'node:util';
+import is from 'is-type-of';
+import homedir from 'node-homedir';
+import type { Logger } from 'egg-logger';
+import FileLoader from './file_loader';
+import ContextLoader from './context_loader';
+import utility from 'utility';
+import utils from '../utils';
+import { Timing } from '../utils/timing';
+import type { EggCore } from '../egg';
 
-const fs = require('fs');
-const path = require('path');
-const assert = require('assert');
-const is = require('is-type-of');
-const debug = require('debug')('egg-core');
-const homedir = require('node-homedir');
-const FileLoader = require('./file_loader');
-const ContextLoader = require('./context_loader');
-const utility = require('utility');
-const utils = require('../utils');
-const Timing = require('../utils/timing');
+const debug = debuglog('@eggjs/core:egg_loader');
 
-const REQUIRE_COUNT = Symbol('EggLoader#requireCount');
+export interface EggAppInfo {
+  /** package.json */
+  pkg: Record<string, any>;
+  /** the application name from package.json */
+  name: string;
+  /** current directory of application */
+  baseDir: string;
+  /** equals to serverEnv */
+  env: string;
+  /** equals to serverScope */
+  scope: string;
+  /** home directory of the OS */
+  HOME: string;
+  /** baseDir when local and unittest, HOME when other environment */
+  root: string;
+}
 
-class EggLoader {
+export interface PluginInfo {
+  /** the plugin name, it can be used in `dep` */
+  name: string;
+  /** the package name of plugin */
+  package: string;
+  /** whether enabled */
+  enable: boolean;
+  /** the directory of the plugin package */
+  path: string;
+  /** the dependent plugins, you can use the plugin name */
+  dependencies: string[];
+  /** the optional dependent plugins. */
+  optionalDependencies: string[];
+  /** specify the serverEnv that only enable the plugin in it */
+  env: string[];
+  /** the file plugin config in. */
+  from: string;
+}
+
+export interface EggLoaderOptions {
+  /** server env */
+  env: string;
+  /** Application instance */
+  app: EggCore;
+  /** the directory of application */
+  baseDir: string;
+  /** egg logger */
+  logger: Logger;
+  /** server scope */
+  serverScope?: string;
+  /** custom plugins */
+  plugins?: Record<string, PluginInfo>;
+}
+
+export class EggLoader {
+  #requiredCount: 0;
+  readonly options: EggLoaderOptions;
+  readonly timing: Timing;
+  readonly pkg: Record<string, any>;
+  readonly eggPaths: string[];
+  readonly serverEnv: string;
+  readonly serverScope: string;
+  readonly appInfo: EggAppInfo;
 
   /**
    * @class
@@ -25,16 +84,13 @@ class EggLoader {
    * @param {Object} [options.plugins] - custom plugins
    * @since 1.0.0
    */
-  constructor(options) {
+  constructor(options: EggLoaderOptions) {
     this.options = options;
     assert(fs.existsSync(this.options.baseDir), `${this.options.baseDir} not exists`);
     assert(this.options.app, 'options.app is required');
     assert(this.options.logger, 'options.logger is required');
 
-    this.app = this.options.app;
-    this.lifecycle = this.app.lifecycle;
     this.timing = this.app.timing || new Timing();
-    this[REQUIRE_COUNT] = 0;
 
     /**
      * @member {Object} EggLoader#pkg
@@ -49,9 +105,10 @@ class EggLoader {
       // skip require tsconfig-paths if tsconfig.json not exists
       const tsConfigFile = path.join(this.options.baseDir, 'tsconfig.json');
       if (fs.existsSync(tsConfigFile)) {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         require('tsconfig-paths').register({ cwd: this.options.baseDir });
       } else {
-        this.options.logger.info('[egg:loader] skip register "tsconfig-paths" because tsconfig.json not exists at %s', tsConfigFile);
+        this.logger.info('[egg:loader] skip register "tsconfig-paths" because tsconfig.json not exists at %s', tsConfigFile);
       }
     }
 
@@ -106,6 +163,18 @@ class EggLoader {
     this.appInfo = this.getAppInfo();
   }
 
+  get app() {
+    return this.options.app;
+  }
+
+  get lifecycle() {
+    return this.app.lifecycle;
+  }
+
+  get logger() {
+    return this.options.logger;
+  }
+
   /**
    * Get {@link AppInfo#env}
    * @return {String} env
@@ -113,7 +182,7 @@ class EggLoader {
    * @private
    * @since 1.0.0
    */
-  getServerEnv() {
+  protected getServerEnv(): string {
     let serverEnv = this.options.env;
 
     const envPath = path.join(this.options.baseDir, 'config/env');
@@ -121,7 +190,7 @@ class EggLoader {
       serverEnv = fs.readFileSync(envPath, 'utf8').trim();
     }
 
-    if (!serverEnv) {
+    if (!serverEnv && process.env.EGG_SERVER_ENV) {
       serverEnv = process.env.EGG_SERVER_ENV;
     }
 
@@ -145,7 +214,7 @@ class EggLoader {
    * @return {String} serverScope
    * @private
    */
-  getServerScope() {
+  protected getServerScope(): string {
     return process.env.EGG_SERVER_SCOPE || '';
   }
 
@@ -179,7 +248,7 @@ class EggLoader {
    * @return {AppInfo} appInfo
    * @since 1.0.0
    */
-  getAppInfo() {
+  protected getAppInfo(): EggAppInfo {
     const env = this.serverEnv;
     const scope = this.serverScope;
     const home = this.getHomedir();
@@ -257,10 +326,11 @@ class EggLoader {
    * @private
    * @since 1.0.0
    */
-  getEggPaths() {
+  protected getEggPaths(): string[] {
     // avoid require recursively
-    const EggCore = require('../egg');
-    const eggPaths = [];
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const EggCore = require('../egg').EggCore;
+    const eggPaths: string[] = [];
 
     let proto = this.app;
 
@@ -323,7 +393,7 @@ class EggLoader {
    * @private
    */
   requireFile(filepath) {
-    const timingKey = `Require(${this[REQUIRE_COUNT]++}) ${utils.getResolvedFilename(filepath, this.options.baseDir)}`;
+    const timingKey = `Require(${this.#requiredCount++}) ${utils.getResolvedFilename(filepath, this.options.baseDir)}`;
     this.timing.start(timingKey);
     const ret = utils.loadFile(filepath);
     this.timing.end(timingKey);
@@ -483,4 +553,27 @@ for (const loader of loaders) {
   Object.assign(EggLoader.prototype, loader);
 }
 
-module.exports = EggLoader;
+import { PluginLoader } from './mixin/plugin';
+import ConfigLoader from './mixin/config';
+
+// https://www.typescriptlang.org/docs/handbook/mixins.html#alternative-pattern
+export interface EggLoader extends PluginLoader, ConfigLoader {}
+
+// https://www.typescriptlang.org/docs/handbook/mixins.html
+function applyMixins(derivedCtor: any, constructors: any[]) {
+  constructors.forEach(baseCtor => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+      if (derivedCtor.prototype.hasOwnProperty(name)) {
+        return;
+      }
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
+          Object.create(null),
+      );
+    });
+  });
+}
+
+applyMixins(EggLoader, [ PluginLoader, ConfigLoader ]);

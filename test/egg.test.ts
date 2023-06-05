@@ -1,21 +1,21 @@
-const mm = require('mm');
-const is = require('is-type-of');
-const util = require('util');
-const path = require('path');
-const assert = require('assert');
-const spy = require('spy');
-const request = require('supertest');
-const coffee = require('coffee');
-const utils = require('./utils');
-const EggCore = require('..').EggCore;
-const awaitEvent = require('await-event');
-const fs = require('fs/promises');
+import util from 'node:util';
+import path from 'node:path';
+import { strict as assert } from 'node:assert';
+import fs from 'node:fs/promises';
+import mm from 'mm';
+import is from 'is-type-of';
+import spy from 'spy';
+import request from 'supertest';
+import coffee from 'coffee';
+import utils from './utils';
+import awaitEvent from 'await-event';
+import { EggCore } from '../src/index';
 
-describe('test/egg.test.js', () => {
+describe('test/egg.test.ts', () => {
   afterEach(mm.restore);
 
   describe('create EggCore', () => {
-    let app;
+    let app: EggCore;
     after(() => app && app.close());
 
     it('should set options and _options', () => {

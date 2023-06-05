@@ -1,14 +1,19 @@
-'use strict';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import path from 'node:path';
+import { debuglog } from 'node:util';
+import sequencify from '../../utils/sequencify';
+import utils from '../../utils';
+import { BaseLoader, PluginInfo } from '../base_loader';
 
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const debug = require('debug')('egg-core:plugin');
-const sequencify = require('../../utils/sequencify');
-const loadFile = require('../../utils').loadFile;
+const debug = debuglog('@eggjs/core:loader:plugin');
 
-
-module.exports = {
+export class PluginLoader extends BaseLoader {
+  protected lookupDirs: Set<string>;
+  protected eggPlugins: Record<string, PluginInfo>;
+  protected appPlugins: Record<string, PluginInfo>;
+  protected customPlugins: Record<string, PluginInfo>;
+  protected allPlugins: Record<string, PluginInfo>;
 
   /**
    * Load config/plugin.js from {EggLoader#loadUnits}
@@ -69,21 +74,22 @@ module.exports = {
     this._extendPlugins(this.allPlugins, this.appPlugins);
     this._extendPlugins(this.allPlugins, this.customPlugins);
 
-    const enabledPluginNames = []; // enabled plugins that configured explicitly
+    const enabledPluginNames: string[] = []; // enabled plugins that configured explicitly
     const plugins = {};
     const env = this.serverEnv;
     for (const name in this.allPlugins) {
       const plugin = this.allPlugins[name];
 
       // resolve the real plugin.path based on plugin or package
-      plugin.path = this.getPluginPath(plugin, this.options.baseDir);
+      plugin.path = this.getPluginPath(plugin);
 
       // read plugin information from ${plugin.path}/package.json
       this.mergePluginConfig(plugin);
 
       // disable the plugin that not match the serverEnv
-      if (env && plugin.env.length && !plugin.env.includes(env)) {
-        this.options.logger.info('Plugin %s is disabled by env unmatched, require env(%s) but got env is %s', name, plugin.env, env);
+      if (env && plugin.env.length > 0 && !plugin.env.includes(env)) {
+        this.logger.info('[@eggjs/core] Plugin %o is disabled by env unmatched, require env(%o) but got env is %o',
+          name, plugin.env, env);
         plugin.enable = false;
         continue;
       }
@@ -111,14 +117,14 @@ module.exports = {
     this.plugins = enablePlugins;
 
     this.timing.end('Load Plugin');
-  },
+  }
 
   loadAppPlugins() {
     // loader plugins from application
     const appPlugins = this.readPluginConfigs(path.join(this.options.baseDir, 'config/plugin.default'));
     debug('Loaded app plugins: %j', Object.keys(appPlugins));
     return appPlugins;
-  },
+  }
 
   loadEggPlugins() {
     // loader plugins from framework
@@ -126,7 +132,7 @@ module.exports = {
     const eggPlugins = this.readPluginConfigs(eggPluginConfigPaths);
     debug('Loaded egg plugins: %j', Object.keys(eggPlugins));
     return eggPlugins;
-  },
+  }
 
   loadCustomPlugins() {
     // loader plugins from process.env.EGG_PLUGINS
@@ -152,12 +158,12 @@ module.exports = {
     }
 
     return customPlugins;
-  },
+  }
 
   /*
    * Read plugin.js from multiple directory
    */
-  readPluginConfigs(configPaths) {
+  readPluginConfigs(configPaths: string[] | string) {
     if (!Array.isArray(configPaths)) {
       configPaths = [ configPaths ];
     }
@@ -167,7 +173,7 @@ module.exports = {
     // plugin.${scope}.js
     // plugin.${env}.js
     // plugin.${scope}_${env}.js
-    const newConfigPaths = [];
+    const newConfigPaths: string[] = [];
     for (const filename of this.getTypeFiles('plugin')) {
       for (let configPath of configPaths) {
         configPath = path.join(path.dirname(configPath), filename);
@@ -175,7 +181,7 @@ module.exports = {
       }
     }
 
-    const plugins = {};
+    const plugins: Record<string, PluginInfo> = {};
     for (const configPath of newConfigPaths) {
       let filepath = this.resolveModule(configPath);
 
@@ -188,8 +194,7 @@ module.exports = {
         continue;
       }
 
-      const config = loadFile(filepath);
-
+      const config = utils.loadFile(filepath) as Record<string, PluginInfo>;
       for (const name in config) {
         this.normalizePluginConfig(config, name, filepath);
       }
@@ -198,9 +203,9 @@ module.exports = {
     }
 
     return plugins;
-  },
+  }
 
-  normalizePluginConfig(plugins, name, configPath) {
+  normalizePluginConfig(plugins: Record<string, PluginInfo | boolean>, name: string, configPath: string) {
     const plugin = plugins[name];
 
     // plugin_name: false
@@ -216,7 +221,7 @@ module.exports = {
       return;
     }
 
-    if (!('enable' in plugin)) {
+    if (typeof plugin.enable !== 'boolean') {
       plugin.enable = true;
     }
     plugin.name = name;
@@ -225,7 +230,7 @@ module.exports = {
     plugin.env = plugin.env || [];
     plugin.from = configPath;
     depCompatible(plugin);
-  },
+  }
 
   // Read plugin information from package.json and merge
   // {
@@ -268,7 +273,7 @@ module.exports = {
         plugin[key] = config[key];
       }
     }
-  },
+  }
 
   getOrderPlugins(allPlugins, enabledPluginNames, appPlugins) {
     // no plugins enabled
@@ -341,10 +346,10 @@ module.exports = {
     }
 
     return result.sequence.map(name => allPlugins[name]);
-  },
+  }
 
   getLookupDirs() {
-    const lookupDirs = new Set();
+    const lookupDirs = new Set<string>();
 
     // try to locate the plugin in the following directories's node_modules
     // -> {APP_PATH} -> {EGG_PATH} -> $CWD
@@ -360,10 +365,10 @@ module.exports = {
     lookupDirs.add(process.cwd());
 
     return lookupDirs;
-  },
+  }
 
   // Get the real plugin path
-  getPluginPath(plugin) {
+  getPluginPath(plugin: PluginInfo) {
     if (plugin.path) {
       return plugin.path;
     }
@@ -373,7 +378,7 @@ module.exports = {
     }
 
     return this._resolvePluginPath(plugin);
-  },
+  }
 
   _resolvePluginPath(plugin) {
     const name = plugin.package || plugin.name;
@@ -390,9 +395,9 @@ module.exports = {
     } catch (_) {
       throw new Error(`Can not find plugin ${name} in "${[ ...this.lookupDirs ].join(', ')}"`);
     }
-  },
+  }
 
-  _extendPlugins(target, plugins) {
+  _extendPlugins(target: Record<string, PluginInfo>, plugins: Record<string, PluginInfo>) {
     if (!plugins) {
       return;
     }
@@ -400,10 +405,10 @@ module.exports = {
       const plugin = plugins[name];
       let targetPlugin = target[name];
       if (!targetPlugin) {
-        targetPlugin = target[name] = {};
+        targetPlugin = target[name] = {} as PluginInfo;
       }
       if (targetPlugin.package && targetPlugin.package === plugin.package) {
-        this.options.logger.warn('plugin %s has been defined that is %j, but you define again in %s',
+        this.logger.warn('[@eggjs/core] plugin %s has been defined that is %j, but you define again in %s',
           name, targetPlugin, plugin.from);
       }
       if (plugin.path || plugin.package) {
@@ -420,11 +425,10 @@ module.exports = {
         targetPlugin[prop] = plugin[prop];
       }
     }
-  },
+  }
+}
 
-};
-
-function depCompatible(plugin) {
+function depCompatible(plugin: PluginInfo & { dep?: string[] }) {
   if (plugin.dep && !(Array.isArray(plugin.dependencies) && plugin.dependencies.length)) {
     plugin.dependencies = plugin.dep;
     delete plugin.dep;

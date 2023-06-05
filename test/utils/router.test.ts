@@ -1,8 +1,8 @@
-const assert = require('assert');
-const request = require('supertest');
-const utils = require('../utils');
+import { strict as assert } from 'node:assert';
+import request from 'supertest';
+import utils from '../utils';
 
-describe('test/utils/router.test.js', () => {
+describe('test/utils/router.test.ts', () => {
   let app;
   before(() => {
     app = utils.createApp('router-app');

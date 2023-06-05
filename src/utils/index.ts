@@ -1,11 +1,11 @@
-'use strict';
+import path from 'node:path';
+import fs from 'node:fs';
+import BuiltinModule from 'node:module';
+import convert from 'koa-convert';
+import is from 'is-type-of';
+import co from 'co';
 
-const convert = require('koa-convert');
-const is = require('is-type-of');
-const path = require('path');
-const fs = require('fs');
-const co = require('co');
-const BuiltinModule = require('module');
+export type Fun = (...args: any[]) => any;
 
 // Guard against poorly mocked module constructors.
 const Module = module.constructor.length > 1
@@ -13,42 +13,43 @@ const Module = module.constructor.length > 1
   /* istanbul ignore next */
   : BuiltinModule;
 
-module.exports = {
-  extensions: Module._extensions,
+export default {
+  extensions: (Module as any)._extensions,
 
-  loadFile(filepath) {
+  loadFile(filepath: string) {
     try {
       // if not js module, just return content buffer
       const extname = path.extname(filepath);
-      if (extname && !Module._extensions[extname]) {
+      if (extname && !(Module as any)._extensions[extname]) {
         return fs.readFileSync(filepath);
       }
       // require js module
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const obj = require(filepath);
       if (!obj) return obj;
       // it's es module
       if (obj.__esModule) return 'default' in obj ? obj.default : obj;
       return obj;
     } catch (err) {
-      err.message = `[egg-core] load file: ${filepath}, error: ${err.message}`;
+      err.message = `[@eggjs/core] load file: ${filepath}, error: ${err.message}`;
       throw err;
     }
   },
 
   methods: [ 'head', 'options', 'get', 'put', 'patch', 'post', 'delete' ],
 
-  async callFn(fn, args, ctx) {
+  async callFn(fn: Fun, args?: any[], ctx?: any) {
     args = args || [];
-    if (!is.function(fn)) return;
+    if (typeof fn !== 'function') return;
     if (is.generatorFunction(fn)) fn = co.wrap(fn);
     return ctx ? fn.call(ctx, ...args) : fn(...args);
   },
 
-  middleware(fn) {
+  middleware(fn: any) {
     return is.generatorFunction(fn) ? convert(fn) : fn;
   },
 
-  getCalleeFromStack(withLine, stackIndex) {
+  getCalleeFromStack(withLine?: boolean, stackIndex?: number) {
     stackIndex = stackIndex === undefined ? 2 : stackIndex;
     const limit = Error.stackTraceLimit;
     const prep = Error.prepareStackTrace;
@@ -57,11 +58,10 @@ module.exports = {
     Error.stackTraceLimit = 5;
 
     // capture the stack
-    const obj = {};
+    const obj: any = {};
     Error.captureStackTrace(obj);
     let callSite = obj.stack[stackIndex];
-    let fileName;
-    /* istanbul ignore else */
+    let fileName = '';
     if (callSite) {
       // egg-mock will create a proxy
       // https://github.com/eggjs/egg-mock/blob/master/lib/app.js#L174
@@ -77,13 +77,12 @@ module.exports = {
     Error.prepareStackTrace = prep;
     Error.stackTraceLimit = limit;
 
-    /* istanbul ignore if */
     if (!callSite || !fileName) return '<anonymous>';
     if (!withLine) return fileName;
     return `${fileName}:${callSite.getLineNumber()}:${callSite.getColumnNumber()}`;
   },
 
-  getResolvedFilename(filepath, baseDir) {
+  getResolvedFilename(filepath: string, baseDir: string) {
     const reg = /[/\\]/g;
     return filepath.replace(baseDir + path.sep, '').replace(reg, '/');
   },
@@ -95,6 +94,6 @@ module.exports = {
  * https://github.com/v8/v8/wiki/Stack-Trace-API
  */
 
-function prepareObjectStackTrace(obj, stack) {
+function prepareObjectStackTrace(_obj, stack) {
   return stack;
 }
