@@ -1,5 +1,6 @@
 const assert = require('assert');
 const path = require('path');
+const { AsyncLocalStorage } = require('async_hooks');
 const request = require('supertest');
 const EggApplication = require('./fixtures/egg').Application;
 
@@ -22,5 +23,11 @@ describe('test/asyncLocalStorage.test.js', () => {
     assert(res.body.sessionId === 'mock-session-id-123');
     assert(res.body.traceId);
     assert(app.currentContext === undefined);
+  });
+
+  it('should access als on global', async () => {
+    assert(global[Symbol.for('egg#ctxStorage')]);
+    assert(global[Symbol.for('egg#ctxStorage')] instanceof AsyncLocalStorage);
+    assert.equal(app.ctxStorage, global[Symbol.for('egg#ctxStorage')]);
   });
 });
