@@ -32,10 +32,12 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
     assert(!('a' in app.middleware));
 
     assert(app.middleware.static === app.middlewares.static);
+    const names = [];
     for (const mw of app.middleware) {
       assert(typeof mw === 'function');
+      names.push(mw._name);
     }
-    assert(Object.keys(app.middleware).length === 4);
+    assert.deepEqual(names, [ 'status', 'static', 'custom' ]);
   });
 
   it('should override middlewares of plugin by framework', async () => {
