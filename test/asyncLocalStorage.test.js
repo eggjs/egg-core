@@ -2,6 +2,7 @@ const assert = require('assert');
 const path = require('path');
 const { AsyncLocalStorage } = require('async_hooks');
 const request = require('supertest');
+const { getAsyncLocalStorage, kGALS } = require('gals');
 const EggApplication = require('./fixtures/egg').Application;
 
 describe('test/asyncLocalStorage.test.js', () => {
@@ -26,8 +27,10 @@ describe('test/asyncLocalStorage.test.js', () => {
   });
 
   it('should access als on global', async () => {
-    assert(global[Symbol.for('egg#ctxStorage')]);
-    assert(global[Symbol.for('egg#ctxStorage')] instanceof AsyncLocalStorage);
-    assert.equal(app.ctxStorage, global[Symbol.for('egg#ctxStorage')]);
+    assert(global[Symbol.for('gals#asyncLocalStorage')]);
+    assert(global[kGALS]);
+    assert(global[Symbol.for('gals#asyncLocalStorage')] instanceof AsyncLocalStorage);
+    assert.equal(app.ctxStorage, global[Symbol.for('gals#asyncLocalStorage')]);
+    assert.equal(app.ctxStorage, getAsyncLocalStorage());
   });
 });
