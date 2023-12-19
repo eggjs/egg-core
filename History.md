@@ -1,4 +1,10 @@
 
+5.4.1 / 2023-12-20
+==================
+
+**fixes**
+  * [[`e1ff721`](http://github.com/eggjs/egg-core/commit/e1ff721db1286aefd4f6f223709aad17d0399be6)] - fix: use gals lib (#268) (fengmk2 <<suqian.yf@antgroup.com>>)
+
 5.4.0 / 2023-12-19
 ==================
 
