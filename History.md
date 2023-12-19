@@ -1,4 +1,14 @@
 
+5.4.0 / 2023-12-19
+==================
+
+**features**
+  * [[`732de10`](http://github.com/eggjs/egg-core/commit/732de10c5194ffe3962c00e695f115b31b0de394)] - feat: export asyncLocalStorage instance to global (#266) (fengmk2 <<suqian.yf@antgroup.com>>)
+
+**others**
+  * [[`bef82db`](http://github.com/eggjs/egg-core/commit/bef82db67eb892ff043303600f8018fa86dbc318)] - chore: remove auto release (fengmk2 <<fengmk2@gmail.com>>)
+  * [[`fa19c0d`](http://github.com/eggjs/egg-core/commit/fa19c0d66588eafc03c3fdfc16c052701789a65f)] - chore: start 5.x LTS branch (fengmk2 <<fengmk2@gmail.com>>)
+
 4.29.0 / 2022-12-06
 ==================
 
