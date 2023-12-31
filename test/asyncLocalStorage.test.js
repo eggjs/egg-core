@@ -28,4 +28,16 @@ describe('test/asyncLocalStorage.test.js', () => {
     }
     assert(app.currentContext === undefined);
   });
+
+  if (enableAsyncLocalStorage) {
+    it('should access als on global', async () => {
+      const { getAsyncLocalStorage, kGALS } = require('gals');
+      const { AsyncLocalStorage } = require('async_hooks');
+      assert(global[Symbol.for('gals#asyncLocalStorage')]);
+      assert(global[kGALS]);
+      assert(global[Symbol.for('gals#asyncLocalStorage')] instanceof AsyncLocalStorage);
+      assert.equal(app.ctxStorage, global[Symbol.for('gals#asyncLocalStorage')]);
+      assert.equal(app.ctxStorage, getAsyncLocalStorage());
+    });
+  }
 });
