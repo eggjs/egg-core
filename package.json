@@ -1,6 +1,6 @@
 {
   "name": "egg-core",
-  "version": "4.30.2",
+  "version": "4.31.0",
   "publishConfig": {
     "tag": "latest-4"
   },
