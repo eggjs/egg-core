@@ -7,7 +7,6 @@ import type { MiddlewareFunc } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
-import { getAsyncLocalStorage } from 'gals';
 import { BaseContextClass } from './utils/base_context_class';
 import utils from './utils';
 import { Timing } from './utils/timing';
@@ -56,10 +55,7 @@ export class EggCore extends KoaApplication {
     assert(fs.existsSync(options.baseDir), `Directory ${options.baseDir} not exists`);
     assert(fs.statSync(options.baseDir).isDirectory(), `Directory ${options.baseDir} is not a directory`);
     assert(options.type === 'application' || options.type === 'agent', 'options.type should be application or agent');
-    // disable koa als and use egg logic
-    super({ asyncLocalStorage: false });
-    // can access the AsyncLocalStorage instance in global
-    this.ctxStorage = getAsyncLocalStorage();
+    super();
 
     this.timing = new Timing();
 

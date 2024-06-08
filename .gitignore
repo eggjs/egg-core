@@ -11,3 +11,4 @@ test/fixtures/egg/node_modules/egg-core
 package-lock.json
 run
 test/fixtures/*/timing.json
+lib/

@@ -45,4 +45,4 @@ class EggApplication extends EggCore {
   }
 }
 
-module.exports.Application = EggApplication;
+exports.Application = EggApplication;

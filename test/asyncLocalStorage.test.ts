@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert';
 import path from 'node:path';
+import { AsyncLocalStorage } from 'node:async_hooks';
 import request from 'supertest';
 import { getAsyncLocalStorage, kGALS } from 'gals';
 import { Application } from './fixtures/egg';

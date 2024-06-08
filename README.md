@@ -15,7 +15,7 @@
 [download-image]: https://img.shields.io/npm/dm/egg-core.svg?style=flat-square
 [download-url]: https://npmjs.org/package/egg-core
 
-A core Pluggable framework based on [koa](https://github.com/koajs/koa).
+A core plugin framework based on [koa](https://github.com/koajs/koa).
 
 **Don't use it directly, see [egg].**
 
@@ -237,6 +237,7 @@ filter         | `Function`     | a function that filter the exports which can b
 ## Timing
 
 EggCore record boot progress with `Timing`, include:
+
 - Process start time
 - Script start time(node don't implement an interface like `process.uptime` to record the script start running time, framework can implement a prestart file used with node `--require` options to set `process.scriptTime`)
 - Application start time
