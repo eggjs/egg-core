@@ -1,5 +1,4 @@
 import path from 'node:path';
-import { setTimeout } from 'node:timers/promises';
 import { Application as EggApplication } from './fixtures/egg';
 
 export function getFilepath(name: string) {
@@ -18,11 +17,7 @@ export function createApp(name, options) {
   }
 
   return new CustomApplication(options);
-};
-
-export async function sleep(ms: number) {
-  return await setTimeout(ms);
-};
+}
 
 export const symbol = {
   view: Symbol('view'),

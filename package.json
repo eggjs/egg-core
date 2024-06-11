@@ -5,20 +5,13 @@
     "node": ">= 18.7.0"
   },
   "description": "A core plugin framework based on koa",
-  "main": "lib/index.js",
-  "types": "lib/index.d.ts",
-  "files": [
-    "lib"
-  ],
   "scripts": {
     "lint": "eslint .",
     "test": "npm run lint -- --fix && npm run test-local -- -p",
     "test-local": "egg-bin test",
-    "ci": "egg-bin cov -p",
+    "ci": "npm run lint && egg-bin cov -p && npm run prepublishOnly",
     "contributor": "git-contributor",
-    "clean": "tsc -b --clean",
-    "tsc": "tsc",
-    "prepublishOnly": "npm run tsc"
+    "prepublishOnly": "tshy && tshy-after"
   },
   "repository": {
     "type": "git",
@@ -35,8 +28,8 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "dependencies": {
-    "@eggjs/koa": "^2.17.0",
-    "@eggjs/router": "^2.0.1",
+    "@eggjs/koa": "^2.18.1",
+    "@eggjs/router": "^3.0.0",
     "@types/depd": "^1.1.32",
     "co": "^4.6.0",
     "depd": "^2.0.0",
@@ -45,7 +38,7 @@
     "extend2": "^1.0.1",
     "get-ready": "^3.1.0",
     "globby": "^11.0.2",
-    "is-type-of": "^1.2.1",
+    "is-type-of": "^2.1.0",
     "koa-convert": "^1.2.0",
     "node-homedir": "^2.0.0",
     "ready-callback": "^4.0.0",
@@ -70,10 +63,40 @@
     "spy": "^1.0.0",
     "supertest": "^4.0.2",
     "ts-node": "10",
-    "typescript": "5",
-    "urllib": "3"
+    "urllib": "3",
+    "tshy": "^1.15.1",
+    "tshy-after": "^1.0.0",
+    "typescript": "^5.4.5"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "type": "module",
+  "tshy": {
+    "exports": {
+      "./package.json": "./package.json",
+      ".": "./src/index.ts"
+    }
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "source": "./src/index.ts",
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "source": "./src/index.ts",
+        "types": "./dist/commonjs/index.d.ts",
+        "default": "./dist/commonjs/index.js"
+      }
+    }
+  },
+  "main": "./dist/commonjs/index.js",
+  "types": "./dist/commonjs/index.d.ts"
 }
