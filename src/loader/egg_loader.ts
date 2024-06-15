@@ -7,7 +7,7 @@ import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
 import { getParamNames, readJSONSync } from 'utility';
 import { extend } from 'extend2';
-import { Request, Response, Context, Application, Next, ContextDelegation } from '@eggjs/koa';
+import { Request, Response, Context, Application, Next } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
 import { FULLPATH, FileLoader, FileLoaderOptions } from './file_loader.js';
 import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
@@ -1327,6 +1327,61 @@ export class EggLoader {
   }
   /** end Router loader */
 
+  /** start CustomLoader loader */
+  async loadCustomLoader() {
+    const loader = this;
+    assert(loader.config, 'should loadConfig first');
+    const customLoader = loader.config.customLoader || {};
+
+    for (const property of Object.keys(customLoader)) {
+      const loaderConfig = {
+        ...customLoader[property],
+      };
+      assert(loaderConfig.directory, `directory is required for config.customLoader.${property}`);
+
+      let directory;
+      if (loaderConfig.loadunit === true) {
+        directory = this.getLoadUnits().map(unit => path.join(unit.path, loaderConfig.directory));
+      } else {
+        directory = path.join(loader.appInfo.baseDir, loaderConfig.directory);
+      }
+      // don't override directory
+      delete loaderConfig.directory;
+
+      const inject = loaderConfig.inject || 'app';
+      // don't override inject
+      delete loaderConfig.inject;
+
+      switch (inject) {
+        case 'ctx': {
+          assert(!(property in loader.app.context), `customLoader should not override ctx.${property}`);
+          const options = {
+            caseStyle: 'lower',
+            fieldClass: `${property}Classes`,
+            ...loaderConfig,
+          };
+          loader.loadToContext(directory, property, options);
+          break;
+        }
+        case 'app': {
+          assert(!(property in loader.app), `customLoader should not override app.${property}`);
+          const options = {
+            caseStyle: 'lower',
+            initializer(Clazz: unknown) {
+              return isClass(Clazz) ? new Clazz(loader.app) : Clazz;
+            },
+            ...loaderConfig,
+          };
+          loader.loadToApp(directory, property, options);
+          break;
+        }
+        default:
+          throw new Error('inject only support app or ctx');
+      }
+    }
+  }
+  /** end CustomLoader loader */
+
   // Low Level API
 
   /**
@@ -1618,39 +1673,3 @@ function objectFunctionToMiddleware(func: Fun) {
   }
   return objectControllerMiddleware;
 }
-
-/**
- * Mixin methods to EggLoader
- * // ES6 Multiple Inheritance
- * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
- */
-// const loaders = [
-//   require('./mixin/custom_loader'),
-// ];
-
-// for (const loader of loaders) {
-//   Object.assign(EggLoader.prototype, loader);
-// }
-
-
-// // https://www.typescriptlang.org/docs/handbook/mixins.html#alternative-pattern
-// export interface EggLoaderMixin extends PluginLoader, ConfigLoader {}
-
-// // https://www.typescriptlang.org/docs/handbook/mixins.html
-// function applyMixins(derivedCtor: any, constructors: any[]) {
-//   constructors.forEach(baseCtor => {
-//     Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
-//       if (derivedCtor.prototype.hasOwnProperty(name)) {
-//         return;
-//       }
-//       Object.defineProperty(
-//         derivedCtor.prototype,
-//         name,
-//         Object.getOwnPropertyDescriptor(baseCtor.prototype, name) ||
-//           Object.create(null),
-//       );
-//     });
-//   });
-// }
-
-// applyMixins(EggLoader, [ PluginLoader, ConfigLoader ]);
