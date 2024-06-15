@@ -35,6 +35,7 @@ export class EggCore extends KoaApplication {
   BaseContextClass: typeof BaseContextClass;
   Controller: typeof BaseContextClass;
   Service: typeof BaseContextClass;
+  Helper?: typeof BaseContextClass;
   lifecycle: Lifecycle;
   loader: EggLoader;
   #closePromise?: Promise<void>;

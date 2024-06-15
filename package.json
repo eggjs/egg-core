@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "dependencies": {
-    "@eggjs/koa": "^2.18.1",
+    "@eggjs/koa": "^2.18.2",
     "@eggjs/router": "^3.0.1",
     "egg-logger": "^3.5.0",
     "egg-path-matching": "^1.1.0",
