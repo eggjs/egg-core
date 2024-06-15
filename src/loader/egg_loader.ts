@@ -1153,6 +1153,29 @@ export class EggLoader {
   }
   /** end Custom loader */
 
+  /** start Service loader */
+  /**
+   * Load app/service
+   * @function EggLoader#loadService
+   * @param {Object} options - LoaderOptions
+   * @since 1.0.0
+   */
+  loadService(options?: Partial<ContextLoaderOptions>) {
+    this.timing.start('Load Service');
+    // 载入到 app.serviceClasses
+    const servicePaths = this.getLoadUnits().map(unit => path.join(unit.path, 'app/service'));
+    options = {
+      call: true,
+      caseStyle: 'lower',
+      fieldClass: 'serviceClasses',
+      directory: servicePaths,
+      ...options,
+    };
+    this.loadToContext(servicePaths, 'service', options as ContextLoaderOptions);
+    this.timing.end('Load Service');
+  }
+  /** end Service loader */
+
   // Low Level API
 
   /**
@@ -1351,7 +1374,6 @@ function isValidatePackageName(name: string) {
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/service'),
 //   require('./mixin/middleware'),
 //   require('./mixin/controller'),
 //   require('./mixin/router'),
