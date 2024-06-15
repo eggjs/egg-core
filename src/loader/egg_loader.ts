@@ -1083,6 +1083,76 @@ export class EggLoader {
   }
   /** end Extend loader */
 
+  /** start Custom loader */
+  /**
+   * load app.js
+   *
+   * @example
+   * - old:
+   *
+   * ```js
+   * module.exports = function(app) {
+   *   doSomething();
+   * }
+   * ```
+   *
+   * - new:
+   *
+   * ```js
+   * module.exports = class Boot {
+   *   constructor(app) {
+   *     this.app = app;
+   *   }
+   *   configDidLoad() {
+   *     doSomething();
+   *   }
+   * }
+   * @since 1.0.0
+   */
+  loadCustomApp() {
+    this.#loadBootHook('app');
+    this.lifecycle.triggerConfigWillLoad();
+  }
+
+  /**
+   * Load agent.js, same as {@link EggLoader#loadCustomApp}
+   */
+  loadCustomAgent() {
+    this.#loadBootHook('agent');
+    this.lifecycle.triggerConfigWillLoad();
+  }
+
+  // FIXME: no logger used after egg removed
+  loadBootHook() {
+    // do nothing
+  }
+
+  #loadBootHook(fileName: string) {
+    this.timing.start(`Load ${fileName}.js`);
+    for (const unit of this.getLoadUnits()) {
+      const bootFilePath = this.resolveModule(path.join(unit.path, fileName));
+      if (!bootFilePath) {
+        continue;
+      }
+      const bootHook = this.requireFile(bootFilePath);
+      if (isClass(bootHook)) {
+        bootHook.prototype.fullPath = bootFilePath;
+        // if is boot class, add to lifecycle
+        this.lifecycle.addBootHook(bootHook);
+      } else if (typeof bootHook === 'function') {
+        // if is boot function, wrap to class
+        // for compatibility
+        this.lifecycle.addFunctionAsBootHook(bootHook);
+      } else {
+        this.options.logger.warn('[@eggjs/core:egg_loader] %s must exports a boot class', bootFilePath);
+      }
+    }
+    // init boots
+    this.lifecycle.init();
+    this.timing.end(`Load ${fileName}.js`);
+  }
+  /** end Custom loader */
+
   // Low Level API
 
   /**
@@ -1281,8 +1351,6 @@ function isValidatePackageName(name: string) {
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/extend'),
-//   require('./mixin/custom'),
 //   require('./mixin/service'),
 //   require('./mixin/middleware'),
 //   require('./mixin/controller'),
