@@ -5,9 +5,10 @@ import { debuglog } from 'node:util';
 import { isClass } from 'is-type-of';
 import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
+import { readJSONSync } from 'utility';
+import { extend } from 'extend2';
 import { FileLoader, FileLoaderOptions } from './file_loader.js';
 import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
-import { readJSONSync } from 'utility';
 import utils from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
@@ -32,7 +33,7 @@ export interface EggAppInfo {
   root: string;
 }
 
-export interface PluginInfo {
+export interface EggPluginInfo {
   /** the plugin name, it can be used in `dep` */
   name: string;
   /** the package name of plugin */
@@ -67,12 +68,14 @@ export interface EggLoaderOptions {
   /** server scope */
   serverScope?: string;
   /** custom plugins */
-  plugins?: Record<string, PluginInfo>;
+  plugins?: Record<string, EggPluginInfo>;
 }
+
+export type EggDirInfoType = 'app' | 'plugin' | 'framework';
 
 export interface EggDirInfo {
   path: string;
-  type: 'app' | 'plugin' | 'framework';
+  type: EggDirInfoType;
 }
 
 export class EggLoader {
@@ -369,15 +372,15 @@ export class EggLoader {
     return eggPaths;
   }
 
-  /** Plugin loader start */
+  /** start Plugin loader */
   lookupDirs: Set<string>;
-  eggPlugins: Record<string, PluginInfo>;
-  appPlugins: Record<string, PluginInfo>;
-  customPlugins: Record<string, PluginInfo>;
-  allPlugins: Record<string, PluginInfo>;
-  orderPlugins: PluginInfo[];
+  eggPlugins: Record<string, EggPluginInfo>;
+  appPlugins: Record<string, EggPluginInfo>;
+  customPlugins: Record<string, EggPluginInfo>;
+  allPlugins: Record<string, EggPluginInfo>;
+  orderPlugins: EggPluginInfo[];
   /** enable plugins */
-  plugins: Record<string, PluginInfo>;
+  plugins: Record<string, EggPluginInfo>;
 
   /**
    * Load config/plugin.js from {EggLoader#loadUnits}
@@ -439,7 +442,7 @@ export class EggLoader {
     this.#extendPlugins(this.allPlugins, this.customPlugins);
 
     const enabledPluginNames: string[] = []; // enabled plugins that configured explicitly
-    const plugins: Record<string, PluginInfo> = {};
+    const plugins: Record<string, EggPluginInfo> = {};
     const env = this.serverEnv;
     for (const name in this.allPlugins) {
       const plugin = this.allPlugins[name];
@@ -467,7 +470,7 @@ export class EggLoader {
     // retrieve the ordered plugins
     this.orderPlugins = this.getOrderPlugins(plugins, enabledPluginNames, this.appPlugins);
 
-    const enablePlugins: Record<string, PluginInfo> = {};
+    const enablePlugins: Record<string, EggPluginInfo> = {};
     for (const plugin of this.orderPlugins) {
       enablePlugins[plugin.name] = plugin;
     }
@@ -499,12 +502,12 @@ export class EggLoader {
 
   protected loadCustomPlugins() {
     // loader plugins from process.env.EGG_PLUGINS
-    let customPlugins: Record<string, PluginInfo> = {};
+    let customPlugins: Record<string, EggPluginInfo> = {};
     const configPaths: string[] = [];
     if (process.env.EGG_PLUGINS) {
       try {
         customPlugins = JSON.parse(process.env.EGG_PLUGINS);
-        configPaths.push('process.env.EGG_PLUGINS');
+        configPaths.push('<process.env.EGG_PLUGINS>');
       } catch (e) {
         debug('parse EGG_PLUGINS failed, %s', e);
       }
@@ -516,7 +519,7 @@ export class EggLoader {
         ...customPlugins,
         ...this.options.plugins,
       };
-      configPaths.push('options.plugins');
+      configPaths.push('<options.plugins>');
     }
 
     if (customPlugins) {
@@ -550,7 +553,7 @@ export class EggLoader {
       }
     }
 
-    const plugins: Record<string, PluginInfo> = {};
+    const plugins: Record<string, EggPluginInfo> = {};
     for (const configPath of newConfigPaths) {
       let filepath = this.resolveModule(configPath);
 
@@ -563,7 +566,7 @@ export class EggLoader {
         continue;
       }
 
-      const config = await utils.loadFile(filepath) as Record<string, PluginInfo>;
+      const config = await utils.loadFile(filepath) as Record<string, EggPluginInfo>;
       for (const name in config) {
         this.#normalizePluginConfig(config, name, filepath);
       }
@@ -573,7 +576,7 @@ export class EggLoader {
     return plugins;
   }
 
-  #normalizePluginConfig(plugins: Record<string, PluginInfo | boolean>, name: string, configPath: string) {
+  #normalizePluginConfig(plugins: Record<string, EggPluginInfo | boolean>, name: string, configPath: string) {
     const plugin = plugins[name];
 
     // plugin_name: false
@@ -587,7 +590,7 @@ export class EggLoader {
         from: configPath,
         package: '',
         path: '',
-      } satisfies PluginInfo;
+      } satisfies EggPluginInfo;
       return;
     }
 
@@ -611,7 +614,7 @@ export class EggLoader {
   //     "strict": true, whether check plugin name, default to true.
   //   }
   // }
-  #mergePluginConfig(plugin: PluginInfo) {
+  #mergePluginConfig(plugin: EggPluginInfo) {
     let pkg;
     let config;
     const pluginPackage = path.join(plugin.path!, 'package.json');
@@ -647,8 +650,8 @@ export class EggLoader {
     }
   }
 
-  protected getOrderPlugins(allPlugins: Record<string, PluginInfo>, enabledPluginNames: string[],
-    appPlugins: Record<string, PluginInfo>) {
+  protected getOrderPlugins(allPlugins: Record<string, EggPluginInfo>, enabledPluginNames: string[],
+    appPlugins: Record<string, EggPluginInfo>) {
     // no plugins enabled
     if (!enabledPluginNames.length) {
       return [];
@@ -743,7 +746,7 @@ export class EggLoader {
   }
 
   // Get the real plugin path
-  protected getPluginPath(plugin: PluginInfo) {
+  protected getPluginPath(plugin: EggPluginInfo) {
     if (plugin.path) {
       return plugin.path;
     }
@@ -755,7 +758,7 @@ export class EggLoader {
     return this.#resolvePluginPath(plugin);
   }
 
-  #resolvePluginPath(plugin: PluginInfo) {
+  #resolvePluginPath(plugin: EggPluginInfo) {
     const name = plugin.package || plugin.name;
 
     try {
@@ -772,7 +775,7 @@ export class EggLoader {
     }
   }
 
-  #extendPlugins(target: Record<string, PluginInfo>, plugins: Record<string, PluginInfo>) {
+  #extendPlugins(target: Record<string, EggPluginInfo>, plugins: Record<string, EggPluginInfo>) {
     if (!plugins) {
       return;
     }
@@ -780,7 +783,7 @@ export class EggLoader {
       const plugin = plugins[name];
       let targetPlugin = target[name];
       if (!targetPlugin) {
-        targetPlugin = target[name] = {} as PluginInfo;
+        targetPlugin = target[name] = {} as EggPluginInfo;
       }
       if (targetPlugin.package && targetPlugin.package === plugin.package) {
         this.logger.warn('[@eggjs/core] plugin %s has been defined that is %j, but you define again in %s',
@@ -801,7 +804,133 @@ export class EggLoader {
       }
     }
   }
-  /** Plugin loader end */
+  /** end Plugin loader */
+
+  /** start Config loader */
+  configMeta: Record<string, any>;
+  config: Record<string, any>;
+
+  /**
+   * Load config/config.js
+   *
+   * Will merge config.default.js 和 config.${env}.js
+   *
+   * @function EggLoader#loadConfig
+   * @since 1.0.0
+   */
+  async loadConfig() {
+    this.timing.start('Load Config');
+    this.configMeta = {};
+
+    const target: Record<string, any> = {};
+
+    // Load Application config first
+    const appConfig = await this.#preloadAppConfig();
+
+    //   plugin config.default
+    //     framework config.default
+    //       app config.default
+    //         plugin config.{env}
+    //           framework config.{env}
+    //             app config.{env}
+    for (const filename of this.getTypeFiles('config')) {
+      for (const unit of this.getLoadUnits()) {
+        const isApp = unit.type === 'app';
+        const config = this.#loadConfig(
+          unit.path, filename, isApp ? undefined : appConfig, unit.type);
+        if (!config) {
+          continue;
+        }
+        debug('Loaded config %s/%s, %j', unit.path, filename, config);
+        extend(true, target, config);
+      }
+    }
+
+    // load env from process.env.EGG_APP_CONFIG
+    const envConfig = this.#loadConfigFromEnv();
+    debug('Loaded config from env, %j', envConfig);
+    extend(true, target, envConfig);
+
+    // You can manipulate the order of app.config.coreMiddleware and app.config.appMiddleware in app.js
+    target.coreMiddleware = target.coreMiddlewares = target.coreMiddleware || [];
+    target.appMiddleware = target.appMiddlewares = target.middleware || [];
+
+    this.config = target;
+    this.timing.end('Load Config');
+  }
+
+  async #preloadAppConfig() {
+    const names = [
+      'config.default',
+      `config.${this.serverEnv}`,
+    ];
+    const target: Record<string, any> = {};
+    for (const filename of names) {
+      const config = await this.#loadConfig(this.options.baseDir, filename, undefined, 'app');
+      if (!config) {
+        continue;
+      }
+      extend(true, target, config);
+    }
+    return target;
+  }
+
+  async #loadConfig(dirpath: string, filename: string, extraInject: object | undefined, type: EggDirInfoType) {
+    const isPlugin = type === 'plugin';
+    const isApp = type === 'app';
+
+    let filepath = this.resolveModule(path.join(dirpath, 'config', filename));
+    // let config.js compatible
+    if (filename === 'config.default' && !filepath) {
+      filepath = this.resolveModule(path.join(dirpath, 'config/config'));
+    }
+    const config: Record<string, any> = await this.loadFile(filepath!, this.appInfo, extraInject);
+    if (!config) return;
+    if (isPlugin || isApp) {
+      assert(!config.coreMiddleware, 'Can not define coreMiddleware in app or plugin');
+    }
+    if (!isApp) {
+      assert(!config.middleware, 'Can not define middleware in ' + filepath);
+    }
+    // store config meta, check where is the property of config come from.
+    this.#setConfigMeta(config, filepath!);
+    return config;
+  }
+
+  #loadConfigFromEnv() {
+    const envConfigStr = process.env.EGG_APP_CONFIG;
+    if (!envConfigStr) return;
+    try {
+      const envConfig: Record<string, any> = JSON.parse(envConfigStr);
+      this.#setConfigMeta(envConfig, '<process.env.EGG_APP_CONFIG>');
+      return envConfig;
+    } catch (err) {
+      this.options.logger.warn('[egg-loader] process.env.EGG_APP_CONFIG is not invalid JSON: %s', envConfigStr);
+    }
+  }
+
+  #setConfigMeta(config: Record<string, any>, filepath: string) {
+    config = extend(true, {}, config);
+    this.#setConfig(config, filepath);
+    extend(true, this.configMeta, config);
+  }
+
+  #setConfig(obj: Record<string, any>, filepath: string) {
+    for (const key of Object.keys(obj)) {
+      const val = obj[key];
+      // ignore console
+      if (key === 'console' && val && typeof val.Console === 'function' && val.Console === console.Console) {
+        obj[key] = filepath;
+        continue;
+      }
+      if (val && Object.getPrototypeOf(val) === Object.prototype && Object.keys(val).length > 0) {
+        this.#setConfig(val, filepath);
+        continue;
+      }
+      obj[key] = filepath;
+    }
+  }
+  /** end Config loader */
 
   // Low Level API
 
@@ -980,7 +1109,7 @@ export class EggLoader {
   }
 }
 
-function depCompatible(plugin: PluginInfo & { dep?: string[] }) {
+function depCompatible(plugin: EggPluginInfo & { dep?: string[] }) {
   if (plugin.dep && !(Array.isArray(plugin.dependencies) && plugin.dependencies.length)) {
     plugin.dependencies = plugin.dep;
     delete plugin.dep;
@@ -1002,7 +1131,6 @@ function isValidatePackageName(name: string) {
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/plugin'),
 //   require('./mixin/config'),
 //   require('./mixin/extend'),
 //   require('./mixin/custom'),
