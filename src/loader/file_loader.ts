@@ -17,17 +17,26 @@ export type FileLoaderInitializer = (exports: unknown, options: { path: string; 
 export type FileLoaderFilter = (exports: unknown) => boolean;
 
 export interface FileLoaderOptions {
+  /** directories to be loaded */
   directory: string | string[];
+  /** attach the target object from loaded files */
   target: Record<string, any>;
+  /** match the files when load, support glob, default to all js files */
   match?: string | string[];
+  /** ignore the files when load, support glob */
   ignore?: string | string[];
-  lowercaseFirst?: boolean;
-  caseStyle?: CaseStyle | CaseStyleFunction;
+  /** custom file exports, receive two parameters, first is the inject object(if not js file, will be content buffer), second is an `options` object that contain `path` */
   initializer?: FileLoaderInitializer;
+  /** determine whether invoke when exports is function */
   call?: boolean;
+  /** determine whether override the property when get the same name */
   override?: boolean;
-  inject?: object;
+  /** an object that be the argument when invoke the function */
+  inject?: Record<string, any>;
+  /** a function that filter the exports which can be loaded */
   filter?: FileLoaderFilter;
+  /** set property's case when converting a filepath to property list. */
+  caseStyle?: CaseStyle | CaseStyleFunction;
 }
 
 export interface FileLoaderParseItem {

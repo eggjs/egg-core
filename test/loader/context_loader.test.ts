@@ -1,8 +1,7 @@
-const request = require('supertest');
-const path = require('path');
-const utils = require('../utils');
+import request from 'supertest';
+import { getFilepath, createApp } from '../utils.js';
 
-describe('test/loader/context_loader.test.js', () => {
+describe('test/loader/context_loader.test.ts', () => {
   let app;
   before(() => {
     app = utils.createApp('context-loader');
@@ -10,7 +9,7 @@ describe('test/loader/context_loader.test.js', () => {
   });
 
   it('should load files ', async () => {
-    const directory = path.join(__dirname, '../fixtures/context-loader/app/depth');
+    const directory = getFilepath('context-loader/app/depth');
     app.loader.loadToContext(directory, 'depth');
 
     await request(app.callback())
@@ -25,7 +24,7 @@ describe('test/loader/context_loader.test.js', () => {
   });
 
   it('should load different types', async () => {
-    const directory = path.join(__dirname, '../fixtures/context-loader/app/type');
+    const directory = getFilepath('context-loader/app/type');
     app.loader.loadToContext(directory, 'type');
 
     await request(app.callback())
@@ -41,9 +40,9 @@ describe('test/loader/context_loader.test.js', () => {
   });
 
   it('should use different cache key', async () => {
-    const service1Dir = path.join(__dirname, '../fixtures/context-loader/app/service1');
+    const service1Dir = getFilepath('context-loader/app/service1');
     app.loader.loadToContext(service1Dir, 'service1');
-    const service2Dir = path.join(__dirname, '../fixtures/context-loader/app/service2');
+    const service2Dir = getFilepath('context-loader/app/service2');
     app.loader.loadToContext(service2Dir, 'service2');
 
     await request(app.callback())
@@ -56,7 +55,7 @@ describe('test/loader/context_loader.test.js', () => {
   });
 
   it('should load file with pathname and config', async () => {
-    const directory = path.join(__dirname, '../fixtures/context-loader/app/pathname');
+    const directory = getFilepath('context-loader/app/pathname');
     app.loader.loadToContext(directory, 'pathname');
 
     await request(app.callback())

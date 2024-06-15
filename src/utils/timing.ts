@@ -35,7 +35,7 @@ export class Timing {
     }
   }
 
-  start(name: string, start?: number) {
+  start(name?: string, start?: number) {
     if (!name || !this.#enable) return;
 
     if (this.#map.has(name)) this.end(name);
@@ -55,7 +55,7 @@ export class Timing {
     return item;
   }
 
-  end(name: string) {
+  end(name?: string) {
     if (!name || !this.#enable) return;
     assert(this.#map.has(name), `should run timing.start('${name}') first`);
 

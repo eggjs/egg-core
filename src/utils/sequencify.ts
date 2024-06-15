@@ -7,7 +7,13 @@ export interface SequencifyResult {
   requires: Record<string, true>;
 }
 
-function sequence(tasks, names: string[], result: SequencifyResult, missing: string[], recursive: string[],
+export interface SequencifyTask {
+  dependencies: string[];
+  optionalDependencies: string[];
+}
+
+function sequence(tasks: Record<string, SequencifyTask>, names: string[], result: SequencifyResult,
+  missing: string[], recursive: string[],
   nest: string[], optional: boolean, parent: string) {
   names.forEach(function(name) {
     if (result.requires[name]) return;
@@ -42,7 +48,7 @@ function sequence(tasks, names: string[], result: SequencifyResult, missing: str
 
 // tasks: object with keys as task names
 // names: array of task names
-export default function sequencify(tasks, names: string[]) {
+export default function sequencify(tasks: Record<string, SequencifyTask>, names: string[]) {
   const result: SequencifyResult = {
     sequence: [],
     requires: {},

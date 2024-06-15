@@ -1,8 +1,8 @@
 import path from 'node:path';
 import { strict as assert } from 'node:assert';
+import { setTimeout as sleep } from 'node:timers/promises';
 import mm from 'mm';
-import { sleep } from '../utils';
-import utils from '../../src/utils';
+import utils from '../../src/utils/index.js';
 
 describe('test/utils/index.test.ts', () => {
   afterEach(mm.restore);

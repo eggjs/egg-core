@@ -62,7 +62,9 @@ import { EggCore as Application } from '@eggjs/core';
 const app = new Application({
   baseDir: '/path/to/app'
 });
-app.ready(() => app.listen(3000));
+app.ready(() => {
+  app.listen(3000);
+});
 ```
 
 ## EggLoader

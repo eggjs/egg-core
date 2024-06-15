@@ -2,7 +2,7 @@
   "name": "@eggjs/core",
   "version": "5.3.1",
   "engines": {
-    "node": ">= 18.7.0"
+    "node": ">= 18.19.0"
   },
   "description": "A core plugin framework based on koa",
   "scripts": {
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/eggjs/egg-core#readme",
   "dependencies": {
     "@eggjs/koa": "^2.18.1",
-    "@eggjs/router": "^3.0.0",
+    "@eggjs/router": "^3.0.1",
     "egg-logger": "^3.5.0",
     "egg-path-matching": "^1.1.0",
     "extend2": "^4.0.0",
@@ -46,6 +46,7 @@
     "@types/js-yaml": "^4.0.9",
     "@types/mocha": "10",
     "@types/node": "20",
+    "@types/supertest": "^6.0.2",
     "await-event": "2",
     "coffee": "5",
     "egg-bin": "6",

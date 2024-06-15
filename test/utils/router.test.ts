@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import request from 'supertest';
-import utils from '../utils';
+import utils from '../utils.js';
 
 describe('test/utils/router.test.ts', () => {
   let app;

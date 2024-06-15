@@ -1,8 +1,7 @@
 import { strict as assert } from 'node:assert';
-import Timing from '../../src/utils/timing';
+import { Timing } from '../../src/utils/timing.js';
 
 describe('test/utils/timing.test.ts', () => {
-
   it('should trace', () => {
     const timing = new Timing();
     timing.start('a');
@@ -14,10 +13,10 @@ describe('test/utils/timing.test.ts', () => {
     assert.equal(json.length, 3);
 
     assert.equal(json[1].name, 'a');
-    assert.equal(json[1].end - json[1].start, json[1].duration);
+    assert.equal(json[1].end! - json[1].start, json[1].duration);
     assert.equal(json[1].pid, process.pid);
     assert.equal(json[2].name, 'b');
-    assert.equal(json[2].end - json[2].start, json[2].duration);
+    assert.equal(json[2].end! - json[2].start, json[2].duration);
     assert.equal(json[2].pid, process.pid);
 
     timing.start('c');
@@ -52,7 +51,7 @@ describe('test/utils/timing.test.ts', () => {
     assert.equal(timing.toJSON().length, 3);
   });
 
-  it('should ignore end when name dont exist', () => {
+  it('should ignore end when name don\'t exist', () => {
     const timing = new Timing();
     timing.end();
     assert.equal(timing.toJSON().length, 1);
@@ -99,9 +98,8 @@ describe('test/utils/timing.test.ts', () => {
     assert.equal(json2.length, 1);
   });
 
-  it('should throw when end and name dont exists', () => {
+  it('should throw when end and name don\'t exists', () => {
     const timing = new Timing();
-
     assert.throws(() => {
       timing.end('a');
     }, /should run timing.start\('a'\) first/);
@@ -109,7 +107,6 @@ describe('test/utils/timing.test.ts', () => {
 
   it('should init process start time', () => {
     const timing = new Timing();
-
     const processStart = timing.toJSON().find(item => item.name === 'Process Start');
     assert(processStart);
     assert(processStart.start);

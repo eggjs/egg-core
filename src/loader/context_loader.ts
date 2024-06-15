@@ -1,28 +1,33 @@
-'use strict';
+import assert from 'node:assert';
+import { type ContextDelegation } from '@eggjs/koa';
+import { isClass, isPrimitive } from 'is-type-of';
+import { FileLoader, EXPORTS, type FileLoaderOptions } from './file_loader.js';
 
-const assert = require('assert');
-const is = require('is-type-of');
-const FileLoader = require('./file_loader');
-const CLASSLOADER = Symbol('classLoader');
-const EXPORTS = FileLoader.EXPORTS;
+const CLASS_LOADER = Symbol('classLoader');
+
+interface ClassLoaderOptions {
+  ctx: ContextDelegation;
+  properties: any;
+}
 
 class ClassLoader {
+  readonly _cache = new Map();
+  _ctx: ContextDelegation;
 
-  constructor(options) {
+  constructor(options: ClassLoaderOptions) {
     assert(options.ctx, 'options.ctx is required');
     const properties = options.properties;
-    this._cache = new Map();
     this._ctx = options.ctx;
 
     for (const property in properties) {
-      this.defineProperty(property, properties[property]);
+      this.#defineProperty(property, properties[property]);
     }
   }
 
-  defineProperty(property, values) {
+  #defineProperty(property: string, values: any) {
     Object.defineProperty(this, property, {
       get() {
-        let instance = this._cache.get(property);
+        let instance: any = this._cache.get(property);
         if (!instance) {
           instance = getInstance(values, this._ctx);
           this._cache.set(property, instance);
@@ -33,45 +38,58 @@ class ClassLoader {
   }
 }
 
+export interface ContextLoaderOptions extends Omit<FileLoaderOptions, 'target'> {
+  /** required inject */
+  inject: Record<string, any>;
+  /** property name defined to target */
+  property: string;
+  /** determine the field name of inject object. */
+  fieldClass?: string;
+}
+
 /**
- * Same as {@link FileLoader}, but it will attach file to `inject[fieldClass]`. The exports will be lazy loaded, such as `ctx.group.repository`.
+ * Same as {@link FileLoader}, but it will attach file to `inject[fieldClass]`.
+ * The exports will be lazy loaded, such as `ctx.group.repository`.
  * @augments FileLoader
  * @since 1.0.0
  */
-class ContextLoader extends FileLoader {
-
+export class ContextLoader extends FileLoader {
+  readonly #inject: Record<string, any>;
   /**
    * @class
    * @param {Object} options - options same as {@link FileLoader}
    * @param {String} options.fieldClass - determine the field name of inject object.
    */
-  constructor(options) {
+  constructor(options: ContextLoaderOptions) {
     assert(options.property, 'options.property is required');
     assert(options.inject, 'options.inject is required');
-    const target = options.target = {};
+    const target = {};
     if (options.fieldClass) {
       options.inject[options.fieldClass] = target;
     }
-    super(options);
+    super({
+      ...options,
+      target,
+    });
+    this.#inject = this.options.inject!;
 
-    const app = this.options.inject;
+    const app = this.#inject;
     const property = options.property;
-
     // define ctx.service
     Object.defineProperty(app.context, property, {
       get() {
+        const ctx = this;
         // distinguish property cache,
         // cache's lifecycle is the same with this context instance
         // e.x. ctx.service1 and ctx.service2 have different cache
-        if (!this[CLASSLOADER]) {
-          this[CLASSLOADER] = new Map();
+        if (!ctx[CLASS_LOADER]) {
+          ctx[CLASS_LOADER] = new Map();
         }
-        const classLoader = this[CLASSLOADER];
-
+        const classLoader: Map<string, ClassLoader> = ctx[CLASS_LOADER];
         let instance = classLoader.get(property);
         if (!instance) {
-          instance = getInstance(target, this);
-          classLoader.set(property, instance);
+          instance = getInstance(target, ctx);
+          classLoader.set(property, instance!);
         }
         return instance;
       },
@@ -79,16 +97,13 @@ class ContextLoader extends FileLoader {
   }
 }
 
-module.exports = ContextLoader;
-
-
-function getInstance(values, ctx) {
+function getInstance(values: any, ctx: ContextDelegation) {
   // it's a directory when it has no exports
   // then use ClassLoader
   const Class = values[EXPORTS] ? values : null;
   let instance;
   if (Class) {
-    if (is.class(Class)) {
+    if (isClass(Class)) {
       instance = new Class(ctx);
     } else {
       // it's just an object
@@ -96,7 +111,7 @@ function getInstance(values, ctx) {
     }
   // Can't set property to primitive, so check again
   // e.x. module.exports = 1;
-  } else if (is.primitive(values)) {
+  } else if (isPrimitive(values)) {
     instance = values;
   } else {
     instance = new ClassLoader({ ctx, properties: values });

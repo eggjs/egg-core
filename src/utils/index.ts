@@ -1,5 +1,6 @@
 import { debuglog } from 'node:util';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import BuiltinModule from 'node:module';
 import { isGeneratorFunction } from 'is-type-of';
@@ -54,6 +55,14 @@ export default {
       err.message = `[@eggjs/core] load file: ${filepath}, error: ${err.message}`;
       throw err;
     }
+  },
+
+  resolvePath(filepath: string, options?: { paths?: string[] }) {
+    if (typeof require?.resolve === 'function') {
+      return require.resolve(filepath, options);
+    }
+    const fileUrl = import.meta.resolve(filepath);
+    return fileURLToPath(fileUrl);
   },
 
   methods: [ 'head', 'options', 'get', 'put', 'patch', 'post', 'delete' ],
