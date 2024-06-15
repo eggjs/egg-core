@@ -1314,6 +1314,19 @@ export class EggLoader {
   }
   /** end Controller loader */
 
+  /** start Router loader */
+  /**
+   * Load app/router.js
+   * @function EggLoader#loadRouter
+   * @since 1.0.0
+   */
+  async loadRouter() {
+    this.timing.start('Load Router');
+    await this.loadFile(path.join(this.options.baseDir, 'app/router'));
+    this.timing.end('Load Router');
+  }
+  /** end Router loader */
+
   // Low Level API
 
   /**
@@ -1612,7 +1625,6 @@ function objectFunctionToMiddleware(func: Fun) {
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/router'),
 //   require('./mixin/custom_loader'),
 // ];
 
