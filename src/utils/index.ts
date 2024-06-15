@@ -1,7 +1,10 @@
+import { debuglog } from 'node:util';
 import path from 'node:path';
 import fs from 'node:fs';
 import BuiltinModule from 'node:module';
 import { isGeneratorFunction } from 'is-type-of';
+
+const debug = debuglog('egg-core:utils');
 
 export type Fun = (...args: any[]) => any;
 
@@ -11,14 +14,17 @@ const Module = typeof module !== 'undefined' && module.constructor.length > 1
   /* istanbul ignore next */
   : BuiltinModule;
 
+const extensions = (Module as any)._extensions;
+debug('Module extensions: %j', Object.keys(extensions));
+
 export default {
-  extensions: (Module as any)._extensions,
+  extensions,
 
   async loadFile(filepath: string) {
     try {
       // if not js module, just return content buffer
       const extname = path.extname(filepath);
-      if (extname && !(Module as any)._extensions[extname]) {
+      if (extname && !extensions[extname]) {
         return fs.readFileSync(filepath);
       }
       let obj: any;
@@ -26,14 +32,16 @@ export default {
       if (typeof require === 'function') {
         // commonjs
         obj = require(filepath);
+        debug('require %s => %o', filepath, obj);
         if (obj && obj.__esModule) {
           isESM = true;
         }
       } else {
         // esm
         obj = await import(filepath);
+        debug('await import %s => %o', filepath, obj);
         isESM = true;
-        if (obj && obj.__esModule && 'default' in obj) {
+        if (obj && 'default' in obj) {
           // default: { default: [Function (anonymous)] }
           obj = obj.default;
         }

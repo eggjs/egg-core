@@ -207,7 +207,20 @@ describe('test/loader/file_loader.test.ts', () => {
       directory: path.join(dirBase, 'es6_module'),
       target: app.model,
     }).load();
-    assert.deepEqual(app.model.mod.a, 1);
+    assert.equal(app.model.mod.a, 1);
+  });
+
+  it('should pass ts module', async () => {
+    const app: Record<string, any> = { model: {} };
+    await new FileLoader({
+      directory: path.join(dirBase, 'ts_module'),
+      target: app.model,
+    }).load();
+    assert.equal(app.model.mod.a, 1);
+    assert.equal(app.model.mod2.foo, 'bar');
+    assert(app.model.mod2.HelloFoo);
+    assert.equal(app.model.mod3.ok, true);
+    assert.equal(app.model.mod3.foo, 'bar');
   });
 
   it('should contain syntax error filepath', async () => {
