@@ -30,16 +30,12 @@
   "dependencies": {
     "@eggjs/koa": "^2.18.1",
     "@eggjs/router": "^3.0.0",
-    "@types/depd": "^1.1.32",
-    "co": "^4.6.0",
-    "depd": "^2.0.0",
     "egg-logger": "^3.5.0",
     "egg-path-matching": "^1.1.0",
-    "extend2": "^1.0.1",
+    "extend2": "^4.0.0",
     "get-ready": "^3.1.0",
     "globby": "^11.0.2",
     "is-type-of": "^2.1.0",
-    "koa-convert": "^1.2.0",
     "node-homedir": "^2.0.0",
     "ready-callback": "^4.0.0",
     "tsconfig-paths": "^4.1.1",
@@ -47,6 +43,7 @@
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",
+    "@types/js-yaml": "^4.0.9",
     "@types/mocha": "10",
     "@types/node": "20",
     "await-event": "2",
@@ -59,14 +56,13 @@
     "git-contributor": "2",
     "js-yaml": "^3.13.1",
     "mm": "3",
-    "pedding": "^1.1.0",
     "spy": "^1.0.0",
     "supertest": "^4.0.2",
     "ts-node": "10",
-    "urllib": "3",
     "tshy": "^1.15.1",
     "tshy-after": "^1.0.0",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "urllib": "3"
   },
   "publishConfig": {
     "access": "public"

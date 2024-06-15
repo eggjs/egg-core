@@ -1,14 +1,12 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import BuiltinModule from 'node:module';
-import convert from 'koa-convert';
-import is from 'is-type-of';
-import co from 'co';
+import { isGeneratorFunction } from 'is-type-of';
 
 export type Fun = (...args: any[]) => any;
 
 // Guard against poorly mocked module constructors.
-const Module = module.constructor.length > 1
+const Module = typeof module !== 'undefined' && module.constructor.length > 1
   ? module.constructor
   /* istanbul ignore next */
   : BuiltinModule;
@@ -16,21 +14,35 @@ const Module = module.constructor.length > 1
 export default {
   extensions: (Module as any)._extensions,
 
-  loadFile(filepath: string) {
+  async loadFile(filepath: string) {
     try {
       // if not js module, just return content buffer
       const extname = path.extname(filepath);
       if (extname && !(Module as any)._extensions[extname]) {
         return fs.readFileSync(filepath);
       }
-      // require js module
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const obj = require(filepath);
+      let obj: any;
+      let isESM = false;
+      if (typeof require === 'function') {
+        // commonjs
+        obj = require(filepath);
+        if (obj && obj.__esModule) {
+          isESM = true;
+        }
+      } else {
+        // esm
+        obj = await import(filepath);
+        isESM = true;
+        if (obj && obj.__esModule && 'default' in obj) {
+          // default: { default: [Function (anonymous)] }
+          obj = obj.default;
+        }
+      }
       if (!obj) return obj;
-      // it's es module
-      if (obj.__esModule) return 'default' in obj ? obj.default : obj;
+      // it's es module, use default export
+      if (isESM) return 'default' in obj ? obj.default : obj;
       return obj;
-    } catch (err) {
+    } catch (err: any) {
       err.message = `[@eggjs/core] load file: ${filepath}, error: ${err.message}`;
       throw err;
     }
@@ -41,12 +53,17 @@ export default {
   async callFn(fn: Fun, args?: any[], ctx?: any) {
     args = args || [];
     if (typeof fn !== 'function') return;
-    if (is.generatorFunction(fn)) fn = co.wrap(fn);
+    if (isGeneratorFunction(fn)) {
+      throw new TypeError(`Support for generators was removed, function: ${fn.toString()}`);
+    }
     return ctx ? fn.call(ctx, ...args) : fn(...args);
   },
 
   middleware(fn: any) {
-    return is.generatorFunction(fn) ? convert(fn) : fn;
+    if (isGeneratorFunction(fn)) {
+      throw new TypeError(`Support for generators was removed, middleware: ${fn.toString()}`);
+    }
+    return fn;
   },
 
   getCalleeFromStack(withLine?: boolean, stackIndex?: number) {
@@ -88,12 +105,10 @@ export default {
   },
 };
 
-
 /**
  * Capture call site stack from v8.
  * https://github.com/v8/v8/wiki/Stack-Trace-API
  */
-
-function prepareObjectStackTrace(_obj, stack) {
+function prepareObjectStackTrace(_obj: any, stack: any) {
   return stack;
 }

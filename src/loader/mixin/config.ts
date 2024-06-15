@@ -1,11 +1,12 @@
-'use strict';
+import { debuglog } from 'node:util';
+import path from 'node:path';
+import assert from 'node:assert';
+import { extend } from 'extend2';
+import { Timing } from '../../utils/timing.js';
 
-const debug = require('node:util').debuglog('egg-core:config');
-const path = require('path');
-const extend = require('extend2');
-const assert = require('assert');
+const debug = debuglog('egg-core:config');
 
-module.exports = {
+export class EggConfigLoader {
 
   /**
    * Load config/config.js
@@ -19,7 +20,7 @@ module.exports = {
     this.timing.start('Load Config');
     this.configMeta = {};
 
-    const target = {};
+    const target: Record<string, any> = {};
 
     // Load Application config first
     const appConfig = this._preloadAppConfig();
@@ -108,14 +109,14 @@ module.exports = {
     }
   },
 
-  _setConfigMeta(config, filepath) {
+  _setConfigMeta(config: Record<string, any>, filepath: string) {
     config = extend(true, {}, config);
     setConfig(config, filepath);
     extend(true, this.configMeta, config);
-  },
-};
+  }
+}
 
-function setConfig(obj, filepath) {
+function setConfig(obj: Record<string, any>, filepath: string) {
   for (const key of Object.keys(obj)) {
     const val = obj[key];
     // ignore console

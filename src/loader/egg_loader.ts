@@ -553,11 +553,11 @@ for (const loader of loaders) {
   Object.assign(EggLoader.prototype, loader);
 }
 
-import { PluginLoader } from './mixin/plugin';
-import ConfigLoader from './mixin/config';
+import { PluginLoader } from './mixin/plugin.js';
+import ConfigLoader from './mixin/config.js';
 
 // https://www.typescriptlang.org/docs/handbook/mixins.html#alternative-pattern
-export interface EggLoader extends PluginLoader, ConfigLoader {}
+export interface EggLoaderMixin extends PluginLoader, ConfigLoader {}
 
 // https://www.typescriptlang.org/docs/handbook/mixins.html
 function applyMixins(derivedCtor: any, constructors: any[]) {

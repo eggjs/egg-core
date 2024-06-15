@@ -5,7 +5,7 @@ import { debuglog } from 'node:util';
 import is from 'is-type-of';
 import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
-import utility from 'utility';
+import { readJSONSync } from 'utility';
 import FileLoader from './file_loader';
 import ContextLoader from './context_loader';
 import utils from '../utils';
@@ -65,6 +65,11 @@ export interface EggLoaderOptions {
   plugins?: Record<string, PluginInfo>;
 }
 
+export interface EggDirInfo {
+  path: string;
+  type: 'app' | 'plugin' | 'framework';
+}
+
 export class BaseLoader {
   #requiredCount: 0;
   readonly options: EggLoaderOptions;
@@ -74,6 +79,7 @@ export class BaseLoader {
   readonly serverEnv: string;
   readonly serverScope: string;
   readonly appInfo: EggAppInfo;
+  dirs?: EggDirInfo[];
 
   /**
    * @class
@@ -97,7 +103,7 @@ export class BaseLoader {
      * @see {@link AppInfo#pkg}
      * @since 1.0.0
      */
-    this.pkg = utility.readJSONSync(path.join(this.options.baseDir, 'package.json'));
+    this.pkg = readJSONSync(path.join(this.options.baseDir, 'package.json'));
 
     // auto require('tsconfig-paths/register') on typescript app
     // support env.EGG_TYPESCRIPT = true or { "egg": { "typescript": true } } on package.json
@@ -224,7 +230,7 @@ export class BaseLoader {
    * @private
    * @since 1.0.0
    */
-  getAppname() {
+  getAppname(): string {
     if (this.pkg.name) {
       debug('Loaded appname(%s) from package.json', this.pkg.name);
       return this.pkg.name;
@@ -238,7 +244,7 @@ export class BaseLoader {
    * @return {String} home directory
    * @since 3.4.0
    */
-  getHomedir() {
+  getHomedir(): string {
     // EGG_HOME for test
     return process.env.EGG_HOME || homedir() || '/home/admin';
   }
@@ -371,16 +377,16 @@ export class BaseLoader {
    * ```
    * @since 1.0.0
    */
-  loadFile(filepath, ...inject) {
-    filepath = filepath && this.resolveModule(filepath);
-    if (!filepath) {
+  loadFile(filepath: string, ...inject: Array<any>): any {
+    const realFilepath = filepath && this.resolveModule(filepath);
+    if (!realFilepath) {
       return null;
     }
 
     // function(arg1, args, ...) {}
     if (inject.length === 0) inject = [ this.app ];
 
-    let ret = this.requireFile(filepath);
+    let ret = this.requireFile(realFilepath);
     if (is.function(ret) && !is.class(ret)) {
       ret = ret(...inject);
     }
@@ -392,12 +398,12 @@ export class BaseLoader {
    * @return {Object} exports
    * @private
    */
-  requireFile(filepath) {
+  requireFile(filepath: string): any {
     const timingKey = `Require(${this.#requiredCount++}) ${utils.getResolvedFilename(filepath, this.options.baseDir)}`;
     this.timing.start(timingKey);
-    const ret = utils.loadFile(filepath);
+    const moduleExports = utils.loadFile(filepath);
     this.timing.end(timingKey);
-    return ret;
+    return moduleExports;
   }
 
   /**
@@ -415,16 +421,16 @@ export class BaseLoader {
    * @return {Array} loadUnits
    * @since 1.0.0
    */
-  getLoadUnits() {
+  getLoadUnits(): Array<any> {
     if (this.dirs) {
       return this.dirs;
     }
 
-    const dirs = this.dirs = [];
+    this.dirs = [];
 
     if (this.orderPlugins) {
       for (const plugin of this.orderPlugins) {
-        dirs.push({
+        this.dirs.push({
           path: plugin.path,
           type: 'plugin',
         });
@@ -433,20 +439,20 @@ export class BaseLoader {
 
     // framework or egg path
     for (const eggPath of this.eggPaths) {
-      dirs.push({
+      this.dirs.push({
         path: eggPath,
         type: 'framework',
       });
     }
 
     // application
-    dirs.push({
+    this.dirs.push({
       path: this.options.baseDir,
       type: 'app',
     });
 
-    debug('Loaded dirs %j', dirs);
-    return dirs;
+    debug('Loaded dirs %j', this.dirs);
+    return this.dirs;
   }
 
   /**

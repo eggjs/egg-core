@@ -2,35 +2,40 @@ import { debuglog } from 'node:util';
 
 const debug = debuglog('@eggjs/core:utils:sequencify');
 
-function sequence(tasks, names, results, missing, recursive, nest, optional, parent) {
+export interface SequencifyResult {
+  sequence: string[];
+  requires: Record<string, true>;
+}
+
+function sequence(tasks, names: string[], result: SequencifyResult, missing: string[], recursive: string[],
+  nest: string[], optional: boolean, parent: string) {
   names.forEach(function(name) {
-    if (results.requires[name]) return;
+    if (result.requires[name]) return;
 
     const node = tasks[name];
-
     if (!node) {
       if (optional === true) return;
       missing.push(name);
     } else if (nest.includes(name)) {
       nest.push(name);
-      recursive.push(nest.slice(0));
-      nest.pop(name);
+      recursive.push(...nest.slice(0));
+      nest.pop();
     } else if (node.dependencies.length || node.optionalDependencies.length) {
       nest.push(name);
       if (node.dependencies.length) {
-        sequence(tasks, node.dependencies, results, missing, recursive, nest, optional, name);
+        sequence(tasks, node.dependencies, result, missing, recursive, nest, optional, name);
       }
       if (node.optionalDependencies.length) {
-        sequence(tasks, node.optionalDependencies, results, missing, recursive, nest, true, name);
+        sequence(tasks, node.optionalDependencies, result, missing, recursive, nest, true, name);
       }
-      nest.pop(name);
+      nest.pop();
     }
     if (!optional) {
-      results.requires[name] = true;
+      result.requires[name] = true;
       debug('task: %s is enabled by %s', name, parent);
     }
-    if (!results.sequence.includes(name)) {
-      results.sequence.push(name);
+    if (!result.sequence.includes(name)) {
+      result.sequence.push(name);
     }
   });
 }
@@ -38,21 +43,21 @@ function sequence(tasks, names, results, missing, recursive, nest, optional, par
 // tasks: object with keys as task names
 // names: array of task names
 export default function sequencify(tasks, names: string[]) {
-  const results = {
+  const result: SequencifyResult = {
     sequence: [],
     requires: {},
   }; // the final sequence
-  const missing = []; // missing tasks
-  const recursive = []; // recursive task dependencies
+  const missing: string[] = []; // missing tasks
+  const recursive: string[] = []; // recursive task dependencies
 
-  sequence(tasks, names, results, missing, recursive, [], false, 'app');
+  sequence(tasks, names, result, missing, recursive, [], false, 'app');
 
   if (missing.length || recursive.length) {
-    results.sequence = []; // results are incomplete at best, completely wrong at worst, remove them to avoid confusion
+    result.sequence = []; // results are incomplete at best, completely wrong at worst, remove them to avoid confusion
   }
 
   return {
-    sequence: results.sequence.filter(item => results.requires[item]),
+    sequence: result.sequence.filter(item => result.requires[item]),
     missingTasks: missing,
     recursiveDependencies: recursive,
   };

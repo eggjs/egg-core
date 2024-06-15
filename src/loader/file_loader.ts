@@ -1,35 +1,47 @@
-'use strict';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import { debuglog } from 'node:util';
+import path from 'node:path';
+import globby from 'globby';
+import { isClass, isGeneratorFunction, isAsyncFunction, isPrimitive } from 'is-type-of';
+import utils from '../utils/index.js';
 
-const assert = require('assert');
-const fs = require('fs');
-const debug = require('node:util').debuglog('egg-core:loader');
-const path = require('path');
-const globby = require('globby');
-const is = require('is-type-of');
-const deprecate = require('depd')('egg');
-const utils = require('../utils');
-const FULLPATH = Symbol('EGG_LOADER_ITEM_FULLPATH');
-const EXPORTS = Symbol('EGG_LOADER_ITEM_EXPORTS');
+const debug = debuglog('egg-core:loader');
 
-const defaults = {
-  directory: null,
-  target: null,
-  match: undefined,
-  ignore: undefined,
-  lowercaseFirst: false,
-  caseStyle: 'camel',
-  initializer: null,
-  call: true,
-  override: false,
-  inject: undefined,
-  filter: null,
-};
+export const FULLPATH = Symbol('EGG_LOADER_ITEM_FULLPATH');
+export const EXPORTS = Symbol('EGG_LOADER_ITEM_EXPORTS');
+
+export type CaseStyle = 'camel' | 'lower' | 'upper';
+export type CaseStyleFunction = (filepath: string) => string[];
+export type FileLoaderInitializer = (exports: unknown, options: { path: string; pathName: string }) => unknown;
+export type FileLoaderFilter = (exports: unknown) => boolean;
+
+export interface FileLoaderOptions {
+  directory: string | string[];
+  target: Record<string, any>;
+  match?: string | string[];
+  ignore?: string | string[];
+  lowercaseFirst?: boolean;
+  caseStyle?: CaseStyle | CaseStyleFunction;
+  initializer?: FileLoaderInitializer;
+  call?: boolean;
+  override?: boolean;
+  inject?: object;
+  filter?: FileLoaderFilter;
+}
+
+export interface FileLoaderParseItem {
+  fullpath: string;
+  properties: string[];
+  exports: object | Function;
+}
 
 /**
  * Load files from directory to target object.
  * @since 1.0.0
  */
-class FileLoader {
+export class FileLoader {
+  readonly options: FileLoaderOptions & Required<Pick<FileLoaderOptions, 'caseStyle'>>;
 
   /**
    * @class
@@ -45,14 +57,20 @@ class FileLoader {
    * @param {Function} options.filter - a function that filter the exports which can be loaded
    * @param {String|Function} options.caseStyle - set property's case when converting a filepath to property list.
    */
-  constructor(options) {
+  constructor(options: FileLoaderOptions) {
     assert(options.directory, 'options.directory is required');
     assert(options.target, 'options.target is required');
-    this.options = Object.assign({}, defaults, options);
+    this.options = {
+      lowercaseFirst: false,
+      caseStyle: 'camel',
+      call: true,
+      override: false,
+      ...options,
+    };
 
     // compatible old options _lowercaseFirst_
     if (this.options.lowercaseFirst === true) {
-      deprecate('lowercaseFirst is deprecated, use caseStyle instead');
+      console.warn('[egg-core:deprecated] lowercaseFirst is deprecated, use caseStyle instead');
       this.options.caseStyle = 'lower';
     }
   }
@@ -63,8 +81,8 @@ class FileLoader {
    * @return {Object} target
    * @since 1.0.0
    */
-  load() {
-    const items = this.parse();
+  async load(): Promise<object> {
+    const items = await this.parse();
     const target = this.options.target;
     for (const item of items) {
       debug('loading item %j', item);
@@ -78,9 +96,9 @@ class FileLoader {
             if (!this.options.override) throw new Error(`can't overwrite property '${properties}' from ${target[property][FULLPATH]} by ${item.fullpath}`);
           }
           obj = item.exports;
-          if (obj && !is.primitive(obj)) {
-            obj[FULLPATH] = item.fullpath;
-            obj[EXPORTS] = true;
+          if (obj && !isPrimitive(obj)) {
+            Reflect.set(obj, FULLPATH, item.fullpath);
+            Reflect.set(obj, EXPORTS, true);
           }
         } else {
           obj = target[property] || {};
@@ -119,7 +137,7 @@ class FileLoader {
    * @return {Array} items
    * @since 1.0.0
    */
-  parse() {
+  async parse(): Promise<FileLoaderParseItem[]> {
     let files = this.options.match;
     if (!files) {
       files = (process.env.EGG_TYPESCRIPT === 'true' && utils.extensions['.ts'])
@@ -141,8 +159,8 @@ class FileLoader {
       directories = [ directories ];
     }
 
-    const filter = is.function(this.options.filter) ? this.options.filter : null;
-    const items = [];
+    const filter = typeof this.options.filter === 'function' ? this.options.filter : null;
+    const items: FileLoaderParseItem[] = [];
     debug('parsing %j', directories);
     for (const directory of directories) {
       const filepaths = globby.sync(files, { cwd: directory });
@@ -151,17 +169,17 @@ class FileLoader {
         if (!fs.statSync(fullpath).isFile()) continue;
         // get properties
         // app/service/foo/bar.js => [ 'foo', 'bar' ]
-        const properties = getProperties(filepath, this.options);
+        const properties = getProperties(filepath, this.options.caseStyle);
         // app/service/foo/bar.js => service.foo.bar
         const pathName = directory.split(/[/\\]/).slice(-1) + '.' + properties.join('.');
         // get exports from the file
-        const exports = getExports(fullpath, this.options, pathName);
+        const exports = await getExports(fullpath, this.options, pathName);
 
         // ignore exports when it's null or false returned by filter function
         if (exports == null || (filter && filter(exports) === false)) continue;
 
         // set properties of class
-        if (is.class(exports)) {
+        if (isClass(exports)) {
           exports.prototype.pathName = pathName;
           exports.prototype.fullPath = fullpath;
         }
@@ -173,20 +191,15 @@ class FileLoader {
 
     return items;
   }
-
 }
-
-module.exports = FileLoader;
-module.exports.EXPORTS = EXPORTS;
-module.exports.FULLPATH = FULLPATH;
 
 // convert file path to an array of properties
 // a/b/c.js => ['a', 'b', 'c']
-function getProperties(filepath, { caseStyle }) {
+function getProperties(filepath: string, caseStyle: CaseStyle | CaseStyleFunction) {
   // if caseStyle is function, return the result of function
-  if (is.function(caseStyle)) {
+  if (typeof caseStyle === 'function') {
     const result = caseStyle(filepath);
-    assert(is.array(result), `caseStyle expect an array, but got ${result}`);
+    assert(Array.isArray(result), `caseStyle expect an array, but got ${JSON.stringify(result)}`);
     return result;
   }
   // use default camelize
@@ -195,19 +208,23 @@ function getProperties(filepath, { caseStyle }) {
 
 // Get exports from filepath
 // If exports is null/undefined, it will be ignored
-function getExports(fullpath, { initializer, call, inject }, pathName) {
-  let exports = utils.loadFile(fullpath);
+async function getExports(fullpath: string, options: FileLoaderOptions, pathName: string) {
+  let exports = await utils.loadFile(fullpath);
   // process exports as you like
-  if (initializer) {
-    exports = initializer(exports, { path: fullpath, pathName });
+  if (options.initializer) {
+    exports = options.initializer(exports, { path: fullpath, pathName });
   }
 
-  // return exports when it's a class or generator
+  if (isGeneratorFunction(exports)) {
+    throw new TypeError(`Support for generators was removed, fullpath: ${fullpath}`);
+  }
+
+  // return exports when it's a class or async function
   //
   // module.exports = class Service {};
   // or
-  // module.exports = function*() {}
-  if (is.class(exports) || is.generatorFunction(exports) || is.asyncFunction(exports)) {
+  // module.exports = async function() {}
+  if (isClass(exports) || isAsyncFunction(exports)) {
     return exports;
   }
 
@@ -216,8 +233,8 @@ function getExports(fullpath, { initializer, call, inject }, pathName) {
   // module.exports = function(app) {
   //   return {};
   // }
-  if (call && is.function(exports)) {
-    exports = exports(inject);
+  if (options.call && typeof exports === 'function') {
+    exports = exports(options.inject);
     if (exports != null) {
       return exports;
     }
@@ -227,7 +244,7 @@ function getExports(fullpath, { initializer, call, inject }, pathName) {
   return exports;
 }
 
-function defaultCamelize(filepath, caseStyle) {
+function defaultCamelize(filepath: string, caseStyle: CaseStyle) {
   const properties = filepath.substring(0, filepath.lastIndexOf('.')).split('/');
   return properties.map(property => {
     if (!/^[a-z][a-z0-9_-]*$/i.test(property)) {

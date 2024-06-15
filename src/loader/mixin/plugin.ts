@@ -2,11 +2,11 @@ import assert from 'node:assert';
 import fs from 'node:fs';
 import path from 'node:path';
 import { debuglog } from 'node:util';
-import sequencify from '../../utils/sequencify';
-import utils from '../../utils';
+import sequencify from '../../utils/sequencify.js';
+import utils from '../../utils/index.js';
 import { BaseLoader, PluginInfo } from '../base_loader';
 
-const debug = debuglog('@eggjs/core:loader:plugin');
+const debug = debuglog('egg-core:loader:plugin');
 
 export class PluginLoader extends BaseLoader {
   protected lookupDirs: Set<string>;

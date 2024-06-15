@@ -6,9 +6,9 @@ import ReadyObject from 'get-ready';
 import type { ReadyFunctionArg } from 'get-ready';
 import { Ready } from 'ready-callback';
 import { EggConsoleLogger } from 'egg-logger';
-import utils from './utils';
-import type { Fun } from './utils';
-import type { EggCore } from './egg';
+import utils from './utils/index.js';
+import type { Fun } from './utils/index.js';
+import type { EggCore } from './egg.js';
 
 const debug = debuglog('@eggjs/core:lifecycle');
 
@@ -141,7 +141,7 @@ export class Lifecycle extends EventEmitter {
     this.#bootHooks.push(BootClass);
   }
 
-  addFunctionAsBootHook<T = EggApplication>(hook: (app: T) => void) {
+  addFunctionAsBootHook<T = EggCore>(hook: (app: T) => void) {
     assert(this.#init === false, 'do not add hook when lifecycle has been initialized');
     // app.js is exported as a function
     // call this function in configDidLoad

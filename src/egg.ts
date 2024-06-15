@@ -1,17 +1,17 @@
 import assert from 'node:assert';
-import fs from 'node:fs';
+// import fs from 'node:fs';
 import { debuglog } from 'node:util';
 import is from 'is-type-of';
 import KoaApplication, { type MiddlewareFunc } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
-import { BaseContextClass } from './utils/base_context_class';
-import utils from './utils';
-import { Timing } from './utils/timing';
-import type { Fun } from './utils';
-import { Lifecycle } from './lifecycle';
-import type { EggLoader } from './loader/egg_loader';
+import { BaseContextClass } from './utils/base_context_class.js';
+import utils from './utils/index.js';
+import { Timing } from './utils/timing.js';
+import type { Fun } from './utils/index.js';
+import { Lifecycle } from './lifecycle.js';
+import { EggLoader, EggLoaderMixin } from './loader/egg_loader.js';
 
 const debug = debuglog('@eggjs/core:egg');
 
@@ -36,7 +36,7 @@ export class EggCore extends KoaApplication {
   Controller: typeof BaseContextClass;
   Service: typeof BaseContextClass;
   lifecycle: Lifecycle;
-  loader: EggLoader;
+  loader: EggLoaderMixin;
 
   /**
    * @class
@@ -47,17 +47,15 @@ export class EggCore extends KoaApplication {
    * @since 1.0.0
    */
   constructor(options: Partial<EggCoreOptions> = {}) {
-    options.baseDir = options.baseDir || process.cwd();
-    options.type = options.type || 'application';
-
+    options.baseDir = options.baseDir ?? process.cwd();
+    options.type = options.type ?? 'application';
     assert(typeof options.baseDir === 'string', 'options.baseDir required, and must be a string');
-    assert(fs.existsSync(options.baseDir), `Directory ${options.baseDir} not exists`);
-    assert(fs.statSync(options.baseDir).isDirectory(), `Directory ${options.baseDir} is not a directory`);
+    // assert(fs.existsSync(options.baseDir), `Directory ${options.baseDir} not exists`);
+    // assert(fs.statSync(options.baseDir).isDirectory(), `Directory ${options.baseDir} is not a directory`);
     assert(options.type === 'application' || options.type === 'agent', 'options.type should be application or agent');
     super();
 
     this.timing = new Timing();
-
     // cache deprecate object by file
     this[DEPRECATE] = new Map();
 
@@ -137,8 +135,8 @@ export class EggCore extends KoaApplication {
       plugins: options.plugins,
       logger: this.console,
       serverScope: options.serverScope,
-      env: options.env,
-    });
+      env: options.env ?? '',
+    }) as unknown as EggLoaderMixin;
   }
 
   /**
@@ -336,7 +334,7 @@ export class EggCore extends KoaApplication {
   }
 
   get [EGG_LOADER]() {
-    return require('./loader/egg_loader');
+    return EggLoader;
   }
 }
 

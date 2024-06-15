@@ -1,16 +1,10 @@
 {
   "extends": "@eggjs/tsconfig",
   "compilerOptions": {
+    "strict": true,
+    "noImplicitAny": true,
     "target": "ES2022",
-    "module": "Node16",
-    "outDir": "lib",
-    "useUnknownInCatchVariables": false
-  },
-  "include": [
-    "src"
-  ],
-  "exclude": [
-    "node_modules",
-    "test"
-  ]
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext"
+  }
 }
