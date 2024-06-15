@@ -1,18 +1,18 @@
 import { strict as assert } from 'node:assert';
-import path from 'node:path';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import request from 'supertest';
 import { getAsyncLocalStorage, kGALS } from 'gals';
-import { Application } from './fixtures/egg';
+import { getFilepath } from './utils.js';
+import { Application } from './fixtures/egg/index.js';
 
 describe('test/asyncLocalStorage.test.ts', () => {
   let app: Application;
-  before(() => {
+  before(async () => {
     app = new Application({
-      baseDir: path.join(__dirname, 'fixtures/session-cache-app'),
+      baseDir: getFilepath('session-cache-app'),
       type: 'application',
     });
-    app.loader.loadAll();
+    await app.loader.loadAll();
   });
 
   it('should start app with asyncLocalStorage = true by default', async () => {
@@ -27,10 +27,10 @@ describe('test/asyncLocalStorage.test.ts', () => {
   });
 
   it('should access als on global', async () => {
-    assert(global[Symbol.for('gals#asyncLocalStorage')]);
-    assert(global[kGALS]);
-    assert(global[Symbol.for('gals#asyncLocalStorage')] instanceof AsyncLocalStorage);
-    assert.equal(app.ctxStorage, global[Symbol.for('gals#asyncLocalStorage')]);
+    assert(Reflect.get(global, Symbol.for('gals#asyncLocalStorage')));
+    assert(Reflect.get(global, kGALS));
+    assert(Reflect.get(global, Symbol.for('gals#asyncLocalStorage')) instanceof AsyncLocalStorage);
+    assert.equal(app.ctxStorage, Reflect.get(global, Symbol.for('gals#asyncLocalStorage')));
     assert.equal(app.ctxStorage, getAsyncLocalStorage());
   });
 });

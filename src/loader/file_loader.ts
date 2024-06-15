@@ -37,6 +37,7 @@ export interface FileLoaderOptions {
   filter?: FileLoaderFilter;
   /** set property's case when converting a filepath to property list. */
   caseStyle?: CaseStyle | CaseStyleFunction;
+  lowercaseFirst?: boolean;
 }
 
 export interface FileLoaderParseItem {
@@ -70,7 +71,6 @@ export class FileLoader {
     assert(options.directory, 'options.directory is required');
     assert(options.target, 'options.target is required');
     this.options = {
-      lowercaseFirst: false,
       caseStyle: 'camel',
       call: true,
       override: false,

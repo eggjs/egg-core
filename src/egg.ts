@@ -6,8 +6,7 @@ import type { ContextDelegation, Next } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
-import { BaseContextClass } from './utils/base_context_class.js';
-import utils from './utils/index.js';
+import { BaseContextClass } from './base_context_class.js';
 import { Timing } from './utils/timing.js';
 import type { Fun } from './utils/index.js';
 import { Lifecycle } from './lifecycle.js';
@@ -25,16 +24,18 @@ export interface EggCoreOptions {
   env?: string;
 }
 
+export type EggCoreInitOptions = Partial<EggCoreOptions>;
+
 function deprecated(message: string) {
   console.warn('[egg-core:deprecated] %s', message);
 }
 
-type Middleware = (ctx: EggContext, next: Next) => Promise<void> | void;
+type Middleware = (ctx: EggCoreContext, next: Next) => Promise<void> | void;
 export type MiddlewareFunc = Middleware & {
   _name?: string;
 };
 
-export interface EggContext extends ContextDelegation {
+export interface EggCoreContext extends ContextDelegation {
   app: EggCore;
 }
 
@@ -62,7 +63,7 @@ export class EggCore extends KoaApplication {
    * @param {Object} [options.plugins] - custom plugins
    * @since 1.0.0
    */
-  constructor(options: Partial<EggCoreOptions> = {}) {
+  constructor(options: EggCoreInitOptions = {}) {
     options.baseDir = options.baseDir ?? process.cwd();
     options.type = options.type ?? 'application';
     assert(typeof options.baseDir === 'string', 'options.baseDir required, and must be a string');
@@ -159,8 +160,8 @@ export class EggCore extends KoaApplication {
    */
   use(fn: MiddlewareFunc) {
     assert(is.function(fn), 'app.use() requires a function');
-    debug('use %s', (fn as any)._name || fn.name || '-');
-    this.middleware.push(utils.middleware(fn));
+    debug('use %s', fn._name || fn.name || '-');
+    this.middleware.push(fn as any);
     return this;
   }
 

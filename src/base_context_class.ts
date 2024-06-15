@@ -1,9 +1,4 @@
-import type { Context as KoaContext } from '@eggjs/koa';
-import type { EggCore } from '../egg';
-
-export type EggCoreContext = KoaContext & {
-  app: EggCore;
-};
+import type { EggCore, EggCoreContext } from './egg.js';
 
 /**
  * BaseContextClass is a base class that can be extended,

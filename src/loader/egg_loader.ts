@@ -14,8 +14,8 @@ import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
 import utils, { Fun } from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
-import type { EggContext, EggCore, MiddlewareFunc } from '../egg.js';
-import { BaseContextClass } from '../utils/base_context_class.js';
+import type { EggCoreContext, EggCore, MiddlewareFunc } from '../egg.js';
+import { BaseContextClass } from '../base_context_class.js';
 
 const debug = debuglog('@eggjs/core:egg_loader');
 
@@ -1111,16 +1111,16 @@ export class EggLoader {
    * }
    * @since 1.0.0
    */
-  loadCustomApp() {
-    this.#loadBootHook('app');
+  async loadCustomApp() {
+    await this.#loadBootHook('app');
     this.lifecycle.triggerConfigWillLoad();
   }
 
   /**
    * Load agent.js, same as {@link EggLoader#loadCustomApp}
    */
-  loadCustomAgent() {
-    this.#loadBootHook('agent');
+  async loadCustomAgent() {
+    await this.#loadBootHook('agent');
     this.lifecycle.triggerConfigWillLoad();
   }
 
@@ -1129,14 +1129,14 @@ export class EggLoader {
     // do nothing
   }
 
-  #loadBootHook(fileName: string) {
+  async #loadBootHook(fileName: string) {
     this.timing.start(`Load ${fileName}.js`);
     for (const unit of this.getLoadUnits()) {
       const bootFilePath = this.resolveModule(path.join(unit.path, fileName));
       if (!bootFilePath) {
         continue;
       }
-      const bootHook = this.requireFile(bootFilePath);
+      const bootHook = await this.requireFile(bootFilePath);
       if (isClass(bootHook)) {
         bootHook.prototype.fullPath = bootFilePath;
         // if is boot class, add to lifecycle
@@ -1162,7 +1162,7 @@ export class EggLoader {
    * @param {Object} options - LoaderOptions
    * @since 1.0.0
    */
-  loadService(options?: Partial<ContextLoaderOptions>) {
+  async loadService(options?: Partial<ContextLoaderOptions>) {
     this.timing.start('Load Service');
     // 载入到 app.serviceClasses
     const servicePaths = this.getLoadUnits().map(unit => path.join(unit.path, 'app/service'));
@@ -1173,7 +1173,7 @@ export class EggLoader {
       directory: servicePaths,
       ...options,
     };
-    this.loadToContext(servicePaths, 'service', options as ContextLoaderOptions);
+    await this.loadToContext(servicePaths, 'service', options as ContextLoaderOptions);
     this.timing.end('Load Service');
   }
   /** end Service loader */
@@ -1449,7 +1449,7 @@ export class EggLoader {
     if (this.orderPlugins) {
       for (const plugin of this.orderPlugins) {
         this.dirs.push({
-          path: plugin.path,
+          path: plugin.path!,
           type: 'plugin',
         });
       }
@@ -1588,7 +1588,7 @@ function wrapMiddleware(mw: MiddlewareFunc,
   }
   const match = pathMatching(options);
 
-  const fn = (ctx: EggContext, next: Next) => {
+  const fn = (ctx: EggCoreContext, next: Next) => {
     if (!match(ctx)) return next();
     return mw(ctx, next);
   };
@@ -1597,7 +1597,7 @@ function wrapMiddleware(mw: MiddlewareFunc,
 }
 
 function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
-  const fn = (ctx: EggContext, next: Next) => {
+  const fn = (ctx: EggCoreContext, next: Next) => {
     debug('[%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
     return mw(ctx, next);
   };
@@ -1632,7 +1632,7 @@ function wrapControllerClass(Controller: typeof BaseContextClass, fullPath: stri
 }
 
 function controllerMethodToMiddleware(Controller: typeof BaseContextClass, key: string) {
-  return function classControllerMiddleware(this: EggContext, ...args: any[]) {
+  return function classControllerMiddleware(this: EggCoreContext, ...args: any[]) {
     const controller: any = new Controller(this);
     if (!this.app.config.controller?.supportParams) {
       args = [ this ];
@@ -1662,7 +1662,7 @@ function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string)
 }
 
 function objectFunctionToMiddleware(func: Fun) {
-  async function objectControllerMiddleware(this: EggContext, ...args: any[]) {
+  async function objectControllerMiddleware(this: EggCoreContext, ...args: any[]) {
     if (!this.app.config.controller?.supportParams) {
       args = [ this ];
     }
