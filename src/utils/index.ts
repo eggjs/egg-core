@@ -3,7 +3,6 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import BuiltinModule from 'node:module';
-import { isGeneratorFunction } from 'is-type-of';
 
 const debug = debuglog('egg-core:utils');
 
@@ -70,17 +69,7 @@ export default {
   async callFn(fn: Fun, args?: any[], ctx?: any) {
     args = args || [];
     if (typeof fn !== 'function') return;
-    if (isGeneratorFunction(fn)) {
-      throw new TypeError(`Support for generators was removed, function: ${fn.toString()}`);
-    }
     return ctx ? fn.call(ctx, ...args) : fn(...args);
-  },
-
-  middleware(fn: any) {
-    if (isGeneratorFunction(fn)) {
-      throw new TypeError(`Support for generators was removed, middleware: ${fn.toString()}`);
-    }
-    return fn;
   },
 
   getCalleeFromStack(withLine?: boolean, stackIndex?: number) {

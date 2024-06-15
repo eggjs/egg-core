@@ -2,6 +2,7 @@ import assert from 'node:assert';
 import { debuglog } from 'node:util';
 import is from 'is-type-of';
 import KoaApplication from '@eggjs/koa';
+import type { ContextDelegation, Next } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
@@ -11,7 +12,6 @@ import { Timing } from './utils/timing.js';
 import type { Fun } from './utils/index.js';
 import { Lifecycle } from './lifecycle.js';
 import { EggLoader } from './loader/egg_loader.js';
-import type { MiddlewareFunc } from './types.js';
 
 const debug = debuglog('@eggjs/core:egg');
 
@@ -27,6 +27,15 @@ export interface EggCoreOptions {
 
 function deprecated(message: string) {
   console.warn('[egg-core:deprecated] %s', message);
+}
+
+type Middleware = (ctx: EggContext, next: Next) => Promise<void> | void;
+export type MiddlewareFunc = Middleware & {
+  _name?: string;
+};
+
+export interface EggContext extends ContextDelegation {
+  app: EggCore;
 }
 
 export class EggCore extends KoaApplication {

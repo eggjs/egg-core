@@ -2,20 +2,20 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
 import { debuglog, inspect } from 'node:util';
-import { isClass } from 'is-type-of';
+import { isAsyncFunction, isClass, isGeneratorFunction, isObject } from 'is-type-of';
 import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
-import { readJSONSync } from 'utility';
+import { getParamNames, readJSONSync } from 'utility';
 import { extend } from 'extend2';
 import { Request, Response, Context, Application, Next, ContextDelegation } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
-import { FileLoader, FileLoaderOptions } from './file_loader.js';
+import { FULLPATH, FileLoader, FileLoaderOptions } from './file_loader.js';
 import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
-import utils from '../utils/index.js';
+import utils, { Fun } from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
-import type { EggCore } from '../egg.js';
-import type { MiddlewareFunc } from '../types.js';
+import type { EggContext, EggCore, MiddlewareFunc } from '../egg.js';
+import { BaseContextClass } from '../utils/base_context_class.js';
 
 const debug = debuglog('@eggjs/core:egg_loader');
 
@@ -1263,6 +1263,57 @@ export class EggLoader {
   }
   /** end Middleware loader */
 
+  /** start Controller loader */
+  /**
+   * Load app/controller
+   * @param {Object} opt - LoaderOptions
+   * @since 1.0.0
+   */
+  async loadController(opt?: Partial<FileLoaderOptions>) {
+    this.timing.start('Load Controller');
+    const controllerBase = path.join(this.options.baseDir, 'app/controller');
+    opt = {
+      caseStyle: 'lower',
+      directory: controllerBase,
+      initializer: (obj, opt) => {
+        // return class if it exports a function
+        // ```js
+        // module.exports = app => {
+        //   return class HomeController extends app.Controller {};
+        // }
+        // ```
+        if (isGeneratorFunction(obj)) {
+          throw new TypeError(`Support for generators was removed, fullpath: ${opt.path}`);
+        }
+        if (!isClass(obj) && !isAsyncFunction(obj)) {
+          if (typeof obj === 'function') {
+            obj = obj(this.app);
+          }
+        }
+        if (isClass(obj)) {
+          obj.prototype.pathName = opt.pathName;
+          obj.prototype.fullPath = opt.path;
+          return wrapControllerClass(obj, opt.path);
+        }
+        if (isObject(obj)) {
+          return wrapObject(obj, opt.path);
+        }
+        if (isGeneratorFunction(obj)) {
+          throw new TypeError(`Support for generators was removed, fullpath: ${opt.path}`);
+        }
+        if (isAsyncFunction(obj)) {
+          return wrapObject({ 'module.exports': obj }, opt.path)['module.exports'];
+        }
+        return obj;
+      },
+      ...opt,
+    }
+    await this.loadToApp(controllerBase, 'controller', opt as FileLoaderOptions);
+    this.options.logger.info('[@eggjs/core:egg_loader] Controller loaded: %s', controllerBase);
+    this.timing.end('Load Controller');
+  }
+  /** end Controller loader */
+
   // Low Level API
 
   /**
@@ -1463,16 +1514,13 @@ function wrapMiddleware(mw: MiddlewareFunc,
     return null;
   }
 
-  // support generator function
-  mw = utils.middleware(mw);
-
   // support options.match and options.ignore
   if (!options.match && !options.ignore) {
     return mw;
   }
   const match = pathMatching(options);
 
-  const fn = (ctx: ContextDelegation, next: Next) => {
+  const fn = (ctx: EggContext, next: Next) => {
     if (!match(ctx)) return next();
     return mw(ctx, next);
   };
@@ -1481,12 +1529,81 @@ function wrapMiddleware(mw: MiddlewareFunc,
 }
 
 function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
-  const fn = (ctx: ContextDelegation, next: Next) => {
+  const fn = (ctx: EggContext, next: Next) => {
     debug('[%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
     return mw(ctx, next);
   };
   fn._name = `${mw._name}DebugWrapper`;
   return fn;
+}
+
+// wrap the controller class, yield a object with middlewares
+function wrapControllerClass(Controller: typeof BaseContextClass, fullPath: string) {
+  let proto = Controller.prototype;
+  const ret: Record<string, any> = {};
+  // tracing the prototype chain
+  while (proto !== Object.prototype) {
+    const keys = Object.getOwnPropertyNames(proto);
+    for (const key of keys) {
+      // getOwnPropertyNames will return constructor
+      // that should be ignored
+      if (key === 'constructor') {
+        continue;
+      }
+      // skip getter, setter & non-function properties
+      const d = Object.getOwnPropertyDescriptor(proto, key);
+      // prevent to override sub method
+      if (typeof d?.value === 'function' && !ret.hasOwnProperty(key)) {
+        ret[key] = controllerMethodToMiddleware(Controller, key);
+        ret[key][FULLPATH] = fullPath + '#' + Controller.name + '.' + key + '()';
+      }
+    }
+    proto = Object.getPrototypeOf(proto);
+  }
+  return ret;
+}
+
+function controllerMethodToMiddleware(Controller: typeof BaseContextClass, key: string) {
+  return function classControllerMiddleware(this: EggContext, ...args: any[]) {
+    const controller: any = new Controller(this);
+    if (!this.app.config.controller?.supportParams) {
+      args = [ this ];
+    }
+    return controller[key](...args);
+  };
+}
+
+// wrap the method of the object, method can receive ctx as it's first argument
+function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string) {
+  const keys = Object.keys(obj);
+  const ret: Record<string, any> = {};
+  prefix = prefix ?? '';
+  for (const key of keys) {
+    if (typeof obj[key] === 'function') {
+      const names = getParamNames(obj[key]);
+      if (names[0] === 'next') {
+        throw new Error(`controller \`${prefix}${key}\` should not use next as argument from file ${fullPath}`);
+      }
+      ret[key] = objectFunctionToMiddleware(obj[key]);
+      ret[key][FULLPATH] = `${fullPath}#${prefix}${key}()`;
+    } else if (isObject(obj[key])) {
+      ret[key] = wrapObject(obj[key], fullPath, `${prefix}${key}.`);
+    }
+  }
+  return ret;
+}
+
+function objectFunctionToMiddleware(func: Fun) {
+  async function objectControllerMiddleware(this: EggContext, ...args: any[]) {
+    if (!this.app.config.controller?.supportParams) {
+      args = [ this ];
+    }
+    return await func.apply(this, args);
+  }
+  for (const key in func) {
+    Reflect.set(objectControllerMiddleware, key, Reflect.get(func, key));
+  }
+  return objectControllerMiddleware;
 }
 
 /**
@@ -1495,7 +1612,6 @@ function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/controller'),
 //   require('./mixin/router'),
 //   require('./mixin/custom_loader'),
 // ];

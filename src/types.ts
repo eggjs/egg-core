@@ -1,11 +1,6 @@
 import type KoaApplication from '@eggjs/koa';
-import type { MiddlewareFunc as KoaMiddlewareFunc } from '@eggjs/koa';
 // import type depd = require('depd');
 import type { Logger } from 'egg-logger';
-
-export type MiddlewareFunc = KoaMiddlewareFunc & {
-  _name: string;
-};
 
 export type EggType = 'application' | 'agent';
 
