@@ -1,19 +1,21 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
-import { debuglog } from 'node:util';
+import { debuglog, inspect } from 'node:util';
 import { isClass } from 'is-type-of';
 import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
 import { readJSONSync } from 'utility';
 import { extend } from 'extend2';
-import { Request, Response, Context, Application } from '@eggjs/koa';
+import { Request, Response, Context, Application, Next, ContextDelegation } from '@eggjs/koa';
+import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
 import { FileLoader, FileLoaderOptions } from './file_loader.js';
 import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
 import utils from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
 import type { EggCore } from '../egg.js';
+import type { MiddlewareFunc } from '../types.js';
 
 const debug = debuglog('@eggjs/core:egg_loader');
 
@@ -1176,6 +1178,91 @@ export class EggLoader {
   }
   /** end Service loader */
 
+  /** start Middleware loader */
+  /**
+   * Load app/middleware
+   *
+   * app.config.xx is the options of the middleware xx that has same name as config
+   *
+   * @function EggLoader#loadMiddleware
+   * @param {Object} opt - LoaderOptions
+   * @example
+   * ```js
+   * // app/middleware/status.js
+   * module.exports = function(options, app) {
+   *   // options == app.config.status
+   *   return async next => {
+   *     await next();
+   *   }
+   * }
+   * ```
+   * @since 1.0.0
+   */
+  async loadMiddleware(opt?: Partial<FileLoaderOptions>) {
+    this.timing.start('Load Middleware');
+    const app = this.app;
+
+    // load middleware to app.middleware
+    const middlewarePaths = this.getLoadUnits().map(unit => path.join(unit.path, 'app/middleware'));
+    opt = {
+      call: false,
+      override: true,
+      caseStyle: 'lower',
+      directory: middlewarePaths,
+      ...opt,
+    };
+    await this.loadToApp(middlewarePaths, 'middlewares', opt as FileLoaderOptions);
+
+    for (const name in app.middlewares) {
+      Object.defineProperty(app.middleware, name, {
+        get() {
+          return app.middlewares[name];
+        },
+        enumerable: false,
+        configurable: false,
+      });
+    }
+
+    this.options.logger.info('Use coreMiddleware order: %j', this.config.coreMiddleware);
+    this.options.logger.info('Use appMiddleware order: %j', this.config.appMiddleware);
+
+    // use middleware ordered by app.config.coreMiddleware and app.config.appMiddleware
+    const middlewareNames = this.config.coreMiddleware.concat(this.config.appMiddleware);
+    debug('middlewareNames: %j', middlewareNames);
+    const middlewaresMap = new Map<string, boolean>();
+    for (const name of middlewareNames) {
+      const createMiddleware = app.middlewares[name];
+      if (!createMiddleware) {
+        throw new TypeError(`Middleware ${name} not found`);
+      }
+      if (middlewaresMap.has(name)) {
+        throw new TypeError(`Middleware ${name} redefined`);
+      }
+      middlewaresMap.set(name, true);
+      const options = this.config[name] || {};
+      let mw: MiddlewareFunc | null = createMiddleware(options, app);
+      assert(typeof mw === 'function', `Middleware ${name} must be a function, but actual is ${inspect(mw)}`);
+      mw._name = name;
+      // middlewares support options.enable, options.ignore and options.match
+      mw = wrapMiddleware(mw, options);
+      if (mw) {
+        if (debug.enabled) {
+          // show mw debug log on every request
+          mw = debugMiddlewareWrapper(mw);
+        }
+        app.use(mw);
+        debug('Use middleware: %s with options: %j', name, options);
+        this.options.logger.info('[@eggjs/core:egg_loader] Use middleware: %s', name);
+      } else {
+        this.options.logger.info('[@eggjs/core:egg_loader] Disable middleware: %s', name);
+      }
+    }
+
+    this.options.logger.info('[@eggjs/core:egg_loader] Loaded middleware from %j', middlewarePaths);
+    this.timing.end('Load Middleware');
+  }
+  /** end Middleware loader */
+
   // Low Level API
 
   /**
@@ -1368,13 +1455,46 @@ function isValidatePackageName(name: string) {
   return true;
 }
 
+// support pathMatching on middleware
+function wrapMiddleware(mw: MiddlewareFunc,
+  options: PathMatchingOptions & { enable?: boolean }): MiddlewareFunc | null {
+  // support options.enable
+  if (options.enable === false) {
+    return null;
+  }
+
+  // support generator function
+  mw = utils.middleware(mw);
+
+  // support options.match and options.ignore
+  if (!options.match && !options.ignore) {
+    return mw;
+  }
+  const match = pathMatching(options);
+
+  const fn = (ctx: ContextDelegation, next: Next) => {
+    if (!match(ctx)) return next();
+    return mw(ctx, next);
+  };
+  fn._name = `${mw._name}middlewareWrapper`;
+  return fn;
+}
+
+function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
+  const fn = (ctx: ContextDelegation, next: Next) => {
+    debug('[%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
+    return mw(ctx, next);
+  };
+  fn._name = `${mw._name}DebugWrapper`;
+  return fn;
+}
+
 /**
  * Mixin methods to EggLoader
  * // ES6 Multiple Inheritance
  * https://medium.com/@leocavalcante/es6-multiple-inheritance-73a3c66d2b6b
  */
 // const loaders = [
-//   require('./mixin/middleware'),
 //   require('./mixin/controller'),
 //   require('./mixin/router'),
 //   require('./mixin/custom_loader'),

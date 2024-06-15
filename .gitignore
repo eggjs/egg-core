@@ -12,3 +12,5 @@ package-lock.json
 run
 test/fixtures/*/timing.json
 lib/
+.tshy*
+dist

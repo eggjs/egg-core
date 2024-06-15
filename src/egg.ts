@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { debuglog } from 'node:util';
 import is from 'is-type-of';
-import KoaApplication, { type MiddlewareFunc } from '@eggjs/koa';
+import KoaApplication from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
@@ -11,6 +11,7 @@ import { Timing } from './utils/timing.js';
 import type { Fun } from './utils/index.js';
 import { Lifecycle } from './lifecycle.js';
 import { EggLoader } from './loader/egg_loader.js';
+import type { MiddlewareFunc } from './types.js';
 
 const debug = debuglog('@eggjs/core:egg');
 
@@ -42,6 +43,7 @@ export class EggCore extends KoaApplication {
   #router?: Router;
 
   readonly controller: Record<string, any> = {};
+  readonly middlewares: Record<string, (opt: any, app: EggCore) => MiddlewareFunc> = {};
 
   /**
    * @class
