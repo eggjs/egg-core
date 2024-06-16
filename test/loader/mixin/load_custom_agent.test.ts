@@ -1,13 +1,13 @@
-const assert = require('assert');
-const utils = require('../../utils');
+import { strict as assert } from 'node:assert';
+import { createApp } from '../../helper.js';
 
-describe('test/loader/mixin/load_custom_agent.test.js', () => {
-  let agent;
-  before(() => {
-    agent = utils.createApp('plugin');
-    agent.loader.loadPlugin();
-    agent.loader.loadConfig();
-    agent.loader.loadCustomAgent();
+describe('test/loader/mixin/load_custom_agent.test.ts', () => {
+  let agent: any;
+  before(async () => {
+    agent = createApp('plugin');
+    await agent.loader.loadPlugin();
+    await agent.loader.loadConfig();
+    await agent.loader.loadCustomAgent();
   });
   after(() => agent.close());
 
