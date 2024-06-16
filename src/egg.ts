@@ -36,6 +36,8 @@ export type MiddlewareFunc = Middleware & {
   _name?: string;
 };
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export interface EggCoreContext extends ContextDelegation {
   app: EggCore;
 }
@@ -59,6 +61,9 @@ export class EggCore extends KoaApplication {
   readonly controller: Record<string, any> = {};
   /** auto inject on loadMiddleware() */
   readonly middlewares: Record<string, (opt: any, app: EggCore) => MiddlewareFunc> = {};
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  declare middleware: MiddlewareFunc[];
 
   /**
    * @class
@@ -163,10 +168,12 @@ export class EggCore extends KoaApplication {
    * override koa's app.use, support generator function
    * @since 1.0.0
    */
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
   use(fn: MiddlewareFunc) {
     assert(is.function(fn), 'app.use() requires a function');
     debug('use %s', fn._name || fn.name || '-');
-    this.middleware.push(fn as any);
+    this.middleware.push(fn);
     return this;
   }
 

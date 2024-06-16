@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = function() {
-  return function* appCustom() {
-    this.body = 'app custom';
+  return async function appCustom(ctx) {
+    ctx.body = 'app custom';
   };
 };

@@ -1248,6 +1248,10 @@ export class EggLoader {
       const options = this.config[name] || {};
       let mw: MiddlewareFunc | null = createMiddleware(options, app);
       assert(typeof mw === 'function', `Middleware ${name} must be a function, but actual is ${inspect(mw)}`);
+      if (isGeneratorFunction(mw)) {
+        const fullpath = Reflect.get(createMiddleware, FULLPATH);
+        throw new TypeError(`Support for generators was removed, middleware: ${name}, fullpath: ${fullpath}`);
+      }
       mw._name = name;
       // middlewares support options.enable, options.ignore and options.match
       mw = wrapMiddleware(mw, options);
@@ -1494,7 +1498,7 @@ export class EggLoader {
     Reflect.set(this.app, property, target);
     options = {
       ...options,
-      directory,
+      directory: options.directory ?? directory,
       target,
       inject: this.app,
     };
@@ -1514,10 +1518,10 @@ export class EggLoader {
    */
   async loadToContext(directory: string | string[], property: string, options?: ContextLoaderOptions) {
     options = {
-      directory,
+      ...options,
+      directory: options?.directory ?? directory,
       property,
       inject: this.app,
-      ...options,
     };
 
     const timingKey = `Load "${String(property)}" to Context`;

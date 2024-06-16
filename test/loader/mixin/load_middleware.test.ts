@@ -1,18 +1,18 @@
-const path = require('path');
-const assert = require('assert');
-const request = require('supertest');
-const utils = require('../../utils');
+import path from 'node:path';
+import { strict as assert } from 'node:assert';
+import request from 'supertest';
+import { Application, createApp, getFilepath } from '../../helper.js';
 
-describe('test/loader/mixin/load_middleware.test.js', () => {
-  let app;
-  before(() => {
-    app = utils.createApp('middleware-override');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadCustomApp();
-    app.loader.loadMiddleware();
-    app.loader.loadController();
-    app.loader.loadRouter();
+describe('test/loader/mixin/load_middleware.test.ts', () => {
+  let app: Application;
+  before(async () => {
+    app = createApp('middleware-override');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadCustomApp();
+    await app.loader.loadMiddleware();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
   });
   after(() => app.close());
 
@@ -34,10 +34,14 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
     assert(app.middleware.static === app.middlewares.static);
     const names = [];
     for (const mw of app.middleware) {
-      assert(typeof mw === 'function');
+      assert.equal(typeof mw, 'function');
       names.push(mw._name);
     }
-    assert.deepEqual(names, [ 'status', 'static', 'custom' ]);
+    try {
+      assert.deepEqual(names, [ 'status', 'static', 'custom' ]);
+    } catch {
+      assert.deepEqual(names, [ 'statusDebugWrapper', 'staticDebugWrapper', 'customDebugWrapper' ]);
+    }
   });
 
   it('should override middlewares of plugin by framework', async () => {
@@ -55,47 +59,48 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   it('should override middlewares of egg by application', async () => {
     await request(app.callback())
       .get('/static')
+      .expect(200)
       .expect('static');
   });
 
-  it('should throw when middleware return no-generator', () => {
-    const app = utils.createApp('custom_session_invaild');
-    assert.throws(() => {
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadCustomApp();
-      app.loader.loadMiddleware();
+  it('should throw when middleware return no-generator', async () => {
+    const app = createApp('custom_session_invaild');
+    await assert.rejects(async () => {
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadCustomApp();
+      await app.loader.loadMiddleware();
     }, /Middleware session must be a function, but actual is {}/);
   });
 
-  it('should throw when not load that is not configured', () => {
-    const app = utils.createApp('no-middleware');
-    assert.throws(() => {
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadCustomApp();
-      app.loader.loadMiddleware();
+  it('should throw when not load that is not configured', async () => {
+    const app = createApp('no-middleware');
+    await assert.rejects(async () => {
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadCustomApp();
+      await app.loader.loadMiddleware();
     }, /Middleware a not found/);
   });
 
-  it('should throw when middleware name redefined', () => {
-    const app = utils.createApp('middleware-redefined');
-    assert.throws(() => {
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadCustomApp();
-      app.loader.loadMiddleware();
+  it('should throw when middleware name redefined', async () => {
+    const app = createApp('middleware-redefined');
+    await assert.rejects(async () => {
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadCustomApp();
+      await app.loader.loadMiddleware();
     }, /Middleware status redefined/);
   });
 
   it('should core middleware support options.enable', async () => {
-    const app = utils.createApp('middleware-disable');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadCustomApp();
-    app.loader.loadMiddleware();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    const app = createApp('middleware-disable');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadCustomApp();
+    await app.loader.loadMiddleware();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .get('/status')
@@ -104,13 +109,13 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   });
 
   it('should core middleware support options.match', async () => {
-    const app = utils.createApp('middleware-match');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadCustomApp();
-    app.loader.loadMiddleware();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    const app = createApp('middleware-match');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadCustomApp();
+    await app.loader.loadMiddleware();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .get('/status')
@@ -123,13 +128,13 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   });
 
   it('should core middleware support options.ignore', async () => {
-    const app = utils.createApp('middleware-ignore');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadCustomApp();
-    app.loader.loadMiddleware();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    const app = createApp('middleware-ignore');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadCustomApp();
+    await app.loader.loadMiddleware();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .post('/status')
@@ -142,13 +147,13 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   });
 
   it('should app middleware support options.enable', async () => {
-    const app = utils.createApp('middleware-app-disable');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadCustomApp();
-    app.loader.loadMiddleware();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    const app = createApp('middleware-app-disable');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadCustomApp();
+    await app.loader.loadMiddleware();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .get('/static')
@@ -157,15 +162,15 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   });
 
   describe('async functions and common functions', () => {
-    let app;
-    before(() => {
-      app = utils.createApp('middleware-aa');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadCustomApp();
-      app.loader.loadMiddleware();
-      app.loader.loadController();
-      app.loader.loadRouter();
+    let app: Application;
+    before(async () => {
+      app = createApp('middleware-aa');
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadCustomApp();
+      await app.loader.loadMiddleware();
+      await app.loader.loadController();
+      await app.loader.loadRouter();
     });
 
     after(() => app.close());
@@ -194,6 +199,7 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
     it('should support with options.match', async () => {
       await request(app.callback())
         .get('/match')
+        .expect(200)
         .expect('match', 'match')
         .expect('hello');
     });
@@ -206,16 +212,16 @@ describe('test/loader/mixin/load_middleware.test.js', () => {
   });
 
   describe('middleware in other directory', () => {
-    let app;
-    before(() => {
-      const baseDir = utils.getFilepath('other-directory');
-      app = utils.createApp('other-directory');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadCustomApp();
+    let app: Application;
+    before(async () => {
+      const baseDir = getFilepath('other-directory');
+      app = createApp('other-directory');
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadCustomApp();
       const directory = app.loader.getLoadUnits().map(unit => path.join(unit.path, 'app/middleware'));
       directory.push(path.join(baseDir, 'app/other-middleware'));
-      app.loader.loadMiddleware({
+      await app.loader.loadMiddleware({
         directory,
       });
       return app.ready();

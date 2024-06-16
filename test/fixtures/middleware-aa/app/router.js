@@ -8,6 +8,6 @@ module.exports = app => {
   app.get('/', controller);
 };
 
-function* controller() {
+function controller() {
   this.body = 'hello';
 };
