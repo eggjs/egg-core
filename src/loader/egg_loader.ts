@@ -1663,16 +1663,20 @@ function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string)
   const ret: Record<string, any> = {};
   prefix = prefix ?? '';
   for (const key of keys) {
+    const controllerMethodName = `${prefix}${key}`;
     const item = obj[key];
+    if (isGeneratorFunction(item)) {
+      throw new TypeError(`Support for generators was removed, controller \`${controllerMethodName}\`, fullpath: ${fullPath}`);
+    }
     if (typeof item === 'function') {
       const names = getParamNames(item);
       if (names[0] === 'next') {
-        throw new Error(`controller \`${prefix}${key}\` should not use next as argument from file ${fullPath}`);
+        throw new Error(`controller \`${controllerMethodName}\` should not use next as argument from file ${fullPath}`);
       }
       ret[key] = objectFunctionToMiddleware(item);
-      ret[key][FULLPATH] = `${fullPath}#${prefix}${key}()`;
+      ret[key][FULLPATH] = `${fullPath}#${controllerMethodName}()`;
     } else if (isObject(item)) {
-      ret[key] = wrapObject(item, fullPath, `${prefix}${key}.`);
+      ret[key] = wrapObject(item, fullPath, `${controllerMethodName}.`);
     }
   }
   debug('[wrapObject] fullPath: %s, prefix: %s => %o', fullPath, prefix, ret);

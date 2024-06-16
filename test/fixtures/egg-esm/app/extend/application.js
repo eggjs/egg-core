@@ -1,10 +1,8 @@
-import { symbol } from '../../../../helper.js';
-
 export default {
   get Proxy() {
     return this.BaseContextClass;
   },
-  get [symbol.view]() {
+  get [Symbol.for('view')]() {
     return 'egg';
   },
 };
