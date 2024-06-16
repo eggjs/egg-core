@@ -1,6 +1,7 @@
 import { debuglog } from 'node:util';
 import path from 'node:path';
 import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
 import BuiltinModule from 'node:module';
 import { createRequire } from 'node:module';
 
@@ -66,7 +67,8 @@ export default {
       } else {
         // esm
         debug('[loadFile] await import start: %s', filepath);
-        obj = await import(filepath);
+        const fileUrl = pathToFileURL(filepath).toString();
+        obj = await import(fileUrl);
         debug('[loadFile] await import end: %s => %o', filepath, obj);
         isESM = true;
         if (obj && typeof obj === 'object' && 'default' in obj) {
