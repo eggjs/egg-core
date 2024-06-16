@@ -1,13 +1,13 @@
-const assert = require('assert');
-const utils = require('../../utils');
+import { strict as assert } from 'node:assert';
+import { createApp } from '../../helper.js';
 
-describe('test/loader/mixin/load_application_extend.test.js', () => {
-  let app;
-  before(() => {
-    app = utils.createApp('application');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
+describe('test/loader/mixin/load_application_extend.test.ts', () => {
+  let app: any;
+  before(async () => {
+    app = createApp('application');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadApplicationExtend();
   });
   after(() => app.close());
 
