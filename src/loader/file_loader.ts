@@ -170,9 +170,10 @@ export class FileLoader {
 
     const filter = typeof this.options.filter === 'function' ? this.options.filter : null;
     const items: FileLoaderParseItem[] = [];
-    debug('parsing directories: %j', directories);
+    debug('[parse] parsing directories: %j', directories);
     for (const directory of directories) {
       const filepaths = globby.sync(files, { cwd: directory });
+      debug('[parse] globby files: %o, cwd: %o => %o', files, directory, filepaths);
       for (const filepath of filepaths) {
         const fullpath = path.join(directory, filepath);
         if (!fs.statSync(fullpath).isFile()) continue;
@@ -196,7 +197,7 @@ export class FileLoader {
         }
 
         items.push({ fullpath, properties, exports });
-        debug('parse %s, properties %j, exports %o', fullpath, properties, exports);
+        debug('[parse] parse %s, properties %j, exports %o', fullpath, properties, exports);
       }
     }
 

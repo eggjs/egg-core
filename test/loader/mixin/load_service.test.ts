@@ -1,23 +1,25 @@
-const path = require('path');
-const request = require('supertest');
-const mm = require('mm');
-const assert = require('assert');
-const utils = require('../../utils');
+import path from 'node:path';
+import { strict as assert } from 'node:assert';
+import request from 'supertest';
+import mm from 'mm';
+import { Application, createApp, getFilepath } from '../../helper.js';
 
-describe('test/loader/mixin/load_service.test.js', () => {
-  let app;
+describe('test/loader/mixin/load_service.test.ts', () => {
+  let app: Application;
   afterEach(mm.restore);
   afterEach(() => app.close());
 
   it('should load from application and plugin', async () => {
-    app = utils.createApp('plugin');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
-    app.loader.loadCustomApp();
-    app.loader.loadService();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    app = createApp('plugin');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadApplicationExtend();
+    await app.loader.loadCustomApp();
+    await app.loader.loadService();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
+    await app.ready();
+    console.log(app.serviceClasses);
     assert(app.serviceClasses.foo);
     assert(app.serviceClasses.foo2);
     assert(!app.serviceClasses.bar1);
@@ -37,21 +39,21 @@ describe('test/loader/mixin/load_service.test.js', () => {
       .expect(200);
   });
 
-  it('should throw when dulplicate', () => {
-    assert.throws(() => {
-      app = utils.createApp('service-override');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadService();
+  it('should throw when dulplicate', async () => {
+    await assert.rejects(async () => {
+      app = createApp('service-override');
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadService();
     }, /can't overwrite property 'foo'/);
   });
 
-  it('should check es6', () => {
-    app = utils.createApp('services_loader_verify');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
-    app.loader.loadService();
+  it('should check es6', async () => {
+    app = createApp('services_loader_verify');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadApplicationExtend();
+    await app.loader.loadService();
     assert('foo' in app.serviceClasses);
     assert('bar' in app.serviceClasses.foo);
     assert('bar1' in app.serviceClasses.foo);
@@ -59,14 +61,14 @@ describe('test/loader/mixin/load_service.test.js', () => {
   });
 
   it('should each request has unique ctx', async () => {
-    app = utils.createApp('service-unique');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
-    app.loader.loadCustomApp();
-    app.loader.loadService();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    app = createApp('service-unique');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadApplicationExtend();
+    await app.loader.loadCustomApp();
+    await app.loader.loadService();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .get('/same?t=1')
@@ -80,14 +82,14 @@ describe('test/loader/mixin/load_service.test.js', () => {
   });
 
   it('should extend app.Service', async () => {
-    app = utils.createApp('extends-app-service');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadApplicationExtend();
-    app.loader.loadCustomApp();
-    app.loader.loadService();
-    app.loader.loadController();
-    app.loader.loadRouter();
+    app = createApp('extends-app-service');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadApplicationExtend();
+    await app.loader.loadCustomApp();
+    await app.loader.loadService();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
 
     await request(app.callback())
       .get('/user')
@@ -100,14 +102,14 @@ describe('test/loader/mixin/load_service.test.js', () => {
   describe('subdir', () => {
     it('should load 2 level dir', async () => {
       mm(process.env, 'NO_DEPRECATION', '*');
-      app = utils.createApp('subdir-services');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadApplicationExtend();
-      app.loader.loadCustomApp();
-      app.loader.loadService();
-      app.loader.loadController();
-      app.loader.loadRouter();
+      app = createApp('subdir-services');
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadApplicationExtend();
+      await app.loader.loadCustomApp();
+      await app.loader.loadService();
+      await app.loader.loadController();
+      await app.loader.loadRouter();
 
       await request(app.callback())
         .get('/')
@@ -150,17 +152,18 @@ describe('test/loader/mixin/load_service.test.js', () => {
   });
 
   describe('service in other directory', () => {
-    before(() => {
-      const baseDir = utils.getFilepath('other-directory');
-      app = utils.createApp('other-directory');
-      app.loader.loadCustomApp();
-      app.loader.loadService({
+    before(async () => {
+      const baseDir = getFilepath('other-directory');
+      app = createApp('other-directory');
+      await app.loader.loadCustomApp();
+      await app.loader.loadService({
         directory: path.join(baseDir, 'app/other-service'),
       });
       return app.ready();
     });
 
     it('should load', () => {
+      console.log(app.serviceClasses);
       assert(app.serviceClasses.user);
     });
   });

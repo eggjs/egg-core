@@ -1178,6 +1178,7 @@ export class EggLoader {
       directory: servicePaths,
       ...options,
     };
+    debug('[loadService] options: %o', options);
     await this.loadToContext(servicePaths, 'service', options as ContextLoaderOptions);
     this.timing.end('Load Service');
   }
@@ -1513,10 +1514,10 @@ export class EggLoader {
    */
   async loadToContext(directory: string | string[], property: string, options?: ContextLoaderOptions) {
     options = {
-      ...options,
       directory,
       property,
       inject: this.app,
+      ...options,
     };
 
     const timingKey = `Load "${String(property)}" to Context`;

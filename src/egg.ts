@@ -53,7 +53,11 @@ export class EggCore extends KoaApplication {
   #closePromise?: Promise<void>;
   #router?: Router;
 
+  /** auto inject on loadService() */
+  readonly serviceClasses: Record<string, any> = {};
+  /** auto inject on loadController() */
   readonly controller: Record<string, any> = {};
+  /** auto inject on loadMiddleware() */
   readonly middlewares: Record<string, (opt: any, app: EggCore) => MiddlewareFunc> = {};
 
   /**
