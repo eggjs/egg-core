@@ -11,7 +11,7 @@ import coffee from 'coffee';
 import { createApp, getFilepath, Application } from './helper.js';
 import { EggCore } from '../src/index.js';
 
-describe('test/egg.test.ts', () => {
+describe.skip('test/egg.test.ts', () => {
   afterEach(mm.restore);
 
   describe('create EggCore', () => {

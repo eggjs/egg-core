@@ -1,16 +1,20 @@
 import request from 'supertest';
-import { getFilepath } from '../helper.js';
+import { getFilepath, createApp, Application } from '../helper.js';
 
 describe('test/loader/context_loader.test.ts', () => {
-  let app;
+  let app: Application;
   before(() => {
-    app = utils.createApp('context-loader');
-    app.loader.loadAll();
+    app = createApp('context-loader');
+    return app.loader.loadAll();
+  });
+
+  after(async () => {
+    await app.close();
   });
 
   it('should load files ', async () => {
     const directory = getFilepath('context-loader/app/depth');
-    app.loader.loadToContext(directory, 'depth');
+    await app.loader.loadToContext(directory, 'depth');
 
     await request(app.callback())
       .get('/depth')
@@ -25,7 +29,7 @@ describe('test/loader/context_loader.test.ts', () => {
 
   it('should load different types', async () => {
     const directory = getFilepath('context-loader/app/type');
-    app.loader.loadToContext(directory, 'type');
+    await app.loader.loadToContext(directory, 'type');
 
     await request(app.callback())
       .get('/type')
@@ -41,9 +45,9 @@ describe('test/loader/context_loader.test.ts', () => {
 
   it('should use different cache key', async () => {
     const service1Dir = getFilepath('context-loader/app/service1');
-    app.loader.loadToContext(service1Dir, 'service1');
+    await app.loader.loadToContext(service1Dir, 'service1');
     const service2Dir = getFilepath('context-loader/app/service2');
-    app.loader.loadToContext(service2Dir, 'service2');
+    await app.loader.loadToContext(service2Dir, 'service2');
 
     await request(app.callback())
       .get('/service')
@@ -56,7 +60,7 @@ describe('test/loader/context_loader.test.ts', () => {
 
   it('should load file with pathname and config', async () => {
     const directory = getFilepath('context-loader/app/pathname');
-    app.loader.loadToContext(directory, 'pathname');
+    await app.loader.loadToContext(directory, 'pathname');
 
     await request(app.callback())
       .get('/pathname')

@@ -65,14 +65,14 @@ export default {
         obj = await import(filepath);
         debug('[loadFile] await import end: %s => %o', filepath, obj);
         isESM = true;
-        if (obj && 'default' in obj) {
+        if (obj && typeof obj === 'object' && 'default' in obj) {
           // default: { default: [Function (anonymous)] }
           obj = obj.default;
         }
       }
       if (!obj) return obj;
       // it's es module, use default export
-      if (isESM) {
+      if (isESM && typeof obj === 'object') {
         obj = 'default' in obj ? obj.default : obj;
       }
       debug('[loadFile] return %s => %o', filepath, obj);

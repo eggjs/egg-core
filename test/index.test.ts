@@ -1,5 +1,5 @@
 import { strict as assert } from 'node:assert';
-import * as EggCore from '../src/index';
+import * as EggCore from '../src/index.js';
 
 describe('test/index.test.ts', () => {
   it('should expose properties', () => {

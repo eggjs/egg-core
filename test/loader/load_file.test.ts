@@ -7,7 +7,7 @@ describe('test/loader/load_file.test.ts', () => {
   afterEach(mm.restore);
   afterEach(() => app.close());
 
-  it.only('should load file', async () => {
+  it('should load file', async () => {
     app = createApp('load_file');
     const exports = await app.loader.loadFile(getFilepath('load_file/obj.js'));
     assert.deepEqual(exports, { a: 1 });

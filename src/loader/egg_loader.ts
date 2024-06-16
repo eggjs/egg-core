@@ -1511,7 +1511,7 @@ export class EggLoader {
    * @param {Object} options - see {@link ContextLoader}
    * @since 1.0.0
    */
-  async loadToContext(directory: string | string[], property: string, options: ContextLoaderOptions) {
+  async loadToContext(directory: string | string[], property: string, options?: ContextLoaderOptions) {
     options = {
       ...options,
       directory,
