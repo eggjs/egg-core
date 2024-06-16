@@ -1,28 +1,29 @@
-const assert = require('assert');
-const request = require('supertest');
-const utils = require('../../utils');
+import { strict as assert } from 'node:assert';
+import request from 'supertest';
+import { Application, createApp } from '../../helper.js';
 
-describe('test/loader/mixin/load_custom_loader.test.js', () => {
-  let app;
-  before(() => {
-    app = utils.createApp('custom-loader');
-    app.loader.loadPlugin();
-    app.loader.loadConfig();
-    app.loader.loadController();
-    app.loader.loadRouter();
-    app.loader.loadCustomLoader();
+describe('test/loader/mixin/load_custom_loader.test.ts', () => {
+  let app: Application;
+  before(async () => {
+    app = createApp('custom-loader');
+    await app.loader.loadPlugin();
+    await app.loader.loadConfig();
+    await app.loader.loadController();
+    await app.loader.loadRouter();
+    await app.loader.loadCustomLoader();
   });
   after(() => app.close());
 
   it('should load to app', async () => {
-    const res = await app.adapter.docker.inspectDocker();
+    console.log((app as any).adapter);
+    const res = await (app as any).adapter.docker.inspectDocker();
     assert(res);
     assert(res.inject === 'app');
   });
 
   it('should support exports load to app', () => {
-    assert(app.util.test.sayHi('egg') === 'hi, egg');
-    assert(app.util.sub.fn.echo() === 'echo custom_loader');
+    assert((app as any).util.test.sayHi('egg') === 'hi, egg');
+    assert((app as any).util.sub.fn.echo() === 'echo custom_loader');
   });
 
   it('should load to ctx', async () => {
@@ -39,27 +40,27 @@ describe('test/loader/mixin/load_custom_loader.test.js', () => {
   });
 
   it('should support loadunit', () => {
-    let name = app.plugin.a.getName();
+    let name = (app as any).plugin.a.getName();
     assert(name === 'plugina');
-    name = app.plugin.b.getName();
+    name = (app as any).plugin.b.getName();
     assert(name === 'pluginb');
   });
 
 
-  it('should loadConfig first', () => {
-    const app = utils.createApp('custom-loader');
+  it('should loadConfig first', async () => {
+    const app = createApp('custom-loader');
     try {
-      app.loader.loadCustomLoader();
+      await app.loader.loadCustomLoader();
       throw new Error('should not run');
-    } catch (err) {
+    } catch (err: any) {
       assert(err.message === 'should loadConfig first');
     } finally {
       app.close();
     }
   });
 
-  it('support set directory', () => {
-    const app = utils.createApp('custom-loader');
+  it('support set directory', async () => {
+    const app = createApp('custom-loader');
     try {
       app.loader.config = {
         customLoader: {
@@ -67,17 +68,17 @@ describe('test/loader/mixin/load_custom_loader.test.js', () => {
           },
         },
       };
-      app.loader.loadCustomLoader();
+      await app.loader.loadCustomLoader();
       throw new Error('should not run');
-    } catch (err) {
+    } catch (err: any) {
       assert(err.message === 'directory is required for config.customLoader.custom');
     } finally {
       app.close();
     }
   });
 
-  it('inject support app/ctx', () => {
-    const app = utils.createApp('custom-loader');
+  it('inject support app/ctx', async () => {
+    const app = createApp('custom-loader');
     try {
       app.loader.config = {
         customLoader: {
@@ -87,17 +88,17 @@ describe('test/loader/mixin/load_custom_loader.test.js', () => {
           },
         },
       };
-      app.loader.loadCustomLoader();
+      await app.loader.loadCustomLoader();
       throw new Error('should not run');
-    } catch (err) {
+    } catch (err: any) {
       assert(err.message === 'inject only support app or ctx');
     } finally {
       app.close();
     }
   });
 
-  it('should not overwrite the existing property', () => {
-    const app = utils.createApp('custom-loader');
+  it('should not overwrite the existing property', async () => {
+    const app = createApp('custom-loader');
     try {
       app.loader.config = {
         customLoader: {
@@ -107,9 +108,9 @@ describe('test/loader/mixin/load_custom_loader.test.js', () => {
           },
         },
       };
-      app.loader.loadCustomLoader();
+      await app.loader.loadCustomLoader();
       throw new Error('should not run');
-    } catch (err) {
+    } catch (err: any) {
       assert(err.message === 'customLoader should not override app.config');
     } finally {
       app.close();
@@ -124,13 +125,12 @@ describe('test/loader/mixin/load_custom_loader.test.js', () => {
           },
         },
       };
-      app.loader.loadCustomLoader();
+      await app.loader.loadCustomLoader();
       throw new Error('should not run');
-    } catch (err) {
+    } catch (err: any) {
       assert(err.message === 'customLoader should not override ctx.cookies');
     } finally {
       app.close();
     }
   });
-
 });

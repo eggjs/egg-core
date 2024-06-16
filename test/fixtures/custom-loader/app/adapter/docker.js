@@ -1,5 +1,3 @@
-'use strict';
-
 class DockerAdapter {
   constructor(app) {
     this.app = app;
@@ -8,7 +6,6 @@ class DockerAdapter {
   async inspectDocker() {
     return this.app.config.customLoader.adapter;
   }
-
 }
 
 module.exports = DockerAdapter;

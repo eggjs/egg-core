@@ -1349,19 +1349,15 @@ export class EggLoader {
         ...customLoader[property],
       };
       assert(loaderConfig.directory, `directory is required for config.customLoader.${property}`);
-
-      let directory;
+      let directory: string | string[];
       if (loaderConfig.loadunit === true) {
         directory = this.getLoadUnits().map(unit => path.join(unit.path, loaderConfig.directory));
       } else {
         directory = path.join(this.appInfo.baseDir, loaderConfig.directory);
       }
-      // don't override directory
-      delete loaderConfig.directory;
-
       const inject = loaderConfig.inject || 'app';
-      // don't override inject
-      delete loaderConfig.inject;
+      debug('[loadCustomLoader] loaderConfig: %o, inject: %o, directory: %o',
+        loaderConfig, inject, directory);
 
       switch (inject) {
         case 'ctx': {
@@ -1370,6 +1366,7 @@ export class EggLoader {
             caseStyle: 'lower',
             fieldClass: `${property}Classes`,
             ...loaderConfig,
+            directory,
           };
           await this.loadToContext(directory, property, options);
           break;
@@ -1378,10 +1375,11 @@ export class EggLoader {
           assert(!(property in this.app), `customLoader should not override app.${property}`);
           const options = {
             caseStyle: 'lower',
-            initializer(Clazz: unknown) {
+            initializer: (Clazz: unknown) => {
               return isClass(Clazz) ? new Clazz(this.app) : Clazz;
             },
             ...loaderConfig,
+            directory,
           };
           await this.loadToApp(directory, property, options);
           break;
@@ -1519,7 +1517,7 @@ export class EggLoader {
   async loadToContext(directory: string | string[], property: string, options?: ContextLoaderOptions) {
     options = {
       ...options,
-      directory: options?.directory ?? directory,
+      directory: options?.directory || directory,
       property,
       inject: this.app,
     };
