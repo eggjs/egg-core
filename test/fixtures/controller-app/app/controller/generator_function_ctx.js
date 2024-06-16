@@ -1,5 +1,5 @@
 'use strict';
 
-module.exports = function* (ctx) {
+module.exports = async function(ctx) {
   ctx.body = 'done';
 };

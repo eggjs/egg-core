@@ -51,6 +51,14 @@ export interface FileLoaderParseItem {
  * @since 1.0.0
  */
 export class FileLoader {
+  static get FULLPATH() {
+    return FULLPATH;
+  }
+
+  static get EXPORTS() {
+    return EXPORTS;
+  }
+
   readonly options: FileLoaderOptions & Required<Pick<FileLoaderOptions, 'caseStyle'>>;
 
   /**

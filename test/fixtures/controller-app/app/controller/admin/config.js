@@ -2,11 +2,11 @@
 
 module.exports = app => {
   return class AdminConfig extends app.Controller {
-    * getName() {
+    async getName() {
       this.ctx.body = this.pathName;
     }
 
-    * getFullPath() {
+    async getFullPath() {
       this.ctx.body = this.fullPath;
     }
   };

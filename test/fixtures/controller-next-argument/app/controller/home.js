@@ -1,6 +1,6 @@
 'use strict';
 
-exports.next = function*(next) {
-  yield next;
+exports.next = async function(next) {
+  await next();
   this.body = 'done';
 };

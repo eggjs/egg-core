@@ -3,7 +3,7 @@
 module.exports = app => {
   return class Resource extends app.Controller {
 
-    * index(ctx) {
+    async index(ctx) {
       ctx.body = 'index';
     }
 

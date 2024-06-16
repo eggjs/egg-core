@@ -1,11 +1,10 @@
-'use strict';
+const { setTimeout } = require('node:timers/promises');
 
 module.exports = app => {
   return class HomeService extends app.Service {
-    info() {
-      return new Promise(resolve => {
-        resolve('done');
-      })
+    async info() {
+      await setTimeout(10);
+      return 'done';
     }
   };
 };

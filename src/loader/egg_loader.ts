@@ -1636,8 +1636,13 @@ function wrapControllerClass(Controller: typeof BaseContextClass, fullPath: stri
       const d = Object.getOwnPropertyDescriptor(proto, key);
       // prevent to override sub method
       if (typeof d?.value === 'function' && !ret.hasOwnProperty(key)) {
+        const controllerMethodName = `${Controller.name}.${key}`;
+        if (isGeneratorFunction(d.value)) {
+          throw new TypeError(
+            `Support for generators was removed, controller \`${controllerMethodName}\`, fullpath: ${fullPath}`);
+        }
         ret[key] = controllerMethodToMiddleware(Controller, key);
-        ret[key][FULLPATH] = fullPath + '#' + Controller.name + '.' + key + '()';
+        ret[key][FULLPATH] = `${fullPath}#${controllerMethodName}()`;
       }
     }
     proto = Object.getPrototypeOf(proto);
@@ -1682,11 +1687,11 @@ function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string)
 }
 
 function objectFunctionToMiddleware(func: Fun) {
-  async function objectControllerMiddleware(ctx: EggCoreContext, ...args: any[]) {
-    if (!ctx.app.config.controller?.supportParams) {
-      args = [ ctx ];
+  async function objectControllerMiddleware(this: EggCoreContext, ...args: any[]) {
+    if (!this.app.config.controller?.supportParams) {
+      args = [ this ];
     }
-    return await func.apply(ctx, args);
+    return await func.apply(this, args);
   }
   for (const key in func) {
     Reflect.set(objectControllerMiddleware, key, Reflect.get(func, key));

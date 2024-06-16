@@ -1,6 +1,6 @@
 'use strict';
 
-exports.index = function* () {
+exports.index = async function() {
   this.body = 'index';
 };
 

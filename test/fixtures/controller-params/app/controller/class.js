@@ -6,7 +6,7 @@ module.exports = class HomeController {
     this.ctx = ctx;
   }
 
-  * generatorFunction(...args) {
+  async generatorFunction(...args) {
     this.ctx.body = 'done';
     return args;
   }

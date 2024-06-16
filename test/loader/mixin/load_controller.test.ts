@@ -1,14 +1,14 @@
-const is = require('is-type-of');
-const assert = require('assert');
-const request = require('supertest');
-const path = require('path');
-const utils = require('../../utils');
+import { strict as assert } from 'node:assert';
+import path from 'node:path';
+import request from 'supertest';
+import is from 'is-type-of';
+import { Application, createApp, getFilepath } from '../../helper.js';
 
-describe('test/loader/mixin/load_controller.test.js', () => {
-  let app;
-  before(() => {
-    app = utils.createApp('controller-app');
-    app.loader.loadAll();
+describe('test/loader/mixin/load_controller.test.ts', () => {
+  let app: Application;
+  before(async () => {
+    app = createApp('controller-app');
+    await app.loader.loadAll();
     return app.ready();
   });
   after(() => app.close());
@@ -27,9 +27,9 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   describe('when controller is generator function', () => {
     it('should use it as middleware', () => {
       assert(app.controller.generatorFunction);
-      assert(app.controller.generatorFunction.name === 'objectControllerMiddleware');
+      assert.equal(app.controller.generatorFunction.name, 'objectControllerMiddleware');
       const classFilePath = path.join(app.baseDir, 'app/controller/generator_function.js');
-      assert(app.controller.generatorFunction[app.loader.FileLoader.FULLPATH] === classFilePath);
+      assert.equal(app.controller.generatorFunction[app.loader.FileLoader.FULLPATH], classFilePath);
 
       return request(app.callback())
         .get('/generator-function')
@@ -299,18 +299,18 @@ describe('test/loader/mixin/load_controller.test.js', () => {
       return request(app.callback())
         .get('/class-fullpath')
         .expect(200)
-        .expect(path.join(utils.getFilepath('controller-app'), 'app/controller/admin/config.js'));
+        .expect(path.join(getFilepath('controller-app'), 'app/controller/admin/config.js'));
     });
   });
 
-  describe('next argument', () => {
-    it('should throw error', () => {
+  describe('only a next argument on controller', () => {
+    it('should throw error', async () => {
       try {
-        const app = utils.createApp('controller-next-argument');
-        app.loader.loadAll();
+        const app = createApp('controller-next-argument');
+        await app.loader.loadAll();
         throw new Error('should not run');
-      } catch (err) {
-        assert(/controller `next` should not use next as argument from file/.test(err.message));
+      } catch (err: any) {
+        assert.match(err.message, /controller `next` should not use next as argument from file/);
       }
     });
   });
@@ -337,12 +337,12 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   });
 
   describe('controller in other directory', () => {
-    let app;
-    before(() => {
-      const baseDir = utils.getFilepath('other-directory');
-      app = utils.createApp('other-directory');
-      app.loader.loadCustomApp();
-      app.loader.loadController({
+    let app: Application;
+    before(async () => {
+      const baseDir = getFilepath('other-directory');
+      app = createApp('other-directory');
+      await app.loader.loadCustomApp();
+      await app.loader.loadController({
         directory: path.join(baseDir, 'app/other-controller'),
       });
       return app.ready();
@@ -355,10 +355,10 @@ describe('test/loader/mixin/load_controller.test.js', () => {
   });
 
   describe('when controller.supportParams === true', () => {
-    let app;
-    before(() => {
-      app = utils.createApp('controller-params');
-      app.loader.loadAll();
+    let app: Application;
+    before(async () => {
+      app = createApp('controller-params');
+      await app.loader.loadAll();
       return app.ready();
     });
     after(() => app.close());
@@ -379,6 +379,7 @@ describe('test/loader/mixin/load_controller.test.js', () => {
     });
 
     it('should support parameter', async () => {
+      assert.equal(app.config.controller.supportParams, true);
       const ctx = { app };
       const args = [ 1, 2, 3 ];
       let r = await app.controller.generatorFunction.call(ctx, ...args);

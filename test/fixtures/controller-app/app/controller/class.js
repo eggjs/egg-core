@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = class HomeController {
 
   constructor(ctx) {
@@ -10,12 +8,12 @@ module.exports = class HomeController {
     this.ctx.body = 'done';
   }
 
-  * callGeneratorFunction() {
-    this.ctx.body = yield this.ctx.service.home.info();
+  async callGeneratorFunction() {
+    this.ctx.body = await this.ctx.service.home.info();
   }
 
-  * callGeneratorFunctionWithArg(ctx) {
-    ctx.body = yield ctx.service.home.info();
+  async callGeneratorFunctionWithArg(ctx) {
+    ctx.body = await ctx.service.home.info();
   }
 
   async callAsyncFunction() {
