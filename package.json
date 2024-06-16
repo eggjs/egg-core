@@ -40,6 +40,7 @@
     "globby": "^11.0.2",
     "is-type-of": "^2.1.0",
     "node-homedir": "^2.0.0",
+    "performance-ms": "^1.1.0",
     "ready-callback": "^4.0.0",
     "tsconfig-paths": "^4.1.1",
     "utility": "^2.1.0"

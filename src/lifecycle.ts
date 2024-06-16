@@ -265,11 +265,13 @@ export class Lifecycle extends EventEmitter {
   }
 
   triggerServerDidReady() {
-    (async () => {
+    return (async () => {
       for (const boot of this.#boots) {
-        if (typeof boot.serverDidReady !== 'function') continue;
+        if (typeof boot.serverDidReady !== 'function') {
+          continue;
+        }
         try {
-          await utils.callFn(boot.serverDidReady, undefined, boot);
+          await boot.serverDidReady();
         } catch (err) {
           this.emit('error', err);
         }

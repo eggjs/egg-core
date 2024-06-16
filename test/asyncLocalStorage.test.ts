@@ -17,16 +17,16 @@ describe('test/asyncLocalStorage.test.ts', () => {
 
   it('should start app with asyncLocalStorage = true by default', async () => {
     assert.equal(app.currentContext, undefined);
-    // let res = await request(app.callback())
-    //   .get('/status');
-    // assert.equal(res.status, 200);
-    // assert.equal(res.text, '');
+    const res1 = await request(app.callback())
+      .get('/status');
+    assert.equal(res1.status, 200);
+    assert.equal(res1.text, 'egg status');
     const res = await request(app.callback())
       .get('/');
     assert.equal(res.status, 200);
     // console.log(res.body);
     assert.equal(res.body.sessionId, 'mock-session-id-123');
-    // assert(res.body.traceId);
+    assert(res.body.traceId);
     assert.equal(app.currentContext, undefined);
   });
 

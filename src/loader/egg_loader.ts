@@ -9,6 +9,7 @@ import { getParamNames, readJSONSync } from 'utility';
 import { extend } from 'extend2';
 import { Request, Response, Context, Application, Next } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
+import { now, diff } from 'performance-ms';
 import { FULLPATH, FileLoader, FileLoaderOptions } from './file_loader.js';
 import { ContextLoader, ContextLoaderOptions } from './context_loader.js';
 import utils, { Fun } from '../utils/index.js';
@@ -129,7 +130,8 @@ export class EggLoader {
     if (process.env.EGG_TYPESCRIPT === 'true' || (this.pkg.egg && this.pkg.egg.typescript)) {
       // skip require tsconfig-paths if tsconfig.json not exists
       const tsConfigFile = path.join(this.options.baseDir, 'tsconfig.json');
-      if (fs.existsSync(tsConfigFile)) {
+      // FIXME: support esm
+      if (fs.existsSync(tsConfigFile) && typeof require === 'function') {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         require('tsconfig-paths').register({ cwd: this.options.baseDir });
       } else {
@@ -846,19 +848,19 @@ export class EggLoader {
     for (const filename of this.getTypeFiles('config')) {
       for (const unit of this.getLoadUnits()) {
         const isApp = unit.type === 'app';
-        const config = this.#loadConfig(
+        const config = await this.#loadConfig(
           unit.path, filename, isApp ? undefined : appConfig, unit.type);
         if (!config) {
           continue;
         }
-        debug('Loaded config %s/%s, %j', unit.path, filename, config);
+        debug('[loadConfig] Loaded config %s/%s, %j', unit.path, filename, config);
         extend(true, target, config);
       }
     }
 
     // load env from process.env.EGG_APP_CONFIG
     const envConfig = this.#loadConfigFromEnv();
-    debug('Loaded config from env, %j', envConfig);
+    debug('[loadConfig] Loaded config from env, %j', envConfig);
     extend(true, target, envConfig);
 
     // You can manipulate the order of app.config.coreMiddleware and app.config.appMiddleware in app.js
@@ -866,6 +868,7 @@ export class EggLoader {
     target.appMiddleware = target.appMiddlewares = target.middleware || [];
 
     this.config = target;
+    debug('[loadConfig] all config: %o', this.config);
     this.timing.end('Load Config');
   }
 
@@ -1230,7 +1233,7 @@ export class EggLoader {
 
     // use middleware ordered by app.config.coreMiddleware and app.config.appMiddleware
     const middlewareNames = this.config.coreMiddleware.concat(this.config.appMiddleware);
-    debug('middlewareNames: %j', middlewareNames);
+    debug('[loadMiddleware] middlewareNames: %j', middlewareNames);
     const middlewaresMap = new Map<string, boolean>();
     for (const name of middlewareNames) {
       const createMiddleware = app.middlewares[name];
@@ -1253,7 +1256,7 @@ export class EggLoader {
           mw = debugMiddlewareWrapper(mw);
         }
         app.use(mw);
-        debug('Use middleware: %s with options: %j', name, options);
+        debug('[loadMiddleware] Use middleware: %s with options: %j', name, options);
         this.options.logger.info('[@eggjs/core:egg_loader] Use middleware: %s', name);
       } else {
         this.options.logger.info('[@eggjs/core:egg_loader] Disable middleware: %s', name);
@@ -1602,9 +1605,12 @@ function wrapMiddleware(mw: MiddlewareFunc,
 }
 
 function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
-  const fn = (ctx: EggCoreContext, next: Next) => {
-    debug('[%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
-    return mw(ctx, next);
+  const fn = async (ctx: EggCoreContext, next: Next) => {
+    const startTime = now();
+    debug('[debugMiddlewareWrapper] [%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
+    await mw(ctx, next);
+    const rt = diff(startTime);
+    debug('[debugMiddlewareWrapper] [%s %s] after middleware: %s [%sms]', ctx.method, ctx.url, mw._name, rt);
   };
   fn._name = `${mw._name}DebugWrapper`;
   return fn;

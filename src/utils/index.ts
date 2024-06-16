@@ -55,15 +55,15 @@ export default {
       if (typeof require === 'function') {
         // commonjs
         obj = require(filepath);
-        debug('require %s => %o', filepath, obj);
+        debug('[loadFile] require %s => %o', filepath, obj);
         if (obj && obj.__esModule) {
           isESM = true;
         }
       } else {
         // esm
-        debug('await import start: %s', filepath);
+        debug('[loadFile] await import start: %s', filepath);
         obj = await import(filepath);
-        debug('await import end: %s => %o', filepath, obj);
+        debug('[loadFile] await import end: %s => %o', filepath, obj);
         isESM = true;
         if (obj && 'default' in obj) {
           // default: { default: [Function (anonymous)] }
@@ -75,11 +75,12 @@ export default {
       if (isESM) {
         obj = 'default' in obj ? obj.default : obj;
       }
-      debug('loadFile %s => %o', filepath, obj);
+      debug('[loadFile] return %s => %o', filepath, obj);
       return obj;
     } catch (e: any) {
       const err = new Error(`[@eggjs/core] load file: ${filepath}, error: ${e.message}`);
       err.cause = e;
+      debug('[loadFile] handle %s error: %s', filepath, e);
       throw err;
     }
   },

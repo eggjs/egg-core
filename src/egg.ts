@@ -250,7 +250,7 @@ export class EggCore extends KoaApplication {
    *   console.log('done');
    * });
    */
-  ready(flagOrFunction: ReadyFunctionArg) {
+  ready(flagOrFunction?: ReadyFunctionArg) {
     return this.lifecycle.ready(flagOrFunction);
   }
 
