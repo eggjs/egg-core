@@ -1,93 +1,117 @@
 import path from 'node:path';
 import { strict as assert } from 'node:assert';
-import { setTimeout as sleep } from 'node:timers/promises';
 import mm from 'mm';
 import utils from '../../src/utils/index.js';
+import { getFilepath } from '../utils.js';
 
 describe('test/utils/index.test.ts', () => {
   afterEach(mm.restore);
 
-  describe('callFn', () => {
-    it('should not call that is not a function', async () => {
-      await utils.callFn();
-    });
+  describe('resolvePath', () => {
+    const baseDir = getFilepath('loadfile');
 
-    it('should call function', async () => {
-      function fn() { return 1; }
-      const result = await utils.callFn(fn);
-      assert.equal(result, 1);
-    });
-
-    it('should call generator function', async () => {
-      function* fn() {
-        yield sleep(10);
-        return 1;
-      }
-      const result = await utils.callFn(fn);
-      assert.equal(result, 1);
-    });
-
-    it('should call return promise function', async () => {
-      function fn() {
-        return sleep(10).then(() => (1));
-      }
-      const result = await utils.callFn(fn);
-      assert.equal(result, 1);
-    });
-
-    it('should call async function', async () => {
-      async function fn() {
-        await sleep(10);
-        return 1;
-      }
-      const result = await utils.callFn(fn);
-      assert.equal(result, 1);
-    });
-
-    it('should call with args', async () => {
-      async function fn(...args) {
-        await sleep(10);
-        return args;
-      }
-      const result = await utils.callFn(fn, [ 1, 2 ]);
-      assert.deepEqual(result, [ 1, 2 ]);
+    it('should load object', async () => {
+      const filepath1 = utils.resolvePath(path.join(baseDir, 'object.js'));
+      assert(filepath1);
+      const filepath2 = utils.resolvePath(path.join(baseDir, 'object'));
+      assert(filepath2, filepath1);
+      assert(filepath2.endsWith('.js'), filepath2);
     });
   });
 
-  describe('loadFile', () => {
-    const baseDir = path.join(__dirname, '../fixtures/loadfile');
-    it('should load object', () => {
-      const result = utils.loadFile(path.join(baseDir, 'object.js'));
+  describe('loadFile on commonjs', () => {
+    const baseDir = getFilepath('loadfile');
+
+    it('should load object', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'object.js'));
       assert.equal(result.a, 1);
     });
 
-    it('should load null', () => {
-      const result = utils.loadFile(path.join(baseDir, 'null.js'));
+    it('should load object2.mjs', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'object2.mjs'));
+      assert.equal(result.a, 1);
+    });
+
+    it('should load null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'null.js'));
       assert.equal(result, null);
     });
 
-    it('should load null', () => {
-      const result = utils.loadFile(path.join(baseDir, 'zero.js'));
+    it('should load null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'zero.js'));
       assert.equal(result, 0);
     });
 
-    it('should load es module', () => {
-      const result = utils.loadFile(path.join(baseDir, 'es-module.js'));
+    it('should load es module', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module.js'));
       assert(result.fn);
     });
 
-    it('should load es module with default', () => {
-      const result = utils.loadFile(path.join(baseDir, 'es-module-default.js'));
+    it('should load es module with default', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default.js'));
       assert(result.fn);
     });
 
-    it('should load es module with default = null', () => {
-      const result = utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
+    it('should load es module with default = null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
       assert.equal(result, null);
     });
 
-    it('should load no js file', () => {
-      let result = utils.loadFile(path.join(baseDir, 'no-js.yml')).toString();
+    it('should load no js file', async () => {
+      let result = (await utils.loadFile(path.join(baseDir, 'no-js.yml'))).toString();
+      if (process.platform === 'win32') {
+        result = result.replace(/\r\n/g, '\n');
+      }
+      assert.equal(result, '---\nmap:\n a: 1\n b: 2');
+    });
+  });
+
+  describe('loadFile on esm', () => {
+    const baseDir = getFilepath('loadfile-esm');
+
+    it('should load object', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'object.js'));
+      assert.equal(result.a, 1);
+      const result2 = await utils.loadFile(utils.resolvePath(path.join(baseDir, 'object')));
+      assert.equal(result2.a, 1);
+      assert.equal(result2, result);
+    });
+
+    it('should load object2.cjs', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'object2.cjs'));
+      assert.equal(result.a, 1);
+      const result2 = await utils.loadFile(utils.resolvePath(path.join(baseDir, 'object2.cjs')));
+      assert.equal(result2.a, 1);
+      assert.equal(result2, result);
+    });
+
+    it('should load null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'null.js'));
+      assert.equal(result, null);
+    });
+
+    it('should load null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'zero.js'));
+      assert.equal(result, 0);
+    });
+
+    it('should load es module', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module.js'));
+      assert(result.fn);
+    });
+
+    it('should load es module with default', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default.js'));
+      assert(result.fn);
+    });
+
+    it('should load es module with default = null', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
+      assert.equal(result, null);
+    });
+
+    it('should load no js file', async () => {
+      let result = (await utils.loadFile(path.join(baseDir, 'no-js.yml'))).toString();
       if (process.platform === 'win32') {
         result = result.replace(/\r\n/g, '\n');
       }

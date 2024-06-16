@@ -1,10 +1,10 @@
 import { debuglog } from 'node:util';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import fs from 'node:fs';
 import BuiltinModule from 'node:module';
+import { createRequire } from 'node:module';
 
-const debug = debuglog('egg-core:utils');
+const debug = debuglog('@eggjs/core:utils');
 
 export type Fun = (...args: any[]) => any;
 
@@ -15,16 +15,38 @@ const Module = typeof module !== 'undefined' && module.constructor.length > 1
   : BuiltinModule;
 
 const extensions = (Module as any)._extensions;
-debug('Module extensions: %j', Object.keys(extensions));
+const extensionNames = Object.keys(extensions).concat([ '.cjs', '.mjs' ]);
+debug('Module extensions: %j', extensionNames);
+
+let _customRequire: NodeRequire;
+function getCustomRequire() {
+  if (!_customRequire) {
+    _customRequire = createRequire(import.meta.url);
+  }
+  return _customRequire;
+}
 
 export default {
   extensions,
+
+  // async _importOrRequire(filepath: string) {
+  //   // try import first
+  //   let obj: any;
+  //   try {
+  //     obj = await import(filepath);
+  //   } catch (err: any) {
+  //     debug('await import error, use require instead, %s', err);
+  //     // use custom require
+  //     obj = getCustomRequire()(filepath);
+  //   }
+  //   return obj;
+  // },
 
   async loadFile(filepath: string) {
     try {
       // if not js module, just return content buffer
       const extname = path.extname(filepath);
-      if (extname && !extensions[extname]) {
+      if (extname && !extensionNames.includes(extname)) {
         return fs.readFileSync(filepath);
       }
       let obj: any;
@@ -38,8 +60,9 @@ export default {
         }
       } else {
         // esm
+        debug('await import %s start', filepath);
         obj = await import(filepath);
-        debug('await import %s => %o', filepath, obj);
+        debug('await import %o', obj);
         isESM = true;
         if (obj && 'default' in obj) {
           // default: { default: [Function (anonymous)] }
@@ -50,18 +73,18 @@ export default {
       // it's es module, use default export
       if (isESM) return 'default' in obj ? obj.default : obj;
       return obj;
-    } catch (err: any) {
-      err.message = `[@eggjs/core] load file: ${filepath}, error: ${err.message}`;
+    } catch (e: any) {
+      const err = new Error(`[@eggjs/core] load file: ${filepath}, error: ${e.message}`);
+      err.cause = e;
       throw err;
     }
   },
 
   resolvePath(filepath: string, options?: { paths?: string[] }) {
-    if (typeof require?.resolve === 'function') {
+    if (typeof require !== 'undefined') {
       return require.resolve(filepath, options);
     }
-    const fileUrl = import.meta.resolve(filepath);
-    return fileURLToPath(fileUrl);
+    return getCustomRequire().resolve(filepath, options);
   },
 
   methods: [ 'head', 'options', 'get', 'put', 'patch', 'post', 'delete' ],

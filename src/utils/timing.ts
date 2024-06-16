@@ -1,5 +1,8 @@
 import { EOL } from 'node:os';
+import { debuglog } from 'node:util';
 import assert from 'node:assert';
+
+const debug = debuglog('@eggjs/core:utils:timing');
 
 interface TimingItem {
   name: string;
@@ -38,7 +41,9 @@ export class Timing {
   start(name?: string, start?: number) {
     if (!name || !this.#enable) return;
 
-    if (this.#map.has(name)) this.end(name);
+    if (this.#map.has(name)) {
+      this.end(name);
+    }
 
     start = start || Date.now();
     if (this.#startTime === null) {
@@ -52,6 +57,7 @@ export class Timing {
     };
     this.#map.set(name, item);
     this.#list.push(item);
+    debug('start %j', item);
     return item;
   }
 
@@ -62,6 +68,7 @@ export class Timing {
     const item = this.#map.get(name)!;
     item.end = Date.now();
     item.duration = item.end - item.start;
+    debug('end %j', item);
     return item;
   }
 

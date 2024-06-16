@@ -17,7 +17,11 @@ describe('test/asyncLocalStorage.test.ts', () => {
 
   it('should start app with asyncLocalStorage = true by default', async () => {
     assert.equal(app.currentContext, undefined);
-    const res = await request(app.callback())
+    let res = await request(app.callback())
+      .get('/status');
+    assert.equal(res.status, 200);
+    assert.equal(res.text, '');
+    res = await request(app.callback())
       .get('/');
     assert.equal(res.status, 200);
     // console.log(res.body);

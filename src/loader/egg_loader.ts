@@ -1024,12 +1024,15 @@ export class EggLoader {
     const filepaths = this.getExtendFilePaths(name);
     // if use mm.env and serverEnv is not unittest
     const needUnittest = 'EGG_MOCK_SERVER_ENV' in process.env && this.serverEnv !== 'unittest';
-    for (const filepath of filepaths) {
+    const length = filepaths.length;
+    for (let i = 0; i < length; i++) {
+      const filepath = filepaths[i];
       filepaths.push(filepath + `.${this.serverEnv}`);
       if (needUnittest) {
         filepaths.push(filepath + '.unittest');
       }
     }
+    debug('loadExtend %s, filepaths: %j', name, filepaths);
 
     const mergeRecord = new Map();
     for (let filepath of filepaths) {
@@ -1044,7 +1047,6 @@ export class EggLoader {
       }
 
       const ext = await this.requireFile(filepath);
-
       const properties = Object.getOwnPropertyNames(ext)
         .concat(Object.getOwnPropertySymbols(ext) as any[]);
 
@@ -1403,7 +1405,9 @@ export class EggLoader {
     }
 
     // function(arg1, args, ...) {}
-    if (inject.length === 0) inject = [ this.app ];
+    if (inject.length === 0) {
+      inject = [ this.app ];
+    }
     let mod = await this.requireFile(fullpath);
     if (typeof mod === 'function' && !isClass(mod)) {
       mod = mod(...inject);
@@ -1547,7 +1551,7 @@ export class EggLoader {
   resolveModule(filepath: string) {
     let fullPath;
     try {
-      fullPath = require.resolve(filepath);
+      fullPath = utils.resolvePath(filepath);
     } catch (e) {
       return undefined;
     }
