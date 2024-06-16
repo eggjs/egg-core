@@ -1,3 +1,4 @@
+/* eslint-disable prefer-spread */
 import assert from 'node:assert';
 import { debuglog } from 'node:util';
 import is from 'is-type-of';
@@ -353,6 +354,7 @@ export class EggCore extends KoaApplication {
   get(path: string | RegExp | (string | RegExp)[], ...middlewares: (MiddlewareFunc | string)[]): EggCore;
   get(name: string, path: string | RegExp | (string | RegExp)[], ...middlewares: (MiddlewareFunc | string)[]): EggCore;
   get(...args: any): EggCore {
+    debug('[router.get] args: %o', args);
     this.router.get.apply(this.router, args);
     return this;
   }

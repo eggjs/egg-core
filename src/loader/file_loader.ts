@@ -4,9 +4,9 @@ import { debuglog } from 'node:util';
 import path from 'node:path';
 import globby from 'globby';
 import { isClass, isGeneratorFunction, isAsyncFunction, isPrimitive } from 'is-type-of';
-import utils from '../utils/index.js';
+import utils, { Fun } from '../utils/index.js';
 
-const debug = debuglog('egg-core:loader');
+const debug = debuglog('@eggjs/core:file_loader');
 
 export const FULLPATH = Symbol('EGG_LOADER_ITEM_FULLPATH');
 export const EXPORTS = Symbol('EGG_LOADER_ITEM_EXPORTS');
@@ -43,7 +43,7 @@ export interface FileLoaderOptions {
 export interface FileLoaderParseItem {
   fullpath: string;
   properties: string[];
-  exports: object | Function;
+  exports: object | Fun;
 }
 
 /**
@@ -94,7 +94,7 @@ export class FileLoader {
     const items = await this.parse();
     const target = this.options.target;
     for (const item of items) {
-      debug('loading item %j', item);
+      debug('loading item: %o', item);
       // item { properties: [ 'a', 'b', 'c'], exports }
       // => target.a.b.c = exports
       item.properties.reduce((target, property, index) => {
@@ -113,7 +113,7 @@ export class FileLoader {
           obj = target[property] || {};
         }
         target[property] = obj;
-        debug('loaded %s', properties);
+        debug('loaded item properties: %o => %o', properties, obj);
         return obj;
       }, target);
     }
@@ -146,7 +146,7 @@ export class FileLoader {
    * @return {Array} items
    * @since 1.0.0
    */
-  async parse(): Promise<FileLoaderParseItem[]> {
+  protected async parse(): Promise<FileLoaderParseItem[]> {
     let files = this.options.match;
     if (!files) {
       files = (process.env.EGG_TYPESCRIPT === 'true' && utils.extensions['.ts'])
@@ -170,7 +170,7 @@ export class FileLoader {
 
     const filter = typeof this.options.filter === 'function' ? this.options.filter : null;
     const items: FileLoaderParseItem[] = [];
-    debug('parsing %j', directories);
+    debug('parsing directories: %j', directories);
     for (const directory of directories) {
       const filepaths = globby.sync(files, { cwd: directory });
       for (const filepath of filepaths) {
@@ -185,7 +185,9 @@ export class FileLoader {
         const exports = await getExports(fullpath, this.options, pathName);
 
         // ignore exports when it's null or false returned by filter function
-        if (exports == null || (filter && filter(exports) === false)) continue;
+        if (exports == null || (filter && filter(exports) === false)) {
+          continue;
+        }
 
         // set properties of class
         if (isClass(exports)) {
@@ -194,7 +196,7 @@ export class FileLoader {
         }
 
         items.push({ fullpath, properties, exports });
-        debug('parse %s, properties %j, export %j', fullpath, properties, exports);
+        debug('parse %s, properties %j, exports %o', fullpath, properties, exports);
       }
     }
 
@@ -222,6 +224,7 @@ async function getExports(fullpath: string, options: FileLoaderOptions, pathName
   // process exports as you like
   if (options.initializer) {
     exports = options.initializer(exports, { path: fullpath, pathName });
+    debug('[getExports] after initializer => %o', exports);
   }
 
   if (isGeneratorFunction(exports)) {

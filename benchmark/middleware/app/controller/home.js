@@ -1,11 +1,9 @@
-'use strict';
-
 module.exports = {
-  * generator() {
+  async async() {
     this.body = [];
   },
 
-  async async() {
-    this.body = [];
+  async index() {
+    this.body = 'hello world';
   },
 };

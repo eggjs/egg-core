@@ -2,7 +2,7 @@ import path from 'node:path';
 import { strict as assert } from 'node:assert';
 import mm from 'mm';
 import utils from '../../src/utils/index.js';
-import { getFilepath } from '../utils.js';
+import { getFilepath } from '../helper.js';
 
 describe('test/utils/index.test.ts', () => {
   afterEach(mm.restore);

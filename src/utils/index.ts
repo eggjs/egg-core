@@ -20,8 +20,9 @@ debug('Module extensions: %j', extensionNames);
 
 let _customRequire: NodeRequire;
 function getCustomRequire() {
-  if (!_customRequire) {
-    _customRequire = createRequire(import.meta.url);
+  if (!_customRequire && typeof require === 'undefined') {
+    _customRequire = createRequire(process.cwd());
+    // _customRequire = createRequire(import.meta.url);
   }
   return _customRequire;
 }
@@ -60,9 +61,9 @@ export default {
         }
       } else {
         // esm
-        debug('await import %s start', filepath);
+        debug('await import start: %s', filepath);
         obj = await import(filepath);
-        debug('await import %o', obj);
+        debug('await import end: %s => %o', filepath, obj);
         isESM = true;
         if (obj && 'default' in obj) {
           // default: { default: [Function (anonymous)] }
@@ -71,7 +72,10 @@ export default {
       }
       if (!obj) return obj;
       // it's es module, use default export
-      if (isESM) return 'default' in obj ? obj.default : obj;
+      if (isESM) {
+        obj = 'default' in obj ? obj.default : obj;
+      }
+      debug('loadFile %s => %o', filepath, obj);
       return obj;
     } catch (e: any) {
       const err = new Error(`[@eggjs/core] load file: ${filepath}, error: ${e.message}`);

@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { getFilepath, createApp } from '../utils.js';
+import { getFilepath } from '../helper.js';
 
 describe('test/loader/context_loader.test.ts', () => {
   let app;

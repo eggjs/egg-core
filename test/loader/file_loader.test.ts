@@ -3,7 +3,7 @@ import path from 'node:path';
 import { isClass } from 'is-type-of';
 import yaml from 'js-yaml';
 import { FileLoader } from '../../src/loader/file_loader.js';
-import { getFilepath } from '../utils.js';
+import { getFilepath } from '../helper.js';
 
 const dirBase = getFilepath('load_dirs');
 

@@ -1,6 +1,6 @@
 import { strict as assert } from 'node:assert';
 import mm from 'mm';
-import { createApp, Application, getFilepath } from '../utils.js';
+import { createApp, Application, getFilepath } from '../helper.js';
 
 describe('test/loader/load_file.test.ts', () => {
   let app: Application;

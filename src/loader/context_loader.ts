@@ -78,6 +78,7 @@ export class ContextLoader extends FileLoader {
     // define ctx.service
     Object.defineProperty(app.context, property, {
       get() {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         const ctx = this;
         // distinguish property cache,
         // cache's lifecycle is the same with this context instance

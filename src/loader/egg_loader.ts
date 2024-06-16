@@ -10,7 +10,7 @@ import { extend } from 'extend2';
 import { Request, Response, Context, Application, Next } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
 import { FULLPATH, FileLoader, FileLoaderOptions } from './file_loader.js';
-import { ContextLoader, ContextLoaderOptions } from './context_loader.js'
+import { ContextLoader, ContextLoaderOptions } from './context_loader.js';
 import utils, { Fun } from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
@@ -89,7 +89,7 @@ export interface EggDirInfo {
 }
 
 export class EggLoader {
-  #requiredCount: 0;
+  #requiredCount = 0;
   readonly options: EggLoaderOptions;
   readonly timing: Timing;
   readonly pkg: Record<string, any>;
@@ -533,7 +533,7 @@ export class EggLoader {
     }
 
     if (customPlugins) {
-      const configPath = configPaths.join(' or '); 
+      const configPath = configPaths.join(' or ');
       for (const name in customPlugins) {
         this.#normalizePluginConfig(customPlugins, name, configPath);
       }
@@ -1290,6 +1290,10 @@ export class EggLoader {
         if (!isClass(obj) && !isAsyncFunction(obj)) {
           if (typeof obj === 'function') {
             obj = obj(this.app);
+            debug('[loadController] after init(app) => %o, meta: %j', obj, opt);
+            if (isGeneratorFunction(obj)) {
+              throw new TypeError(`Support for generators was removed, fullpath: ${opt.path}`);
+            }
           }
         }
         if (isClass(obj)) {
@@ -1300,17 +1304,15 @@ export class EggLoader {
         if (isObject(obj)) {
           return wrapObject(obj, opt.path);
         }
-        if (isGeneratorFunction(obj)) {
-          throw new TypeError(`Support for generators was removed, fullpath: ${opt.path}`);
-        }
         if (isAsyncFunction(obj)) {
           return wrapObject({ 'module.exports': obj }, opt.path)['module.exports'];
         }
         return obj;
       },
       ...opt,
-    }
+    };
     await this.loadToApp(controllerBase, 'controller', opt as FileLoaderOptions);
+    debug('[loadController] app.controller => %o', this.app.controller);
     this.options.logger.info('[@eggjs/core:egg_loader] Controller loaded: %s', controllerBase);
     this.timing.end('Load Controller');
   }
@@ -1331,9 +1333,8 @@ export class EggLoader {
 
   /** start CustomLoader loader */
   async loadCustomLoader() {
-    const loader = this;
-    assert(loader.config, 'should loadConfig first');
-    const customLoader = loader.config.customLoader || {};
+    assert(this.config, 'should loadConfig first');
+    const customLoader = this.config.customLoader || {};
 
     for (const property of Object.keys(customLoader)) {
       const loaderConfig = {
@@ -1345,7 +1346,7 @@ export class EggLoader {
       if (loaderConfig.loadunit === true) {
         directory = this.getLoadUnits().map(unit => path.join(unit.path, loaderConfig.directory));
       } else {
-        directory = path.join(loader.appInfo.baseDir, loaderConfig.directory);
+        directory = path.join(this.appInfo.baseDir, loaderConfig.directory);
       }
       // don't override directory
       delete loaderConfig.directory;
@@ -1356,25 +1357,25 @@ export class EggLoader {
 
       switch (inject) {
         case 'ctx': {
-          assert(!(property in loader.app.context), `customLoader should not override ctx.${property}`);
+          assert(!(property in this.app.context), `customLoader should not override ctx.${property}`);
           const options = {
             caseStyle: 'lower',
             fieldClass: `${property}Classes`,
             ...loaderConfig,
           };
-          loader.loadToContext(directory, property, options);
+          await this.loadToContext(directory, property, options);
           break;
         }
         case 'app': {
-          assert(!(property in loader.app), `customLoader should not override app.${property}`);
+          assert(!(property in this.app), `customLoader should not override app.${property}`);
           const options = {
             caseStyle: 'lower',
             initializer(Clazz: unknown) {
-              return isClass(Clazz) ? new Clazz(loader.app) : Clazz;
+              return isClass(Clazz) ? new Clazz(this.app) : Clazz;
             },
             ...loaderConfig,
           };
-          loader.loadToApp(directory, property, options);
+          await this.loadToApp(directory, property, options);
           break;
         }
         default:
@@ -1651,26 +1652,28 @@ function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string)
   const ret: Record<string, any> = {};
   prefix = prefix ?? '';
   for (const key of keys) {
-    if (typeof obj[key] === 'function') {
-      const names = getParamNames(obj[key]);
+    const item = obj[key];
+    if (typeof item === 'function') {
+      const names = getParamNames(item);
       if (names[0] === 'next') {
         throw new Error(`controller \`${prefix}${key}\` should not use next as argument from file ${fullPath}`);
       }
-      ret[key] = objectFunctionToMiddleware(obj[key]);
+      ret[key] = objectFunctionToMiddleware(item);
       ret[key][FULLPATH] = `${fullPath}#${prefix}${key}()`;
-    } else if (isObject(obj[key])) {
-      ret[key] = wrapObject(obj[key], fullPath, `${prefix}${key}.`);
+    } else if (isObject(item)) {
+      ret[key] = wrapObject(item, fullPath, `${prefix}${key}.`);
     }
   }
+  debug('[wrapObject] fullPath: %s, prefix: %s => %o', fullPath, prefix, ret);
   return ret;
 }
 
 function objectFunctionToMiddleware(func: Fun) {
-  async function objectControllerMiddleware(this: EggCoreContext, ...args: any[]) {
-    if (!this.app.config.controller?.supportParams) {
-      args = [ this ];
+  async function objectControllerMiddleware(ctx: EggCoreContext, ...args: any[]) {
+    if (!ctx.app.config.controller?.supportParams) {
+      args = [ ctx ];
     }
-    return await func.apply(this, args);
+    return await func.apply(ctx, args);
   }
   for (const key in func) {
     Reflect.set(objectControllerMiddleware, key, Reflect.get(func, key));

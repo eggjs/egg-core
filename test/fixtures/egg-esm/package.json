@@ -1,4 +1,4 @@
 {
   "name": "egg",
-  "type": "commonjs"
+  "type": "module"
 }

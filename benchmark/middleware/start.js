@@ -7,7 +7,10 @@ const app = new EggApplication({
   type: 'application',
 });
 
-app.loader.loadAll();
+app.loader.loadAll().then(() => {
+  app.listen(7001);
+  console.log('server started at 7001');
+}).catch(err => {
+  throw err;
+});
 
-app.listen(7001);
-console.log('server started at 7001');
