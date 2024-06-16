@@ -1,7 +1,7 @@
 import assert from 'node:assert';
 import { EventEmitter } from 'node:events';
 import { debuglog } from 'node:util';
-import is from 'is-type-of';
+import is, { isClass } from 'is-type-of';
 import ReadyObject from 'get-ready';
 import type { ReadyFunctionArg } from 'get-ready';
 import { Ready } from 'ready-callback';
@@ -54,7 +54,7 @@ export interface ILifecycleBoot {
   beforeClose?(): Promise<void>;
 }
 
-export type BootImplClass<T = object> = new(...args: any[]) => T;
+export type BootImplClass<T = object> = (new(...args: any[]) => T) & ILifecycleBoot;
 
 export interface LifecycleOptions {
   baseDir: string;
@@ -65,7 +65,7 @@ export interface LifecycleOptions {
 export class Lifecycle extends EventEmitter {
   #init: boolean;
   #readyObject: ReadyObject;
-  #bootHooks: BootImplClass[];
+  #bootHooks: (BootImplClass | ILifecycleBoot)[];
   #boots: ILifecycleBoot[];
   #isClosed: boolean;
   #closeFunctionSet: Set<Fun>;
@@ -104,6 +104,7 @@ export class Lifecycle extends EventEmitter {
 
     this.ready(err => {
       this.triggerDidReady(err);
+      debug('app ready');
       this.timing.end('Application Start');
     });
   }
@@ -130,15 +131,17 @@ export class Lifecycle extends EventEmitter {
     const cb = this.loadReady.readyCallback(name, opt);
     const timingKey = `${timingKeyPrefix} in ` + utils.getResolvedFilename(name, this.app.baseDir);
     this.timing.start(timingKey);
+    debug('register legacyReadyCallback');
     return function legacyReadyCallback(...args: any[]) {
       timing.end(timingKey);
+      debug('end legacyReadyCallback');
       cb(...args);
     };
   }
 
-  addBootHook(BootClass: BootImplClass) {
+  addBootHook(bootHootOrBootClass: BootImplClass | ILifecycleBoot) {
     assert(this.#init === false, 'do not add hook when lifecycle has been initialized');
-    this.#bootHooks.push(BootClass);
+    this.#bootHooks.push(bootHootOrBootClass);
   }
 
   addFunctionAsBootHook<T = EggCore>(hook: (app: T) => void) {
@@ -162,10 +165,16 @@ export class Lifecycle extends EventEmitter {
   init() {
     assert(this.#init === false, 'lifecycle have been init');
     this.#init = true;
-    this.#boots = this.#bootHooks.map((Boot: BootImplClass) => new Boot(this.app));
+    this.#boots = this.#bootHooks.map(BootHootOrBootClass => {
+      if (isClass(BootHootOrBootClass)) {
+        return new BootHootOrBootClass(this.app);
+      }
+      return BootHootOrBootClass;
+    });
   }
 
   registerBeforeStart(scope: Fun, name: string) {
+    debug('add registerBeforeStart, name: %o', name);
     this.#registerReadyCallback({
       scope,
       ready: this.loadReady,
@@ -195,15 +204,18 @@ export class Lifecycle extends EventEmitter {
   }
 
   triggerConfigWillLoad() {
+    debug('trigger configWillLoad start');
     for (const boot of this.#boots) {
       if (typeof boot.configWillLoad === 'function') {
         boot.configWillLoad();
       }
     }
+    debug('trigger configWillLoad end');
     this.triggerConfigDidLoad();
   }
 
   triggerConfigDidLoad() {
+    debug('trigger configDidLoad start');
     for (const boot of this.#boots) {
       if (typeof boot.configDidLoad === 'function') {
         boot.configDidLoad();
@@ -214,11 +226,14 @@ export class Lifecycle extends EventEmitter {
         this.registerBeforeClose(beforeClose);
       }
     }
+    debug('trigger configDidLoad end');
     this.triggerDidLoad();
   }
 
   triggerDidLoad() {
-    debug('register didLoad');
+    debug('trigger didLoad start');
+    debug('loadReady start');
+    this.loadReady.start();
     for (const boot of this.#boots) {
       if (typeof boot.didLoad === 'function') {
         const didLoad = boot.didLoad.bind(boot);
@@ -233,7 +248,8 @@ export class Lifecycle extends EventEmitter {
   }
 
   triggerWillReady() {
-    debug('register willReady');
+    debug('trigger willReady start');
+    debug('bootReady start');
     this.bootReady.start();
     for (const boot of this.#boots) {
       if (typeof boot.willReady === 'function') {
@@ -249,8 +265,8 @@ export class Lifecycle extends EventEmitter {
   }
 
   triggerDidReady(err?: Error) {
-    debug('trigger didReady');
-    (async () => {
+    debug('trigger didReady start');
+    return (async () => {
       for (const boot of this.#boots) {
         if (typeof boot.didReady === 'function') {
           try {
@@ -260,11 +276,12 @@ export class Lifecycle extends EventEmitter {
           }
         }
       }
-      debug('trigger didReady done');
+      debug('trigger didReady end');
     })();
   }
 
   triggerServerDidReady() {
+    debug('trigger serverDidReady start');
     return (async () => {
       for (const boot of this.#boots) {
         if (typeof boot.serverDidReady !== 'function') {
@@ -276,14 +293,17 @@ export class Lifecycle extends EventEmitter {
           this.emit('error', err);
         }
       }
+      debug('trigger serverDidReady end');
     })();
   }
 
   #initReady() {
-    this.loadReady = new Ready({ timeout: this.readyTimeout });
+    debug('loadReady init');
+    this.loadReady = new Ready({ timeout: this.readyTimeout, lazyStart: true });
     this.#delegateReadyEvent(this.loadReady);
     this.loadReady.ready((err?: Error) => {
-      debug('didLoad done');
+      debug('loadReady end, err: %o', err);
+      debug('trigger didLoad end');
       if (err) {
         this.ready(err);
       } else {
@@ -291,9 +311,12 @@ export class Lifecycle extends EventEmitter {
       }
     });
 
+    debug('bootReady init');
     this.bootReady = new Ready({ timeout: this.readyTimeout, lazyStart: true });
     this.#delegateReadyEvent(this.bootReady);
     this.bootReady.ready((err?: Error) => {
+      debug('bootReady end, err: %o', err);
+      debug('trigger willReady end');
       this.ready(err || true);
     });
   }
@@ -322,11 +345,13 @@ export class Lifecycle extends EventEmitter {
 
     this.timing.start(timingKey);
 
+    debug('[registerReadyCallback] start name: %o', name);
     const done = ready.readyCallback(name);
 
     // ensure scope executes after load completed
     process.nextTick(() => {
       utils.callFn(scope).then(() => {
+        debug('[registerReadyCallback] end name: %o', name);
         done();
         this.timing.end(timingKey);
       }, (err: Error) => {

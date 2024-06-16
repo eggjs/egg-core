@@ -1335,6 +1335,10 @@ export class EggLoader {
   async loadRouter() {
     this.timing.start('Load Router');
     await this.loadFile(path.join(this.options.baseDir, 'app/router'));
+    // add router middleware
+    const mw = this.app.router.middleware();
+    Reflect.set(mw, '_name', 'routerMiddleware');
+    this.app.use(mw);
     this.timing.end('Load Router');
   }
   /** end Router loader */

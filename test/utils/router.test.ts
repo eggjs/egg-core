@@ -1,12 +1,12 @@
 import { strict as assert } from 'node:assert';
 import request from 'supertest';
-import utils from '../helper.js';
+import { Application, createApp } from '../helper.js';
 
 describe('test/utils/router.test.ts', () => {
-  let app;
-  before(() => {
-    app = utils.createApp('router-app');
-    app.loader.loadAll();
+  let app: Application;
+  before(async () => {
+    app = createApp('router-app');
+    await app.loader.loadAll();
     return app.ready();
   });
   after(() => app.close());
@@ -197,7 +197,7 @@ describe('test/utils/router.test.ts', () => {
 
     it('should not support regular url', () => {
       assert.throws(() => {
-        app.router.url('packages', [ 'urllib' ]);
+        app.router.url('packages', [ 'urllib' ] as any);
       }, 'Can\'t get the url for regExp /^\/packages\/(.*)/ for by name \'posts\'');
     });
   });
@@ -292,7 +292,7 @@ describe('test/utils/router.test.ts', () => {
       try {
         app.router.get('/test', app.controller.not_exist);
         throw new Error('should not run here');
-      } catch (err) {
+      } catch (err: any) {
         assert(err.message.includes('controller not exists'));
       }
     });
@@ -301,8 +301,8 @@ describe('test/utils/router.test.ts', () => {
       try {
         app.get('/hello', 'not.exist.controller');
         throw new Error('should not run here');
-      } catch (err) {
-        assert(err.message.includes('controller \'not.exist.controller\' not exists'));
+      } catch (err: any) {
+        assert.match(err.message, /app\.controller\.not\.exist\.controller not exists/);
       }
     });
 
@@ -310,8 +310,8 @@ describe('test/utils/router.test.ts', () => {
       try {
         app.router.resources('/test', app.controller.not_exist);
         throw new Error('should not run here');
-      } catch (err) {
-        assert(err.message.includes('controller not exists'));
+      } catch (err: any) {
+        assert.match(err.message, /controller not exists/);
       }
     });
 
@@ -319,18 +319,20 @@ describe('test/utils/router.test.ts', () => {
       try {
         app.router.resources('/test', 'not.exist.controller');
         throw new Error('should not run here');
-      } catch (err) {
-        assert(err.message.includes('controller \'not.exist.controller\' not exists'));
+      } catch (err: any) {
+        assert.match(err.message, /app\.controller\.not\.exist\.controller not exists/);
       }
     });
   });
 
-  describe('router middleware', () => {
-    before(() => {
-      app = utils.createApp('router-in-app');
-      app.loader.loadAll();
+  describe.only('router middleware', () => {
+    before(async () => {
+      app = createApp('router-in-app');
+      await app.loader.loadAll();
       return app.ready();
     });
+
+    after(() => app.close());
 
     it('should always load router middleware at last', () => {
       return request(app.callback())

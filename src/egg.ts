@@ -172,7 +172,7 @@ export class EggCore extends KoaApplication {
   // @ts-ignore
   use(fn: MiddlewareFunc) {
     assert(is.function(fn), 'app.use() requires a function');
-    debug('use %s', fn._name || fn.name || '-');
+    debug('[use] add middleware: %o', fn._name || fn.name || '-');
     this.middleware.push(fn);
     return this;
   }
@@ -243,7 +243,7 @@ export class EggCore extends KoaApplication {
    *
    * @see https://eggjs.org/en/advanced/loader.html#beforestart
    *
-   * @param  {Function|GeneratorFunction|AsyncFunction} scope function will execute before app start
+   * @param  {Function|AsyncFunction} scope function will execute before app start
    * @param {string} [name] scope name, default is empty string
    */
   beforeStart(scope: Fun, name?: string) {
@@ -330,10 +330,6 @@ export class EggCore extends KoaApplication {
       return this.#router;
     }
     const router = this.#router = new Router({ sensitive: true }, this);
-    // register router middleware
-    this.beforeStart(() => {
-      this.use(router.middleware());
-    }, 'use-router');
     return router;
   }
 
@@ -365,7 +361,6 @@ export class EggCore extends KoaApplication {
   get(path: string | RegExp | (string | RegExp)[], ...middlewares: (MiddlewareFunc | string)[]): EggCore;
   get(name: string, path: string | RegExp | (string | RegExp)[], ...middlewares: (MiddlewareFunc | string)[]): EggCore;
   get(...args: any): EggCore {
-    debug('[router.get] args: %o', args);
     this.router.get.apply(this.router, args);
     return this;
   }
