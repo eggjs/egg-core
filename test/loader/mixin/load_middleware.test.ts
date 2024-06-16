@@ -31,16 +31,16 @@ describe('test/loader/mixin/load_middleware.test.ts', () => {
     assert('b' in app.middleware);
     assert(!('a' in app.middleware));
 
-    assert(app.middleware.static === app.middlewares.static);
+    assert.equal(app.middleware.static, app.middlewares.static);
     const names = [];
     for (const mw of app.middleware) {
       assert.equal(typeof mw, 'function');
       names.push(mw._name);
     }
     try {
-      assert.deepEqual(names, [ 'status', 'static', 'custom' ]);
+      assert.deepEqual(names, [ 'status', 'static', 'custom', 'routerMiddleware' ]);
     } catch {
-      assert.deepEqual(names, [ 'statusDebugWrapper', 'staticDebugWrapper', 'customDebugWrapper' ]);
+      assert.deepEqual(names, [ 'statusDebugWrapper', 'staticDebugWrapper', 'customDebugWrapper', 'routerMiddleware' ]);
     }
   });
 

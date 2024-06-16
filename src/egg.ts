@@ -12,6 +12,7 @@ import { Timing } from './utils/timing.js';
 import type { Fun } from './utils/index.js';
 import { Lifecycle } from './lifecycle.js';
 import { EggLoader } from './loader/egg_loader.js';
+import utils from './utils/index.js';
 
 const debug = debuglog('@eggjs/core:egg');
 
@@ -26,10 +27,6 @@ export interface EggCoreOptions {
 }
 
 export type EggCoreInitOptions = Partial<EggCoreOptions>;
-
-function deprecated(message: string) {
-  console.warn('[egg-core:deprecated] %s', message);
-}
 
 type Middleware = (ctx: EggCoreContext, next: Next) => Promise<void> | void;
 export type MiddlewareFunc = Middleware & {
@@ -202,7 +199,7 @@ export class EggCore extends KoaApplication {
    * @since 1.0.0
    */
   get deprecate() {
-    return deprecated;
+    return utils.deprecated;
   }
 
   /**
@@ -247,7 +244,8 @@ export class EggCore extends KoaApplication {
    * @param {string} [name] scope name, default is empty string
    */
   beforeStart(scope: Fun, name?: string) {
-    this.lifecycle.registerBeforeStart(scope, name || '');
+    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
+    this.lifecycle.registerBeforeStart(scope, name ?? '');
   }
 
   /**
@@ -284,6 +282,7 @@ export class EggCore extends KoaApplication {
    * mysql.ready(done);
    */
   readyCallback(name: string, opts: object) {
+    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
     return this.lifecycle.legacyReadyCallback(name, opts);
   }
 
@@ -300,6 +299,7 @@ export class EggCore extends KoaApplication {
    * @param {Function} fn - the function that can be generator function or async function.
    */
   beforeClose(fn: Fun) {
+    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
     this.lifecycle.registerBeforeClose(fn);
   }
 

@@ -87,7 +87,7 @@ export class FileLoader {
 
     // compatible old options _lowercaseFirst_
     if (this.options.lowercaseFirst === true) {
-      console.warn('[egg-core:deprecated] lowercaseFirst is deprecated, use caseStyle instead');
+      utils.deprecated('lowercaseFirst is deprecated, use caseStyle instead');
       this.options.caseStyle = 'lower';
     }
   }

@@ -325,7 +325,7 @@ describe('test/utils/router.test.ts', () => {
     });
   });
 
-  describe.only('router middleware', () => {
+  describe('router middleware', () => {
     before(async () => {
       app = createApp('router-in-app');
       await app.loader.loadAll();

@@ -28,6 +28,10 @@ function getCustomRequire() {
 }
 
 export default {
+  deprecated(message: string) {
+    console.warn('[@eggjs/core:deprecated] %s', message);
+  },
+
   extensions,
 
   // async _importOrRequire(filepath: string) {
