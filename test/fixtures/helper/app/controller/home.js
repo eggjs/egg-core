@@ -1,4 +1,4 @@
-module.exports = function*() {
+module.exports = async function() {
   try {
     this.body = `
       app: ${this.helper.exists(this.helper.app)}

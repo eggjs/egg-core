@@ -1,18 +1,18 @@
-const request = require('supertest');
-const utils = require('../../utils');
+import request from 'supertest';
+import { Application, createApp } from '../../helper.js';
 
-describe('test/loader/mixin/load_helper_extend.test.js', () => {
+describe('test/loader/mixin/load_helper_extend.test.ts', () => {
   describe('helper', () => {
-    let app;
-    before(() => {
-      app = utils.createApp('helper');
-      app.loader.loadPlugin();
-      app.loader.loadConfig();
-      app.loader.loadApplicationExtend();
-      app.loader.loadContextExtend();
-      app.loader.loadHelperExtend();
-      app.loader.loadController();
-      app.loader.loadRouter();
+    let app: Application;
+    before(async () => {
+      app = createApp('helper');
+      await app.loader.loadPlugin();
+      await app.loader.loadConfig();
+      await app.loader.loadApplicationExtend();
+      await app.loader.loadContextExtend();
+      await app.loader.loadHelperExtend();
+      await app.loader.loadController();
+      await app.loader.loadRouter();
     });
     after(() => app.close());
 
@@ -41,13 +41,13 @@ describe('test/loader/mixin/load_helper_extend.test.js', () => {
   });
 
   describe('no Helper', () => {
-    let app;
+    let app: Application;
     after(() => app.close());
 
-    it('should not extend helper', () => {
-      app = utils.createApp('no-helper');
+    it('should not extend helper', async () => {
+      app = createApp('no-helper');
       // should not throw
-      app.loader.loadHelperExtend();
+      await app.loader.loadHelperExtend();
     });
   });
 });
