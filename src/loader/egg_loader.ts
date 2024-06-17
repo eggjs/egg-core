@@ -1459,7 +1459,6 @@ export class EggLoader {
     }
 
     this.dirs = [];
-
     if (this.orderPlugins) {
       for (const plugin of this.orderPlugins) {
         this.dirs.push({
