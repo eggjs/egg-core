@@ -46,7 +46,7 @@
     "node-homedir": "^2.0.0",
     "performance-ms": "^1.1.0",
     "ready-callback": "^4.0.0",
-    "tsconfig-paths": "^4.1.1",
+    "tsconfig-paths": "^4.2.0",
     "utility": "^2.1.0"
   },
   "devDependencies": {
@@ -64,7 +64,6 @@
     "git-contributor": "2",
     "js-yaml": "3",
     "mm": "3",
-    "spy": "1",
     "supertest": "7",
     "ts-node": "10",
     "tshy": "1",

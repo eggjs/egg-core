@@ -10,6 +10,7 @@ describe('test/loader/mixin/load_custom_loader.test.ts', () => {
     await app.loader.loadConfig();
     await app.loader.loadController();
     await app.loader.loadRouter();
+    await app.loader.loadMiddleware();
     await app.loader.loadCustomLoader();
   });
   after(() => app.close());

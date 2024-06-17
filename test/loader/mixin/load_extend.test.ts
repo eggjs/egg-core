@@ -15,6 +15,7 @@ describe('test/loader/mixin/load_extend.test.ts', () => {
     await app.loader.loadContextExtend();
     await app.loader.loadController();
     await app.loader.loadRouter();
+    await app.loader.loadMiddleware();
   });
   after(() => app.close());
   afterEach(mm.restore);

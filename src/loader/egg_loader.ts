@@ -1268,6 +1268,11 @@ export class EggLoader {
 
     this.options.logger.info('[@eggjs/core:egg_loader] Loaded middleware from %j', middlewarePaths);
     this.timing.end('Load Middleware');
+
+    // add router middleware, make sure router is the last middleware
+    const mw = this.app.router.middleware();
+    Reflect.set(mw, '_name', 'routerMiddleware');
+    this.app.use(mw);
   }
   /** end Middleware loader */
 
@@ -1333,10 +1338,6 @@ export class EggLoader {
   async loadRouter() {
     this.timing.start('Load Router');
     await this.loadFile(path.join(this.options.baseDir, 'app/router'));
-    // add router middleware
-    const mw = this.app.router.middleware();
-    Reflect.set(mw, '_name', 'routerMiddleware');
-    this.app.use(mw);
     this.timing.end('Load Router');
   }
   /** end Router loader */

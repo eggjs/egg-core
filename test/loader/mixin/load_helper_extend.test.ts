@@ -13,6 +13,7 @@ describe('test/loader/mixin/load_helper_extend.test.ts', () => {
       await app.loader.loadHelperExtend();
       await app.loader.loadController();
       await app.loader.loadRouter();
+      await app.loader.loadMiddleware();
     });
     after(() => app.close());
 

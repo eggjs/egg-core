@@ -26,33 +26,33 @@ Directory structure
 
 ```bash
 ├── package.json
-├── app.js (optional)
-├── agent.js (optional)
+├── app.ts (optional)
+├── agent.ts (optional)
 ├── app
-|   ├── router.js
+|   ├── router.ts
 │   ├── controller
-│   │   └── home.js
+│   │   └── home.ts
 |   ├── extend (optional)
-│   |   ├── helper.js (optional)
-│   |   ├── filter.js (optional)
-│   |   ├── request.js (optional)
-│   |   ├── response.js (optional)
-│   |   ├── context.js (optional)
-│   |   ├── application.js (optional)
-│   |   └── agent.js (optional)
+│   |   ├── helper.ts (optional)
+│   |   ├── filter.ts (optional)
+│   |   ├── request.ts (optional)
+│   |   ├── response.ts (optional)
+│   |   ├── context.ts (optional)
+│   |   ├── application.ts (optional)
+│   |   └── agent.ts (optional)
 │   ├── service (optional)
 │   ├── middleware (optional)
-│   │   └── response_time.js
+│   │   └── response_time.ts
 │   └── view (optional)
 |       ├── layout.html
 │       └── home.html
 ├── config
-|   ├── config.default.js
-│   ├── config.prod.js
-|   ├── config.test.js (optional)
-|   ├── config.local.js (optional)
-|   ├── config.unittest.js (optional)
-│   └── plugin.js
+|   ├── config.default.ts
+│   ├── config.prod.ts
+|   ├── config.test.ts (optional)
+|   ├── config.local.ts (optional)
+|   ├── config.unittest.ts (optional)
+│   └── plugin.ts
 ```
 
 Then you can start with code below
@@ -70,7 +70,8 @@ app.ready(() => {
 
 ## EggLoader
 
-EggLoader can easily load files or directories in your [egg] project. In addition, you can customize the loader with low level APIs.
+EggLoader can easily load files or directories in your [egg] project.
+In addition, you can customize the loader with low level APIs.
 
 ### constructor
 
@@ -135,7 +136,8 @@ Load app/service
 
 #### getServerEnv()
 
-Retrieve application environment variable values via `serverEnv`. You can access directly by calling `this.serverEnv` after instantiation.
+Retrieve application environment variable values via `serverEnv`.
+You can access directly by calling `this.serverEnv` after instantiation.
 
 serverEnv | description
 ---       | ---
@@ -147,7 +149,8 @@ unittest  | unit test environment
 
 #### getEggPaths()
 
-To get directories of the frameworks. A new framework is created by extending egg, then you can use this function to get all frameworks.
+To get directories of the frameworks. A new framework is created by extending egg,
+then you can use this function to get all frameworks.
 
 #### getLoadUnits()
 

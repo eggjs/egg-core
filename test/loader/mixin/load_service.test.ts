@@ -18,6 +18,7 @@ describe('test/loader/mixin/load_service.test.ts', () => {
     await app.loader.loadService();
     await app.loader.loadController();
     await app.loader.loadRouter();
+    await app.loader.loadMiddleware();
     await app.ready();
     console.log(app.serviceClasses);
     assert(app.serviceClasses.foo);
@@ -69,6 +70,7 @@ describe('test/loader/mixin/load_service.test.ts', () => {
     await app.loader.loadService();
     await app.loader.loadController();
     await app.loader.loadRouter();
+    await app.loader.loadMiddleware();
 
     await request(app.callback())
       .get('/same?t=1')
@@ -90,6 +92,7 @@ describe('test/loader/mixin/load_service.test.ts', () => {
     await app.loader.loadService();
     await app.loader.loadController();
     await app.loader.loadRouter();
+    await app.loader.loadMiddleware();
 
     await request(app.callback())
       .get('/user')
@@ -110,6 +113,7 @@ describe('test/loader/mixin/load_service.test.ts', () => {
       await app.loader.loadService();
       await app.loader.loadController();
       await app.loader.loadRouter();
+      await app.loader.loadMiddleware();
 
       await request(app.callback())
         .get('/')
