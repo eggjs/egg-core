@@ -389,23 +389,15 @@ describe('test/loader/mixin/load_plugin.test.ts', () => {
     app = createApp('plugin-dep-disable', {
       Application,
     });
-    mm(app.console, 'info', (msg: string) => {
-      if (msg.startsWith('[egg:loader] eggPlugin is missing')) {
-        throw new Error('should no run here');
-      }
-      assert.equal(msg, 'Following plugins will be enabled implicitly.\n  - b required by [a,d]\n  - e required by [c]\n  - c required by [a]');
-    });
-    mm(app.console, 'warn', (msg: string) => {
-      assert.equal(msg, 'Following plugins will be enabled implicitly that is disabled by application.\n  - e required by [c]');
-    });
     const loader = app.loader;
     await loader.loadPlugin();
     await loader.loadConfig();
-    assert(loader.plugins.a && loader.plugins.a.enable);
-    assert(loader.plugins.b && loader.plugins.b.enable);
-    assert(loader.plugins.d && loader.plugins.d.enable);
-    assert(!loader.plugins.c);
-    assert(!loader.plugins.e);
+    assert.equal(loader.plugins.a.enable, true);
+    assert.equal(loader.plugins.b.enable, true);
+    assert.equal(loader.plugins.d.enable, true);
+    assert.equal(loader.plugins.c.enable, true);
+    assert.equal(loader.plugins.e.enable, true);
+    assert.deepEqual(Object.keys(loader.plugins), [ 'b', 'e', 'c', 'a', 'd' ]);
   });
 
   it('should enable when not match env', async () => {
@@ -451,7 +443,6 @@ describe('test/loader/mixin/load_plugin.test.ts', () => {
       dependencies: [ 'd1' ],
       optionalDependencies: [],
       env: [ 'local', 'prod' ],
-      package: '',
       path: path.join(baseDir, 'node_modules/a1'),
       from: path.join(baseDir, 'config/plugin.js'),
     });

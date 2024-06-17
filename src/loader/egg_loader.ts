@@ -486,7 +486,7 @@ export class EggLoader {
     for (const plugin of this.orderPlugins) {
       enablePlugins[plugin.name] = plugin;
     }
-    debug('Loaded plugins: %j', Object.keys(enablePlugins));
+    debug('Loaded enable plugins: %j', Object.keys(enablePlugins));
 
     /**
      * Retrieve enabled plugins
@@ -500,7 +500,7 @@ export class EggLoader {
   protected async loadAppPlugins() {
     // loader plugins from application
     const appPlugins = await this.readPluginConfigs(path.join(this.options.baseDir, 'config/plugin.default'));
-    debug('Loaded app plugins: %j', Object.keys(appPlugins));
+    debug('Loaded app plugins: %j', Object.keys(appPlugins).map(k => `${k}:${appPlugins[k].enable}`));
     return appPlugins;
   }
 
@@ -508,7 +508,7 @@ export class EggLoader {
     // loader plugins from framework
     const eggPluginConfigPaths = this.eggPaths.map(eggPath => path.join(eggPath, 'config/plugin.default'));
     const eggPlugins = await this.readPluginConfigs(eggPluginConfigPaths);
-    debug('Loaded egg plugins: %j', Object.keys(eggPlugins));
+    debug('Loaded egg plugins: %j', Object.keys(eggPlugins).map(k => `${k}:${eggPlugins[k].enable}`));
     return eggPlugins;
   }
 
@@ -600,20 +600,18 @@ export class EggLoader {
         optionalDependencies: [],
         env: [],
         from: configPath,
-        package: '',
-        path: '',
       } satisfies EggPluginInfo;
       return;
     }
 
-    if (typeof plugin.enable !== 'boolean') {
-      plugin.enable = true;
+    if (!('enable' in plugin)) {
+      Reflect.set(plugin, 'enable', true);
     }
     plugin.name = name;
     plugin.dependencies = plugin.dependencies || [];
     plugin.optionalDependencies = plugin.optionalDependencies || [];
     plugin.env = plugin.env || [];
-    plugin.from = configPath;
+    plugin.from = plugin.from || configPath;
     depCompatible(plugin);
   }
 
@@ -782,20 +780,21 @@ export class EggLoader {
       // 'node_modules/.pnpm/egg@2.33.1/node_modules', <- this is the sibling directory
       const filePath = utils.resolvePath(`${name}/package.json`, { paths: [ ...this.lookupDirs ] });
       return path.dirname(filePath);
-    } catch (_) {
+    } catch (err: any) {
+      debug('[resolvePluginPath] error: %o', err);
       throw new Error(`Can not find plugin ${name} in "${[ ...this.lookupDirs ].join(', ')}"`);
     }
   }
 
-  #extendPlugins(target: Record<string, EggPluginInfo>, plugins: Record<string, EggPluginInfo>) {
+  #extendPlugins(targets: Record<string, EggPluginInfo>, plugins: Record<string, EggPluginInfo>) {
     if (!plugins) {
       return;
     }
     for (const name in plugins) {
       const plugin = plugins[name];
-      let targetPlugin = target[name];
+      let targetPlugin = targets[name];
       if (!targetPlugin) {
-        targetPlugin = target[name] = {} as EggPluginInfo;
+        targetPlugin = targets[name] = {} as EggPluginInfo;
       }
       if (targetPlugin.package && targetPlugin.package === plugin.package) {
         this.logger.warn('[@eggjs/core] plugin %s has been defined that is %j, but you define again in %s',
@@ -809,7 +808,7 @@ export class EggLoader {
         if (value === undefined) {
           continue;
         }
-        if (prop in targetPlugin && Array.isArray(value) && !value.length) {
+        if (Reflect.get(targetPlugin, prop) && Array.isArray(value) && !value.length) {
           continue;
         }
         Reflect.set(targetPlugin, prop, value);
