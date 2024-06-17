@@ -1,5 +1,31 @@
 # Changelog
 
+## [6.0.0](https://github.com/eggjs/egg-core/compare/v5.3.1...v6.0.0) (2024-06-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* Drop Node.js < 18.19.0 support
+
+https://github.com/eggjs/egg-core/issues/264
+
+the core part of https://github.com/eggjs/egg/issues/3644
+
+Breaking changes:
+- Drop Node.js < 18.19.0 support
+- Drop generator function support
+- loader functions change to async function
+
+### Features
+
+* export asyncLocalStorage instance to global ([#267](https://github.com/eggjs/egg-core/issues/267)) ([910fe85](https://github.com/eggjs/egg-core/commit/910fe855e990e5f9775df401243f1b8c2cfc2710))
+* support cjs and esm both ([#265](https://github.com/eggjs/egg-core/issues/265)) ([fed5f35](https://github.com/eggjs/egg-core/commit/fed5f35dcb5de71be35a25a8ea85e8bc48b154d6))
+
+
+### Bug Fixes
+
+* use gals lib ([#268](https://github.com/eggjs/egg-core/issues/268)) ([72fafc8](https://github.com/eggjs/egg-core/commit/72fafc8abd4cec322c0a210aa797f28c4bfdae32))
+
 ## [5.3.1](https://github.com/eggjs/egg-core/compare/v5.3.0...v5.3.1) (2023-04-06)
 
 
