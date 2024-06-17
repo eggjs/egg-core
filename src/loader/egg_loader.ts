@@ -135,7 +135,7 @@ export class EggLoader {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         require('tsconfig-paths').register({ cwd: this.options.baseDir });
       } else {
-        this.logger.info('[egg-core:egg_loader] skip register "tsconfig-paths" because tsconfig.json not exists at %s',
+        this.logger.info('[@eggjs/core:egg_loader] skip register "tsconfig-paths" because tsconfig.json not exists at %s',
           tsConfigFile);
       }
     }

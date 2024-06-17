@@ -6,16 +6,17 @@
 [![Known Vulnerabilities][snyk-image]][snyk-url]
 [![npm download][download-image]][download-url]
 
-[npm-image]: https://img.shields.io/npm/v/egg-core.svg?style=flat-square
-[npm-url]: https://npmjs.org/package/egg-core
+[npm-image]: https://img.shields.io/npm/v/@eggjs/core.svg?style=flat-square
+[npm-url]: https://npmjs.org/package/@eggjs/core
 [codecov-image]: https://codecov.io/github/eggjs/egg-core/coverage.svg?branch=master
 [codecov-url]: https://codecov.io/github/eggjs/egg-core?branch=master
-[snyk-image]: https://snyk.io/test/npm/egg-core/badge.svg?style=flat-square
-[snyk-url]: https://snyk.io/test/npm/egg-core
-[download-image]: https://img.shields.io/npm/dm/egg-core.svg?style=flat-square
-[download-url]: https://npmjs.org/package/egg-core
+[snyk-image]: https://snyk.io/test/npm/@eggjs/core/badge.svg?style=flat-square
+[snyk-url]: https://snyk.io/test/npm/@eggjs/core
+[download-image]: https://img.shields.io/npm/dm/@eggjs/core.svg?style=flat-square
+[download-url]: https://npmjs.org/package/@eggjs/core
 
-A core plugin framework based on [koa](https://github.com/koajs/koa).
+A core plugin framework based on [@eggjs/koa](https://github.com/eggjs/koa).
+Support Commonjs and ESM both by [tshy](https://github.com/isaacs/tshy).
 
 **Don't use it directly, see [egg].**
 
@@ -80,53 +81,53 @@ EggLoader can easily load files or directories in your [egg] project. In additio
 
 ### High Level APIs
 
-#### loadPlugin
+#### async loadPlugin
 
 Load config/plugin.ts
 
-#### loadConfig
+#### async loadConfig
 
 Load config/config.ts and config/{serverEnv}.ts
 
 If `process.env.EGG_APP_CONFIG` is exists, then it will be parse and override config.
 
-#### loadController
+#### async loadController
 
 Load app/controller
 
-#### loadMiddleware
+#### async loadMiddleware
 
 Load app/middleware
 
-#### loadApplicationExtend
+#### async loadApplicationExtend
 
 Load app/extend/application.ts
 
-#### loadContextExtend
+#### async loadContextExtend
 
 Load app/extend/context.ts
 
-#### loadRequestExtend
+#### async loadRequestExtend
 
 Load app/extend/request.ts
 
-#### loadResponseExtend
+#### async loadResponseExtend
 
 Load app/extend/response.ts
 
-#### loadHelperExtend
+#### async loadHelperExtend
 
 Load app/extend/helper.ts
 
-#### loadCustomApp
+#### async loadCustomApp
 
 Load app.ts, if app.ts export boot class, then trigger configDidLoad
 
-#### loadCustomAgent
+#### async loadCustomAgent
 
 Load agent.ts, if agent.ts export boot class, then trigger configDidLoad
 
-#### loadService
+#### async loadService
 
 Load app/service
 
@@ -182,17 +183,17 @@ Get the infomation of the application
 - HOME: home directory of the OS
 - root: baseDir when local and unittest, HOME when other environment
 
-#### loadFile(filepath)
+#### async loadFile(filepath)
 
 To load a single file. **Note:** The file must export as a function.
 
-#### loadToApp(directory, property, LoaderOptions)
+#### async loadToApp(directory, property, LoaderOptions)
 
 To load files from directory in the application.
 
 Invoke `this.loadToApp('$baseDir/app/controller', 'controller')`, then you can use it by `app.controller`.
 
-#### loadToContext(directory, property, LoaderOptions)
+#### async loadToContext(directory, property, LoaderOptions)
 
 To load files from directory, and it will be bound the context.
 
@@ -213,12 +214,12 @@ export default async (ctx: Context) => {
 };
 ```
 
-#### loadExtend(name, target)
+#### async loadExtend(name, target)
 
 Loader app/extend/xx.ts to target, For example,
 
 ```ts
-this.loadExtend('application', app);
+await this.loadExtend('application', app);
 ```
 
 ### LoaderOptions
