@@ -1,5 +1,6 @@
 import { strict as assert } from 'node:assert';
 import mm from 'mm';
+import { importModule } from '@eggjs/utils';
 import { Application, createApp, getFilepath } from '../helper.js';
 import { EggLoader, EggCore } from '../../src/index.js';
 
@@ -15,7 +16,7 @@ describe('test/loader/get_framework_paths.test.ts', () => {
 
   it('should get from framework using symbol', async () => {
     app = createApp('eggpath', {
-      Application: (await import(getFilepath('framework-symbol/index.js'))).default,
+      Application: await importModule(getFilepath('framework-symbol/index.js'), { importDefaultOnly: true }),
     });
     assert.deepEqual(app.loader.eggPaths, [
       getFilepath('egg'),
@@ -25,7 +26,7 @@ describe('test/loader/get_framework_paths.test.ts', () => {
   });
 
   it.skip('should throw when one of the Application do not specify symbol', async () => {
-    const AppClass = (await import(getFilepath('framework-nosymbol/index.js'))).default;
+    const AppClass = await importModule(getFilepath('framework-nosymbol/index.js'), { importDefaultOnly: true });
     assert.throws(() => {
       const app = createApp('eggpath', {
         Application: AppClass,
@@ -36,7 +37,7 @@ describe('test/loader/get_framework_paths.test.ts', () => {
 
   it('should remove dulplicate eggPath', async () => {
     app = createApp('eggpath', {
-      Application: (await import(getFilepath('framework-dulp/index.js'))).default,
+      Application: await importModule(getFilepath('framework-dulp/index.js'), { importDefaultOnly: true }),
     });
     assert.deepEqual(app.loader.eggPaths, [
       getFilepath('egg'),
@@ -71,7 +72,7 @@ describe('test/loader/get_framework_paths.test.ts', () => {
   it('should assert eggPath type', async () => {
     await assert.rejects(async () => {
       createApp('eggpath', {
-        Application: (await import(getFilepath('framework-wrong-eggpath/index.js'))).default,
+        Application: await importModule(getFilepath('framework-wrong-eggpath/index.js'), { importDefaultOnly: true }),
       });
     }, /Symbol.for\('egg#eggPath'\) should be string/);
   });
