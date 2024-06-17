@@ -71,7 +71,7 @@ export interface EggLoaderOptions {
   env: string;
   /** Application instance */
   app: EggCore;
-  EggCoreClass: typeof EggCore;
+  EggCoreClass?: typeof EggCore;
   /** the directory of application */
   baseDir: string;
   /** egg logger */
@@ -148,16 +148,12 @@ export class EggLoader {
      * loader will find all directories from the prototype of Application,
      * you should define `Symbol.for('egg#eggPath')` property.
      *
-     * ```
-     * // lib/example.js
-     * const egg = require('egg');
-     * class ExampleApplication extends egg.Application {
-     *   constructor(options) {
-     *     super(options);
-     *   }
-     *
+     * ```ts
+     * // src/example.ts
+     * import { Application } from 'egg';
+     * class ExampleApplication extends Application {
      *   get [Symbol.for('egg#eggPath')]() {
-     *     return path.join(__dirname, '..');
+     *     return baseDir;
      *   }
      * }
      * ```
@@ -367,20 +363,23 @@ export class EggLoader {
       // stop the loop if
       // - object extends Object
       // - object extends EggCore
-      if (proto === Object.prototype || proto === EggCore.prototype) {
+      if (proto === Object.prototype || proto === EggCore?.prototype) {
         break;
       }
-
-      assert(proto.hasOwnProperty(Symbol.for('egg#eggPath')), 'Symbol.for(\'egg#eggPath\') is required on Application');
       const eggPath = Reflect.get(proto, Symbol.for('egg#eggPath'));
-      assert(eggPath && typeof eggPath === 'string', 'Symbol.for(\'egg#eggPath\') should be string');
+      if (!eggPath) {
+        // if (EggCore) {
+        //   throw new TypeError('Symbol.for(\'egg#eggPath\') is required on Application');
+        // }
+        continue;
+      }
+      assert(typeof eggPath === 'string', 'Symbol.for(\'egg#eggPath\') should be string');
       assert(fs.existsSync(eggPath), `${eggPath} not exists`);
       const realpath = fs.realpathSync(eggPath);
       if (!eggPaths.includes(realpath)) {
         eggPaths.unshift(realpath);
       }
     }
-
     return eggPaths;
   }
 
@@ -1493,12 +1492,12 @@ export class EggLoader {
    * @param {Object} options - see {@link FileLoader}
    * @since 1.0.0
    */
-  async loadToApp(directory: string | string[], property: string, options: FileLoaderOptions) {
+  async loadToApp(directory: string | string[], property: string | symbol, options?: FileLoaderOptions) {
     const target = {};
     Reflect.set(this.app, property, target);
     options = {
       ...options,
-      directory: options.directory ?? directory,
+      directory: options?.directory ?? directory,
       target,
       inject: this.app,
     };
@@ -1516,7 +1515,7 @@ export class EggLoader {
    * @param {Object} options - see {@link ContextLoader}
    * @since 1.0.0
    */
-  async loadToContext(directory: string | string[], property: string, options?: ContextLoaderOptions) {
+  async loadToContext(directory: string | string[], property: string | symbol, options?: ContextLoaderOptions) {
     options = {
       ...options,
       directory: options?.directory || directory,

@@ -1,6 +1,6 @@
 {
   "name": "@eggjs/core",
-  "version": "6.0.0-beta.0",
+  "version": "6.0.0-beta.2",
   "publishConfig": {
     "access": "public"
   },
@@ -36,6 +36,7 @@
   "dependencies": {
     "@eggjs/koa": "^2.18.2",
     "@eggjs/router": "^3.0.5",
+    "@eggjs/utils": "^4.0.2",
     "egg-logger": "^3.5.0",
     "egg-path-matching": "^2.0.0",
     "extend2": "^4.0.0",
@@ -50,26 +51,25 @@
   },
   "devDependencies": {
     "@eggjs/tsconfig": "1",
-    "@types/js-yaml": "^4.0.9",
+    "@types/js-yaml": "4",
     "@types/mocha": "10",
     "@types/node": "20",
-    "@types/supertest": "^6.0.2",
+    "@types/supertest": "6",
     "await-event": "2",
     "coffee": "5",
     "egg-bin": "6",
-    "egg-utils": "2",
     "eslint": "8",
     "eslint-config-egg": "13",
-    "gals": "^1.0.2",
+    "gals": "1",
     "git-contributor": "2",
-    "js-yaml": "^3.13.1",
+    "js-yaml": "3",
     "mm": "3",
-    "spy": "^1.0.0",
-    "supertest": "^4.0.2",
+    "spy": "1",
+    "supertest": "7",
     "ts-node": "10",
-    "tshy": "^1.15.1",
-    "tshy-after": "^1.0.0",
-    "typescript": "^5.4.5",
+    "tshy": "1",
+    "tshy-after": "1",
+    "typescript": "5",
     "urllib": "3"
   },
   "files": [
