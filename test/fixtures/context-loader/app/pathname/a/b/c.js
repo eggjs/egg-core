@@ -2,11 +2,11 @@
 
 module.exports = app => {
   return class xxx extends app.BaseContextClass {
-    * getPathname() {
+    async getPathname() {
       return this.pathName;
     }
 
-    * getName() {
+    async getName() {
       return this.config.name;
     }
   };

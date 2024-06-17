@@ -6,7 +6,7 @@ module.exports = app => {
       super(ctx);
     }
 
-    * get() {
+    async get() {
       return {
         ok: true,
       };

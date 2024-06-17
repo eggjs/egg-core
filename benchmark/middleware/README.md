@@ -1,5 +1,4 @@
-
-**Please run benchmark with node 7+ for async await support.**
+# Benchmark
 
 ## Benchmark Result
 
@@ -34,7 +33,7 @@ Transfer/sec:      6.01MB
 
 Enable asyncLocalStorage
 
-```
+```bash
 v18.12.1
 server started at 7001
 ------- generator middleware -------
@@ -130,7 +129,7 @@ Transfer/sec:      5.47MB
 
 Disable asyncLocalStorage
 
-```
+```bash
 v18.12.1
 server started at 7001
 ------- generator middleware -------

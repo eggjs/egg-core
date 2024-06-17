@@ -1,40 +1,27 @@
-const fs = require('fs');
-const path = require('path');
-
-const eggPath = path.join(__dirname, 'node_modules/egg-core');
-fs.rmSync(eggPath, { force: true, recursive: true });
-fs.symlinkSync(
-  path.join(__dirname, '../../..'),
-  eggPath,
-  'dir'
-);
-
-const EggCore = require('egg-core').EggCore;
-const EggLoader = require('egg-core').EggLoader;
+const { EggLoader, EggCore } = require('../../..');
 
 class AppLoader extends EggLoader {
-  loadAll() {
-    this.loadPlugin();
-    this.loadConfig();
-    this.loadApplicationExtend();
-    this.loadContextExtend();
-    this.loadRequestExtend();
-    this.loadResponseExtend();
-    this.loadCustomApp();
-    this.loadMiddleware();
-    this.loadService();
-    this.loadController();
-    this.loadRouter();
+  async loadAll() {
+    await this.loadPlugin();
+    await this.loadConfig();
+    await this.loadApplicationExtend();
+    await this.loadContextExtend();
+    await this.loadRequestExtend();
+    await this.loadResponseExtend();
+    await this.loadCustomApp();
+    await this.loadMiddleware();
+    await this.loadService();
+    await this.loadController();
+    await this.loadRouter();
   }
 }
 
-class EggApplication extends EggCore {
-
-  constructor(options) {
+class Application extends EggCore {
+  constructor(options = {}) {
     super(options);
     this.on('error', err => {
       console.error(err);
-    })
+    });
   }
 
   get [Symbol.for('egg#eggPath')]() {
@@ -45,4 +32,4 @@ class EggApplication extends EggCore {
   }
 }
 
-module.exports.Application = EggApplication;
+exports.Application = Application;

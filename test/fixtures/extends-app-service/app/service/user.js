@@ -6,7 +6,7 @@ module.exports = function (app) {
       super(ctx);
     }
 
-    * get(uid) {
+    async get(uid) {
       return '123mock';
     }
   }

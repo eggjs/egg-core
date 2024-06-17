@@ -1,18 +1,16 @@
-'use strict';
-
-exports.appOverrideChair = function*() {
+exports.appOverrideChair = async function() {
   this.body = {
     value: this.ajax()
   };
 };
 
-exports.pluginOverrideChair = function*() {
+exports.pluginOverrideChair = async function() {
   this.body = {
     value: this.ip
   };
 };
 
-exports.appOverridePlugin = function*() {
+exports.appOverridePlugin = async function() {
   this.body = {
     value: this.response.overridePlugin
   };

@@ -1,11 +1,11 @@
 'use strict';
 
 module.exports = function() {
-  return function*(next) {
-    if (this.path === '/static') {
-      this.body = 'static';
+  return async function(ctx, next) {
+    if (ctx.path === '/static') {
+      ctx.body = 'static';
       return;
     }
-    yield next;
+    await next();
   };
 };

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-  * callFunction(...args) {
+  async callFunction(...args) {
     this.body = 'done';
     return args;
   },

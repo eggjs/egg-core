@@ -1,5 +1,5 @@
 'use strict';
 
-exports.get = function* () {
+exports.get = async function() {
   this.body = this.params[0];
 };

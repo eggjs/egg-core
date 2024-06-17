@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = function(app) {
-  app.get('/', function*() {
-    const foo2 = yield this.service.foo2();
-    const foo3 = yield this.service.foo3.foo3();
+  app.get('/', async function() {
+    const foo2 = await this.service.foo2();
+    const foo3 = await this.service.foo3.foo3();
     this.body = {
       foo2: foo2,
       foo3: foo3,
@@ -14,11 +14,11 @@ module.exports = function(app) {
     };
   });
 
-  app.get('/proxy', function*() {
+  app.get('/proxy', async function() {
     this.body = {
-      coupon: yield this.proxy.couponQuery.query(),
-      userInfo: yield this.proxy.userInfoQuery.query(),
-      onlyClass: yield this.proxy.onlyClassQuery.query(),
+      coupon: await this.proxy.couponQuery.query(),
+      userInfo: await this.proxy.userInfoQuery.query(),
+      onlyClass: await this.proxy.onlyClassQuery.query(),
     };
   });
 };

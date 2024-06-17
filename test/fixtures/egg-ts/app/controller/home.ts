@@ -1,6 +1,6 @@
-module.exports = async ctx => {
+module.exports = async (ctx: any) => {
   const serviceText = ctx.service.test.getTest();
-  const helper = ctx.helper = new ctx.app.Helper();
+  ctx.helper = new ctx.app.Helper();
   ctx.body = [
     ctx.contextShow(),
     ctx.app.applicationShow(),

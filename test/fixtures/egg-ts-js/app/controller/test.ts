@@ -1,3 +1,3 @@
-module.exports = async ctx => {
+module.exports = async (ctx: any) => {
   ctx.body = 'ok';
 }

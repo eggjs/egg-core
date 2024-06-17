@@ -1,8 +1,8 @@
 'use strict';
 
 module.exports = function() {
-  return function*(next) {
-    yield next;
-    this.body.push('generator');
+  return async function(ctx, next) {
+    await next();
+    ctx.body.push('generator');
   };
 };

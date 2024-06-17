@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function*() {
+module.exports = async function() {
   const status = Number(this.query.status || 200);
   this.status = status;
   this.etag = '2.2.2.2';

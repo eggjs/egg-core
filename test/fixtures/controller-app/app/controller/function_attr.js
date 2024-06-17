@@ -1,6 +1,6 @@
 'use strict';
 
-exports.getAccountInfo = function*() {
+exports.getAccountInfo = async function() {
   const [name] = this.request.body || [];
   if (!name) {
     throw Error('please provide name');
@@ -11,7 +11,7 @@ exports.getAccountInfo = function*() {
 exports.getAccountInfo.operationType = true;
 
 exports.foo = {
-  bar: function*() {
+  bar: async function() {
     return 'account.foo.bar() is called!';
   },
 };

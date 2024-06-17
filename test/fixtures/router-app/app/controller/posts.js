@@ -1,29 +1,29 @@
 'use strict';
 
-exports.index = function* () {
+exports.index = async function() {
   this.body = 'index';
 };
 
-exports.new = function* () {
+exports.new = async function() {
   this.body = 'new';
 };
 
-exports.create = function* () {
+exports.create = async function() {
   this.body = 'create';
 };
 
-exports.show = function* () {
+exports.show = async function() {
   this.body = 'show - ' + this.params.id;
 };
 
-exports.edit = function* () {
+exports.edit = async function() {
   this.body = 'edit - ' + this.params.id;
 };
 
-exports.update = function* () {
+exports.update = async function() {
   this.body = 'update - ' + this.params.id;
 };
 
-exports.destroy = function* () {
+exports.destroy = async function() {
   this.body = 'destroy - ' + this.params.id;
 };
