@@ -71,7 +71,7 @@ export interface EggLoaderOptions {
   env: string;
   /** Application instance */
   app: EggCore;
-  EggCoreClass?: typeof EggCore;
+  EggCoreClass: typeof EggCore;
   /** the directory of application */
   baseDir: string;
   /** egg logger */
@@ -356,7 +356,7 @@ export class EggLoader {
    */
   protected getEggPaths(): string[] {
     // avoid require recursively
-    const EggCore = this.options.EggCoreClass!;
+    const EggCore = this.options.EggCoreClass;
     const eggPaths: string[] = [];
 
     let proto = this.app;
