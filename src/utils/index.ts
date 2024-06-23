@@ -24,6 +24,7 @@ export default {
   },
 
   extensions,
+  extensionNames,
 
   async loadFile(filepath: string) {
     try {

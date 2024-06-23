@@ -5,12 +5,12 @@ import { FileLoader, EXPORTS, type FileLoaderOptions } from './file_loader.js';
 
 const CLASS_LOADER = Symbol('classLoader');
 
-interface ClassLoaderOptions {
+export interface ClassLoaderOptions {
   ctx: ContextDelegation;
   properties: any;
 }
 
-class ClassLoader {
+export class ClassLoader {
   readonly _cache = new Map();
   _ctx: ContextDelegation;
 
