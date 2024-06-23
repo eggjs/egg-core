@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.1](https://github.com/eggjs/egg-core/compare/v6.0.0...v6.0.1) (2024-06-23)
+
+
+### Bug Fixes
+
+* should export everything ([#270](https://github.com/eggjs/egg-core/issues/270)) ([0217618](https://github.com/eggjs/egg-core/commit/021761870c4c03fb30512df7ef975164335321cc))
+
 ## [6.0.0](https://github.com/eggjs/egg-core/compare/v5.3.1...v6.0.0) (2024-06-17)
 
 
