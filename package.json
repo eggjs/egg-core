@@ -18,7 +18,6 @@
     "test-local": "egg-bin test",
     "preci": "npm run prepublishOnly",
     "ci": "npm run lint && egg-bin cov && npm run prepublishOnly",
-    "contributor": "git-contributor",
     "prepublishOnly": "tshy && tshy-after"
   },
   "repository": {
@@ -63,7 +62,6 @@
     "eslint": "8",
     "eslint-config-egg": "13",
     "gals": "1",
-    "git-contributor": "2",
     "js-yaml": "3",
     "mm": "3",
     "supertest": "7",
