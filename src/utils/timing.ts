@@ -4,7 +4,7 @@ import assert from 'node:assert';
 
 const debug = debuglog('@eggjs/core:utils:timing');
 
-interface TimingItem {
+export interface TimingItem {
   name: string;
   start: number;
   end?: number;
