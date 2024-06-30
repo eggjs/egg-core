@@ -3,7 +3,7 @@ import assert from 'node:assert';
 import { debuglog } from 'node:util';
 import is from 'is-type-of';
 import KoaApplication from '@eggjs/koa';
-import type { ContextDelegation, Next } from '@eggjs/koa';
+import type { ContextDelegation, MiddlewareFunc } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
@@ -28,13 +28,8 @@ export interface EggCoreOptions {
 
 export type EggCoreInitOptions = Partial<EggCoreOptions>;
 
-type Middleware = (ctx: EggCoreContext, next: Next) => Promise<void> | void;
-export type MiddlewareFunc = Middleware & {
-  _name?: string;
-};
+export type { ContextDelegation, MiddlewareFunc, Next } from '@eggjs/koa';
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 export interface EggCoreContext extends ContextDelegation {
   app: EggCore;
 }
@@ -58,9 +53,6 @@ export class EggCore extends KoaApplication {
   readonly controller: Record<string, any> = {};
   /** auto inject on loadMiddleware() */
   readonly middlewares: Record<string, (opt: any, app: EggCore) => MiddlewareFunc> = {};
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  declare middleware: MiddlewareFunc[];
 
   /**
    * @class
