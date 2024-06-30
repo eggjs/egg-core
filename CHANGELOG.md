@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.2](https://github.com/eggjs/egg-core/compare/v6.0.1...v6.0.2) (2024-06-30)
+
+
+### Bug Fixes
+
+* don't override koa Middleware type ([#271](https://github.com/eggjs/egg-core/issues/271)) ([1facf82](https://github.com/eggjs/egg-core/commit/1facf824a41c9227e8da862fda1f17071f1d2a55))
+
 ## [6.0.1](https://github.com/eggjs/egg-core/compare/v6.0.0...v6.0.1) (2024-06-23)
 
 
