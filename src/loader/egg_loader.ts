@@ -7,7 +7,7 @@ import homedir from 'node-homedir';
 import type { Logger } from 'egg-logger';
 import { getParamNames, readJSONSync } from 'utility';
 import { extend } from 'extend2';
-import { Request, Response, Context, Application, Next } from '@eggjs/koa';
+import { Request, Response, Context, Application } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
 import { now, diff } from 'performance-ms';
 import { FULLPATH, FileLoader, FileLoaderOptions } from './file_loader.js';
@@ -1601,7 +1601,7 @@ function wrapMiddleware(mw: MiddlewareFunc,
   }
   const match = pathMatching(options);
 
-  const fn = (ctx: EggCoreContext, next: Next) => {
+  const fn: MiddlewareFunc = (ctx, next) => {
     if (!match(ctx)) return next();
     return mw(ctx, next);
   };
@@ -1610,7 +1610,7 @@ function wrapMiddleware(mw: MiddlewareFunc,
 }
 
 function debugMiddlewareWrapper(mw: MiddlewareFunc): MiddlewareFunc {
-  const fn = async (ctx: EggCoreContext, next: Next) => {
+  const fn: MiddlewareFunc = async (ctx, next) => {
     const startTime = now();
     debug('[debugMiddlewareWrapper] [%s %s] enter middleware: %s', ctx.method, ctx.url, mw._name);
     await mw(ctx, next);

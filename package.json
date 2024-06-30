@@ -60,7 +60,7 @@
     "coffee": "5",
     "egg-bin": "6",
     "eslint": "8",
-    "eslint-config-egg": "13",
+    "eslint-config-egg": "14",
     "gals": "1",
     "js-yaml": "3",
     "mm": "3",
@@ -69,7 +69,7 @@
     "tshy": "1",
     "tshy-after": "1",
     "typescript": "5",
-    "urllib": "3"
+    "urllib": "4"
   },
   "files": [
     "dist",
