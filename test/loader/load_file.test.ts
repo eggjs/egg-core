@@ -39,7 +39,7 @@ describe('test/loader/load_file.test.ts', () => {
 
   it('should load file which returns async function', async () => {
     app = createApp('load_file');
-    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-async.yml'))).toString();
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-async.js')));
     assert.deepEqual(result, { clients: 'Test Config' });
   });
 });
