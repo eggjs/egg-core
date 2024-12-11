@@ -36,4 +36,10 @@ describe('test/loader/load_file.test.ts', () => {
     }
     assert.equal(result, '---\nmap:\n a: 1\n b: 2');
   });
+
+  it('should load file which returns async function', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-async.yml'))).toString();
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
 });
