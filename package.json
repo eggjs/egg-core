@@ -15,7 +15,7 @@
     "lint": "eslint src test --ext ts",
     "pretest": "npm run prepublishOnly",
     "test": "npm run lint -- --fix && npm run test-local",
-    "test-local": "egg-bin test",
+    "test-local": "egg-bin test -p",
     "preci": "npm run prepublishOnly",
     "ci": "npm run lint && egg-bin cov && npm run prepublishOnly",
     "prepublishOnly": "tshy && tshy-after"
