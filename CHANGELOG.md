@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.0.3](https://github.com/eggjs/egg-core/compare/v6.0.2...v6.0.3) (2024-12-13)
+
+
+### Bug Fixes
+
+* dont import default value ([#273](https://github.com/eggjs/egg-core/issues/273)) ([16274e7](https://github.com/eggjs/egg-core/commit/16274e744007bcbeef9a99210fa00c8812d05718))
+
 ## [6.0.2](https://github.com/eggjs/egg-core/compare/v6.0.1...v6.0.2) (2024-06-30)
 
 
