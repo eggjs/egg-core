@@ -1,8 +1,7 @@
 /* eslint-disable prefer-spread */
 import assert from 'node:assert';
 import { debuglog } from 'node:util';
-import is from 'is-type-of';
-import KoaApplication from '@eggjs/koa';
+import { Application as KoaApplication } from '@eggjs/koa';
 import type { ContextDelegation, MiddlewareFunc } from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
@@ -157,10 +156,8 @@ export class EggCore extends KoaApplication {
    * override koa's app.use, support generator function
    * @since 1.0.0
    */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
   use(fn: MiddlewareFunc) {
-    assert(is.function(fn), 'app.use() requires a function');
+    assert(typeof fn === 'function', 'app.use() requires a function');
     debug('[use] add middleware: %o', fn._name || fn.name || '-');
     this.middleware.push(fn);
     return this;
@@ -226,7 +223,7 @@ export class EggCore extends KoaApplication {
    * Execute scope after loaded and before app start.
    *
    * Notice:
-   * This method is now NOT recommanded and reguarded as a deprecated one,
+   * This method is now NOT recommended and regarded as a deprecated one,
    * For plugin development, we should use `didLoad` instead.
    * For application development, we should use `willReady` instead.
    *

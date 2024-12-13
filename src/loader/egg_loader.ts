@@ -3,7 +3,7 @@ import path from 'node:path';
 import assert from 'node:assert';
 import { debuglog, inspect } from 'node:util';
 import { isAsyncFunction, isClass, isGeneratorFunction, isObject } from 'is-type-of';
-import homedir from 'node-homedir';
+import { homedir } from 'node-homedir';
 import type { Logger } from 'egg-logger';
 import { getParamNames, readJSONSync } from 'utility';
 import { extend } from 'extend2';

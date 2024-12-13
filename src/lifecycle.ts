@@ -1,8 +1,8 @@
 import assert from 'node:assert';
 import { EventEmitter } from 'node:events';
 import { debuglog } from 'node:util';
-import is, { isClass } from 'is-type-of';
-import ReadyObject from 'get-ready';
+import { isClass } from 'is-type-of';
+import { Ready as ReadyObject } from 'get-ready';
 import type { ReadyFunctionArg } from 'get-ready';
 import { Ready } from 'ready-callback';
 import { EggConsoleLogger } from 'egg-logger';
@@ -184,7 +184,7 @@ export class Lifecycle extends EventEmitter {
   }
 
   registerBeforeClose(fn: Fun) {
-    assert(is.function(fn), 'argument should be function');
+    assert(typeof fn === 'function', 'argument should be function');
     assert(this.#isClosed === false, 'app has been closed');
     this.#closeFunctionSet.add(fn);
   }
