@@ -1,6 +1,7 @@
 import { debuglog } from 'node:util';
 import path from 'node:path';
 import fs from 'node:fs';
+import { stat } from 'node:fs/promises';
 import BuiltinModule from 'node:module';
 import { importResolve, importModule } from '@eggjs/utils';
 
@@ -18,13 +19,56 @@ const extensions = (Module as any)._extensions;
 const extensionNames = Object.keys(extensions).concat([ '.cjs', '.mjs' ]);
 debug('Module extensions: %j', extensionNames);
 
+function getCalleeFromStack(withLine?: boolean, stackIndex?: number) {
+  stackIndex = stackIndex === undefined ? 2 : stackIndex;
+  const limit = Error.stackTraceLimit;
+  const prep = Error.prepareStackTrace;
+
+  Error.prepareStackTrace = prepareObjectStackTrace;
+  Error.stackTraceLimit = 5;
+
+  // capture the stack
+  const obj: any = {};
+  Error.captureStackTrace(obj);
+  let callSite = obj.stack[stackIndex];
+  let fileName = '';
+  if (callSite) {
+    // egg-mock will create a proxy
+    // https://github.com/eggjs/egg-mock/blob/master/lib/app.js#L174
+    fileName = callSite.getFileName();
+    /* istanbul ignore if */
+    if (fileName && fileName.endsWith('egg-mock/lib/app.js')) {
+      // TODO: add test
+      callSite = obj.stack[stackIndex + 1];
+      fileName = callSite.getFileName();
+    }
+  }
+
+  Error.prepareStackTrace = prep;
+  Error.stackTraceLimit = limit;
+
+  if (!callSite || !fileName) return '<anonymous>';
+  if (!withLine) return fileName;
+  return `${fileName}:${callSite.getLineNumber()}:${callSite.getColumnNumber()}`;
+}
+
 export default {
   deprecated(message: string) {
+    // console.trace('[@eggjs/core:deprecated] %s', message);
     console.warn('[@eggjs/core:deprecated] %s', message);
   },
 
   extensions,
   extensionNames,
+
+  async existsPath(filepath: string) {
+    try {
+      await stat(filepath);
+      return true;
+    } catch {
+      return false;
+    }
+  },
 
   async loadFile(filepath: string) {
     try {
@@ -55,38 +99,7 @@ export default {
     return ctx ? fn.call(ctx, ...args) : fn(...args);
   },
 
-  getCalleeFromStack(withLine?: boolean, stackIndex?: number) {
-    stackIndex = stackIndex === undefined ? 2 : stackIndex;
-    const limit = Error.stackTraceLimit;
-    const prep = Error.prepareStackTrace;
-
-    Error.prepareStackTrace = prepareObjectStackTrace;
-    Error.stackTraceLimit = 5;
-
-    // capture the stack
-    const obj: any = {};
-    Error.captureStackTrace(obj);
-    let callSite = obj.stack[stackIndex];
-    let fileName = '';
-    if (callSite) {
-      // egg-mock will create a proxy
-      // https://github.com/eggjs/egg-mock/blob/master/lib/app.js#L174
-      fileName = callSite.getFileName();
-      /* istanbul ignore if */
-      if (fileName && fileName.endsWith('egg-mock/lib/app.js')) {
-        // TODO: add test
-        callSite = obj.stack[stackIndex + 1];
-        fileName = callSite.getFileName();
-      }
-    }
-
-    Error.prepareStackTrace = prep;
-    Error.stackTraceLimit = limit;
-
-    if (!callSite || !fileName) return '<anonymous>';
-    if (!withLine) return fileName;
-    return `${fileName}:${callSite.getLineNumber()}:${callSite.getColumnNumber()}`;
-  },
+  getCalleeFromStack,
 
   getResolvedFilename(filepath: string, baseDir: string) {
     const reg = /[/\\]/g;
