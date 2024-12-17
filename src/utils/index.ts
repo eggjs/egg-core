@@ -54,8 +54,12 @@ function getCalleeFromStack(withLine?: boolean, stackIndex?: number) {
 
 export default {
   deprecated(message: string) {
-    // console.trace('[@eggjs/core:deprecated] %s', message);
-    console.warn('[@eggjs/core:deprecated] %s', message);
+    if (debug.enabled) {
+      console.trace('[@eggjs/core:deprecated] %s', message);
+    } else {
+      console.warn('[@eggjs/core:deprecated] %s', message);
+      console.warn('[@eggjs/core:deprecated] set NODE_DEBUG=@eggjs/core:utils can show call stack');
+    }
   },
 
   extensions,
