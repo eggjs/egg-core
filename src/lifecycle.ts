@@ -109,8 +109,13 @@ export class Lifecycle extends EventEmitter {
     });
   }
 
-  ready(arg?: ReadyFunctionArg) {
-    return this.#readyObject.ready(arg);
+  ready(): Promise<void>;
+  ready(flagOrFunction: ReadyFunctionArg): void;
+  ready(flagOrFunction?: ReadyFunctionArg) {
+    if (flagOrFunction === undefined) {
+      return this.#readyObject.ready();
+    }
+    return this.#readyObject.ready(flagOrFunction);
   }
 
   get app() {
