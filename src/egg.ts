@@ -248,7 +248,12 @@ export class EggCore extends KoaApplication {
    *   console.log('done');
    * });
    */
+  ready(): Promise<void>;
+  ready(flagOrFunction: ReadyFunctionArg): void;
   ready(flagOrFunction?: ReadyFunctionArg) {
+    if (flagOrFunction === undefined) {
+      return this.lifecycle.ready();
+    }
     return this.lifecycle.ready(flagOrFunction);
   }
 
