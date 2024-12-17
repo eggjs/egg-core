@@ -14,14 +14,25 @@ describe('test/loader/mixin/load_plugin.test.ts', () => {
     app = undefined;
   });
 
-  it('should exports allPlugins, appPlugins, customPlugins, eggPlugins', () => {
+  it('should exports allPlugins, appPlugins, customPlugins, eggPlugins', async () => {
     app = createApp('plugin');
     const loader = app.loader;
-    loader.loadPlugin();
+    await loader.loadPlugin();
     assert('allPlugins' in loader);
     assert('appPlugins' in loader);
     assert('customPlugins' in loader);
     assert('eggPlugins' in loader);
+  });
+
+  it('should load plugin by pkg.eggPlugin.exports', async () => {
+    app = createApp('plugin-pkg-exports');
+    const loader = app.loader;
+    await loader.loadPlugin();
+    assert('allPlugins' in loader);
+    assert('appPlugins' in loader);
+    assert('customPlugins' in loader);
+    assert('eggPlugins' in loader);
+    assert(loader.plugins.a.enable);
   });
 
   it('should loadConfig all plugins', async () => {
