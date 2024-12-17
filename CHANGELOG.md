@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.1.0](https://github.com/eggjs/egg-core/compare/v6.0.3...v6.1.0) (2024-12-17)
+
+
+### Features
+
+* support `pkg.eggPlugin.exports` property ([#274](https://github.com/eggjs/egg-core/issues/274)) ([df9efed](https://github.com/eggjs/egg-core/commit/df9efedb22c630b13a4f1374f96450f6ba1107ab))
+
 ## [6.0.3](https://github.com/eggjs/egg-core/compare/v6.0.2...v6.0.3) (2024-12-13)
 
 
