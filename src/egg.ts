@@ -233,7 +233,7 @@ export class EggCore extends KoaApplication {
    * @param {string} [name] scope name, default is empty string
    */
   beforeStart(scope: Fun, name?: string) {
-    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
+    this.deprecate('`beforeStart` was deprecated, please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
     this.lifecycle.registerBeforeStart(scope, name ?? '');
   }
 
@@ -276,7 +276,7 @@ export class EggCore extends KoaApplication {
    * mysql.ready(done);
    */
   readyCallback(name: string, opts: object) {
-    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
+    this.deprecate('`readyCallback` was deprecated, please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
     return this.lifecycle.legacyReadyCallback(name, opts);
   }
 
@@ -293,7 +293,7 @@ export class EggCore extends KoaApplication {
    * @param {Function} fn - the function that can be generator function or async function.
    */
   beforeClose(fn: Fun) {
-    this.deprecate('Please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
+    this.deprecate('`beforeClose` was deprecated, please use "Life Cycles" instead, see https://www.eggjs.org/advanced/loader#life-cycles');
     this.lifecycle.registerBeforeClose(fn);
   }
 
