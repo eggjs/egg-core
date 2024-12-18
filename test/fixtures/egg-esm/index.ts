@@ -26,7 +26,7 @@ export class Application extends EggCore {
 
   constructor(options: EggCoreInitOptions = {}) {
     super(options);
-    this.on('error', err => {
+    this.on('error', (err: any) => {
       console.error(err);
     });
   }

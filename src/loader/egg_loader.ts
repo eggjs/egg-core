@@ -2,10 +2,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
 import { debuglog, inspect } from 'node:util';
-import is, { isAsyncFunction, isClass, isGeneratorFunction, isObject } from 'is-type-of';
 import homedir from 'node-homedir';
+import { isAsyncFunction, isClass, isGeneratorFunction, isObject, isPromise } from 'is-type-of';
 import type { Logger } from 'egg-logger';
-import { getParamNames, readJSONSync } from 'utility';
+import { getParamNames, readJSONSync, readJSON } from 'utility';
 import { extend } from 'extend2';
 import { Request, Response, Context, Application } from '@eggjs/koa';
 import { pathMatching, type PathMatchingOptions } from 'egg-path-matching';
@@ -462,7 +462,7 @@ export class EggLoader {
       plugin.path = this.getPluginPath(plugin);
 
       // read plugin information from ${plugin.path}/package.json
-      this.#mergePluginConfig(plugin);
+      await this.#mergePluginConfig(plugin);
 
       // disable the plugin that not match the serverEnv
       if (env && plugin.env.length > 0 && !plugin.env.includes(env)) {
@@ -538,7 +538,7 @@ export class EggLoader {
       for (const name in customPlugins) {
         this.#normalizePluginConfig(customPlugins, name, configPath);
       }
-      debug('Loaded custom plugins: %j', Object.keys(customPlugins));
+      debug('Loaded custom plugins: %o', customPlugins);
     }
     return customPlugins;
   }
@@ -623,16 +623,18 @@ export class EggLoader {
   //     "strict": true, whether check plugin name, default to true.
   //   }
   // }
-  #mergePluginConfig(plugin: EggPluginInfo) {
+  async #mergePluginConfig(plugin: EggPluginInfo) {
     let pkg;
     let config;
     const pluginPackage = path.join(plugin.path!, 'package.json');
-    if (fs.existsSync(pluginPackage)) {
-      pkg = readJSONSync(pluginPackage);
+    if (await utils.existsPath(pluginPackage)) {
+      pkg = await readJSON(pluginPackage);
       config = pkg.eggPlugin;
       if (pkg.version) {
         plugin.version = pkg.version;
       }
+      // support commonjs and esm dist files
+      plugin.path = this.#formatPluginPathFromPackageJSON(plugin.path!, pkg);
     }
 
     const logger = this.options.logger;
@@ -712,9 +714,9 @@ export class EggLoader {
     }
 
     // Following plugins will be enabled implicitly.
-    //   - configclient required by [hsfclient]
-    //   - eagleeye required by [hsfclient]
-    //   - diamond required by [hsfclient]
+    //   - configclient required by [rpcClient]
+    //   - monitor required by [rpcClient]
+    //   - diamond required by [rpcClient]
     if (implicitEnabledPlugins.length) {
       let message = implicitEnabledPlugins
         .map(name => `  - ${name} required by [${requireMap[name]}]`)
@@ -769,7 +771,6 @@ export class EggLoader {
 
   #resolvePluginPath(plugin: EggPluginInfo) {
     const name = plugin.package || plugin.name;
-
     try {
       // should find the plugin directory
       // pnpm will lift the node_modules to the sibling directory
@@ -777,12 +778,36 @@ export class EggLoader {
       // 'node_modules/.pnpm/yadan@2.0.0/node_modules',  <- this is the sibling directory
       // 'node_modules/.pnpm/egg@2.33.1/node_modules/egg/node_modules',
       // 'node_modules/.pnpm/egg@2.33.1/node_modules', <- this is the sibling directory
-      const filePath = utils.resolvePath(`${name}/package.json`, { paths: [ ...this.lookupDirs ] });
-      return path.dirname(filePath);
-    } catch (err: any) {
+      const pluginPkgFile = utils.resolvePath(`${name}/package.json`, { paths: [ ...this.lookupDirs ] });
+      return path.dirname(pluginPkgFile);
+    } catch (err) {
       debug('[resolvePluginPath] error: %o', err);
-      throw new Error(`Can not find plugin ${name} in "${[ ...this.lookupDirs ].join(', ')}"`);
+      throw new Error(`Can not find plugin ${name} in "${[ ...this.lookupDirs ].join(', ')}"`, {
+        cause: err,
+      });
     }
+  }
+
+  #formatPluginPathFromPackageJSON(pluginPath: string, pluginPkg: {
+    eggPlugin?: {
+      exports?: {
+        import?: string;
+        require?: string;
+      };
+    };
+  }) {
+    if (pluginPkg.eggPlugin?.exports) {
+      if (typeof require === 'function') {
+        if (pluginPkg.eggPlugin.exports.require) {
+          pluginPath = path.join(pluginPath, pluginPkg.eggPlugin.exports.require);
+        }
+      } else {
+        if (pluginPkg.eggPlugin.exports.import) {
+          pluginPath = path.join(pluginPath, pluginPkg.eggPlugin.exports.import);
+        }
+      }
+    }
+    return pluginPath;
   }
 
   #extendPlugins(targets: Record<string, EggPluginInfo>, plugins: Record<string, EggPluginInfo>) {
@@ -1036,9 +1061,10 @@ export class EggLoader {
     debug('loadExtend %s, filepaths: %j', name, filepaths);
 
     const mergeRecord = new Map();
-    for (let filepath of filepaths) {
-      filepath = this.resolveModule(filepath)!;
+    for (const rawFilepath of filepaths) {
+      const filepath = this.resolveModule(rawFilepath)!;
       if (!filepath) {
+        debug('loadExtend %o not found', rawFilepath);
         continue;
       }
       if (filepath.endsWith('/index.js')) {
@@ -1421,7 +1447,7 @@ export class EggLoader {
     let mod = await this.requireFile(fullpath);
     if (typeof mod === 'function' && !isClass(mod)) {
       mod = mod(...inject);
-      if (is.promise(mod)) {
+      if (isPromise(mod)) {
         mod = await mod;
       }
     }
