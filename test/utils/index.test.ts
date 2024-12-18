@@ -57,6 +57,16 @@ describe('test/utils/index.test.ts', () => {
       assert.equal(result, null);
     });
 
+    it('should load es module with default = async function', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-async.js'));
+      assert(typeof result().then === 'function');
+    });
+
+    it('should load es module with default = function returning a promise', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-promise.js'));
+      assert(typeof result().then === 'function');
+    });
+
     it('should load no js file', async () => {
       let result = (await utils.loadFile(path.join(baseDir, 'no-js.yml'))).toString();
       if (process.platform === 'win32') {
@@ -108,6 +118,16 @@ describe('test/utils/index.test.ts', () => {
     it('should load es module with default = null', async () => {
       const result = await utils.loadFile(path.join(baseDir, 'es-module-default-null.js'));
       assert.equal(result, null);
+    });
+
+    it('should load es module with default = async function', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-async.js'));
+      assert(typeof result().then === 'function');
+    });
+
+    it('should load es module with default = function returning a promise', async () => {
+      const result = await utils.loadFile(path.join(baseDir, 'es-module-default-promise.js'));
+      assert(typeof result().then === 'function');
     });
 
     it('should load no js file', async () => {
