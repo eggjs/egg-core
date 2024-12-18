@@ -36,4 +36,40 @@ describe('test/loader/load_file.test.ts', () => {
     }
     assert.equal(result, '---\nmap:\n a: 1\n b: 2');
   });
+
+  it('should load cjs module file which returns function returning a promise', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/promise_function.js')));
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
+
+  it('should load cjs module file which returns async function', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/async.js')));
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
+
+  it('should load compiled es module file', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default.js')));
+    assert(result.fn);
+  });
+
+  it('should load compiled es module file which default = null', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-null.js')));
+    assert.equal(result, null);
+  });
+
+  it('should load compiled es module file which default = function returning a promise', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-promise.js')));
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
+
+  it('should load compiled es module file which default = async function', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-async.js')));
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
 });

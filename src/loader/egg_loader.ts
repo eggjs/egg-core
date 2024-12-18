@@ -2,8 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
 import { debuglog, inspect } from 'node:util';
-import { isAsyncFunction, isClass, isGeneratorFunction, isObject } from 'is-type-of';
 import { homedir } from 'node-homedir';
+import { isAsyncFunction, isClass, isGeneratorFunction, isObject, isPromise } from 'is-type-of';
 import type { Logger } from 'egg-logger';
 import { getParamNames, readJSONSync, readJSON } from 'utility';
 import { extend } from 'extend2';
@@ -1447,6 +1447,9 @@ export class EggLoader {
     let mod = await this.requireFile(fullpath);
     if (typeof mod === 'function' && !isClass(mod)) {
       mod = mod(...inject);
+      if (isPromise(mod)) {
+        mod = await mod;
+      }
     }
     return mod;
   }
