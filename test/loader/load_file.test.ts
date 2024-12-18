@@ -37,9 +37,15 @@ describe('test/loader/load_file.test.ts', () => {
     assert.equal(result, '---\nmap:\n a: 1\n b: 2');
   });
 
-  it('should load file which returns async function', async () => {
+  it('should load compiled es module file which returns function returning a promise', async () => {
     app = createApp('load_file');
-    const result = (await app.loader.loadFile(getFilepath('load_file/es-module-default-async.js')));
+    const result = (await app.loader.loadFile(getFilepath('loadfile/es-module-default-promise.js')));
+    assert.deepEqual(result, { clients: 'Test Config' });
+  });
+
+  it('should load compiled es module file which returns async function', async () => {
+    app = createApp('load_file');
+    const result = (await app.loader.loadFile(getFilepath('loadfile/es-module-default-async.js')));
     assert.deepEqual(result, { clients: 'Test Config' });
   });
 });

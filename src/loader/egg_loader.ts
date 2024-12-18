@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import assert from 'node:assert';
 import { debuglog, inspect } from 'node:util';
-import homedir from 'node-homedir';
+import { homedir } from 'node-homedir';
 import { isAsyncFunction, isClass, isGeneratorFunction, isObject, isPromise } from 'is-type-of';
 import type { Logger } from 'egg-logger';
 import { getParamNames, readJSONSync, readJSON } from 'utility';
