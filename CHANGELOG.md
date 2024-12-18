@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.0](https://github.com/eggjs/egg-core/compare/v6.1.0...v6.2.0) (2024-12-18)
+
+
+### Features
+
+* support file returning async functions when loading it ([#272](https://github.com/eggjs/egg-core/issues/272)) ([cb48d0e](https://github.com/eggjs/egg-core/commit/cb48d0e53d36e500ab186505c9d4f32528bf6ff9))
+
 ## [6.1.0](https://github.com/eggjs/egg-core/compare/v6.0.3...v6.1.0) (2024-12-17)
 
 
