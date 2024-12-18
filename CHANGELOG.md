@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.1](https://github.com/eggjs/egg-core/compare/v6.2.0...v6.2.1) (2024-12-18)
+
+
+### Bug Fixes
+
+* improve lifecycle deprecated message ([#275](https://github.com/eggjs/egg-core/issues/275)) ([ff906ee](https://github.com/eggjs/egg-core/commit/ff906ee4ba107d3e29c88c85ca5172bcd18a14f0))
+
 ## [6.2.0](https://github.com/eggjs/egg-core/compare/v6.1.0...v6.2.0) (2024-12-18)
 
 
