@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.2](https://github.com/eggjs/egg-core/compare/v6.2.1...v6.2.2) (2024-12-19)
+
+
+### Bug Fixes
+
+* extend support Class ([#276](https://github.com/eggjs/egg-core/issues/276)) ([b0a4b37](https://github.com/eggjs/egg-core/commit/b0a4b37f3afd04594a508d7817d8d0246456a5b2))
+
 ## [6.2.1](https://github.com/eggjs/egg-core/compare/v6.2.0...v6.2.1) (2024-12-18)
 
 
