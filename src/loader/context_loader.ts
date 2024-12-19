@@ -1,7 +1,7 @@
 import assert from 'node:assert';
-import { type ContextDelegation } from '@eggjs/koa';
 import { isClass, isPrimitive } from 'is-type-of';
 import { FileLoader, EXPORTS, type FileLoaderOptions } from './file_loader.js';
+import type { ContextDelegation } from '../egg.js';
 
 const CLASS_LOADER = Symbol('classLoader');
 

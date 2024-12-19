@@ -1,4 +1,4 @@
-import type { EggCore, EggCoreContext } from './egg.js';
+import type { EggCore, ContextDelegation } from './egg.js';
 
 /**
  * BaseContextClass is a base class that can be extended,
@@ -6,7 +6,7 @@ import type { EggCore, EggCoreContext } from './egg.js';
  * {@link Helper}, {@link Service} is extending it.
  */
 export class BaseContextClass {
-  ctx: EggCoreContext;
+  ctx: ContextDelegation;
   app: EggCore;
   config: Record<string, any>;
   service: BaseContextClass;
@@ -14,7 +14,7 @@ export class BaseContextClass {
   /**
    * @since 1.0.0
    */
-  constructor(ctx: EggCoreContext) {
+  constructor(ctx: ContextDelegation) {
     /**
      * @member {Context} BaseContextClass#ctx
      * @since 1.0.0
