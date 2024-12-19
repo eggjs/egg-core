@@ -37,6 +37,7 @@ export type EggCoreInitOptions = Partial<EggCoreOptions>;
 // export @eggjs/koa classes
 export {
   KoaRequest, KoaResponse, KoaContext, KoaApplication,
+  Router,
 };
 
 // export @eggjs/koa types
