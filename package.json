@@ -13,16 +13,16 @@
   "description": "A core plugin framework based on @eggjs/koa",
   "scripts": {
     "lint": "eslint src test --ext ts",
-    "pretest": "npm run prepublishOnly",
-    "test": "npm run lint -- --fix && npm run test-local",
+    "pretest": "npm run lint -- --fix && npm run prepublishOnly",
+    "test": "npm run test-local",
     "test-local": "egg-bin test",
-    "preci": "npm run prepublishOnly",
-    "ci": "npm run lint && egg-bin cov && npm run prepublishOnly",
+    "preci": "npm run lint && npm run prepublishOnly && attw --pack",
+    "ci": "egg-bin cov",
     "prepublishOnly": "tshy && tshy-after"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/eggjs/egg-core.git"
+    "url": "git+https://github.com/eggjs/core.git"
   },
   "keywords": [
     "egg",
@@ -33,7 +33,7 @@
   "bugs": {
     "url": "https://github.com/eggjs/egg/issues"
   },
-  "homepage": "https://github.com/eggjs/egg-core#readme",
+  "homepage": "https://github.com/eggjs/core#readme",
   "dependencies": {
     "@eggjs/koa": "^2.20.1",
     "@eggjs/router": "^3.0.5",
@@ -51,6 +51,7 @@
     "utility": "^2.1.0"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.17.1",
     "@eggjs/tsconfig": "1",
     "@types/js-yaml": "4",
     "@types/mocha": "10",
