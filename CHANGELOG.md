@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.3](https://github.com/eggjs/core/compare/v6.2.2...v6.2.3) (2024-12-19)
+
+
+### Bug Fixes
+
+* export Router Class ([#277](https://github.com/eggjs/core/issues/277)) ([acf5958](https://github.com/eggjs/core/commit/acf595810055d0399a2a2f875eb9e38e4af027cf))
+
 ## [6.2.2](https://github.com/eggjs/core/compare/v6.2.1...v6.2.2) (2024-12-19)
 
 
