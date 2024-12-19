@@ -15,10 +15,10 @@ import { ContextLoader, ContextLoaderOptions } from './context_loader.js';
 import utils, { Fun } from '../utils/index.js';
 import sequencify from '../utils/sequencify.js';
 import { Timing } from '../utils/timing.js';
-import type { EggCoreContext, EggCore, MiddlewareFunc } from '../egg.js';
+import type { ContextDelegation, EggCore, MiddlewareFunc } from '../egg.js';
 import { BaseContextClass } from '../base_context_class.js';
 
-const debug = debuglog('@eggjs/core:egg_loader');
+const debug = debuglog('@eggjs/core/loader/egg_loader');
 
 const originalPrototypes: Record<string, any> = {
   request: Request.prototype,
@@ -1064,7 +1064,7 @@ export class EggLoader {
     for (const rawFilepath of filepaths) {
       const filepath = this.resolveModule(rawFilepath)!;
       if (!filepath) {
-        debug('loadExtend %o not found', rawFilepath);
+        // debug('loadExtend %o not found', rawFilepath);
         continue;
       }
       if (filepath.endsWith('/index.js')) {
@@ -1073,9 +1073,14 @@ export class EggLoader {
         this.app.deprecate(`app/extend/${name}/index.ts is deprecated, use app/extend/${name}.ts instead`);
       }
 
-      const ext = await this.requireFile(filepath);
+      let ext = await this.requireFile(filepath);
+      // if extend object is Class, should use Class.prototype instead
+      if (isClass(ext)) {
+        ext = ext.prototype;
+      }
       const properties = Object.getOwnPropertyNames(ext)
-        .concat(Object.getOwnPropertySymbols(ext) as any[]);
+        .concat(Object.getOwnPropertySymbols(ext) as any[])
+        .filter(name => name !== 'constructor'); // ignore class constructor for extend
 
       for (const property of properties) {
         if (mergeRecord.has(property)) {
@@ -1108,7 +1113,7 @@ export class EggLoader {
         Object.defineProperty(proto, property, descriptor!);
         mergeRecord.set(property, filepath);
       }
-      debug('merge %j to %s from %s', Object.keys(ext), name, filepath);
+      debug('merge %j to %s from %s', properties, name, filepath);
     }
     this.timing.end(`Load extend/${name}.js`);
   }
@@ -1682,7 +1687,7 @@ function wrapControllerClass(Controller: typeof BaseContextClass, fullPath: stri
 }
 
 function controllerMethodToMiddleware(Controller: typeof BaseContextClass, key: string) {
-  return function classControllerMiddleware(this: EggCoreContext, ...args: any[]) {
+  return function classControllerMiddleware(this: ContextDelegation, ...args: any[]) {
     const controller: any = new Controller(this);
     if (!this.app.config.controller?.supportParams) {
       args = [ this ];
@@ -1718,7 +1723,7 @@ function wrapObject(obj: Record<string, any>, fullPath: string, prefix?: string)
 }
 
 function objectFunctionToMiddleware(func: Fun) {
-  async function objectControllerMiddleware(this: EggCoreContext, ...args: any[]) {
+  async function objectControllerMiddleware(this: ContextDelegation, ...args: any[]) {
     if (!this.app.config.controller?.supportParams) {
       args = [ this ];
     }

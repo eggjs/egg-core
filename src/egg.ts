@@ -1,8 +1,15 @@
 /* eslint-disable prefer-spread */
 import assert from 'node:assert';
 import { debuglog } from 'node:util';
-import { Application as KoaApplication } from '@eggjs/koa';
-import type { ContextDelegation, MiddlewareFunc } from '@eggjs/koa';
+import {
+  Application as KoaApplication, Context as KoaContext,
+  Request as KoaRequest, Response as KoaResponse,
+} from '@eggjs/koa';
+import type {
+  ContextDelegation as KoaContextDelegation,
+  MiddlewareFunc as KoaMiddlewareFunc,
+  Next,
+} from '@eggjs/koa';
 import { EggConsoleLogger } from 'egg-logger';
 import { RegisterOptions, ResourcesController, EggRouter as Router } from '@eggjs/router';
 import type { ReadyFunctionArg } from 'get-ready';
@@ -15,7 +22,7 @@ import utils from './utils/index.js';
 
 const debug = debuglog('@eggjs/core:egg');
 
-const EGG_LOADER = Symbol.for('egg#loader');
+export const EGG_LOADER = Symbol.for('egg#loader');
 
 export interface EggCoreOptions {
   baseDir: string;
@@ -27,11 +34,39 @@ export interface EggCoreOptions {
 
 export type EggCoreInitOptions = Partial<EggCoreOptions>;
 
-export type { ContextDelegation, MiddlewareFunc, Next } from '@eggjs/koa';
+// export @eggjs/koa classes
+export {
+  KoaRequest, KoaResponse, KoaContext, KoaApplication,
+};
 
-export interface EggCoreContext extends ContextDelegation {
-  app: EggCore;
+// export @eggjs/koa types
+export type {
+  Next, KoaMiddlewareFunc, KoaContextDelegation,
+};
+
+// export @eggjs/core classes
+export class Request extends KoaRequest {
+  declare app: EggCore;
+  declare response: Response;
+  declare ctx: ContextDelegation;
 }
+
+export class Response extends KoaResponse {
+  declare app: EggCore;
+  declare request: Request;
+  declare ctx: ContextDelegation;
+}
+
+export class Context extends KoaContext {
+  declare app: EggCore;
+  declare request: Request;
+  declare response: Response;
+  declare service: BaseContextClass;
+}
+
+// export @eggjs/core types
+export type ContextDelegation = KoaContextDelegation & Context;
+export type MiddlewareFunc<T extends ContextDelegation = ContextDelegation> = KoaMiddlewareFunc<T>;
 
 export class EggCore extends KoaApplication {
   options: EggCoreOptions;
@@ -159,7 +194,7 @@ export class EggCore extends KoaApplication {
   use(fn: MiddlewareFunc) {
     assert(typeof fn === 'function', 'app.use() requires a function');
     debug('[use] add middleware: %o', fn._name || fn.name || '-');
-    this.middleware.push(fn);
+    this.middleware.push(fn as unknown as KoaMiddlewareFunc);
     return this;
   }
 
@@ -229,7 +264,7 @@ export class EggCore extends KoaApplication {
    *
    * @see https://eggjs.org/en/advanced/loader.html#beforestart
    *
-   * @param  {Function|AsyncFunction} scope function will execute before app start
+   * @param  {Function} scope function will execute before app start
    * @param {string} [name] scope name, default is empty string
    */
   beforeStart(scope: Fun, name?: string) {
